@@ -86,7 +86,7 @@ console.log(item);
   }
 
   categorychange(value: string,i:number) {
-    this.categorychangeload(value,i);
+    this.categorychangeload(value,i);g
 
 
   }

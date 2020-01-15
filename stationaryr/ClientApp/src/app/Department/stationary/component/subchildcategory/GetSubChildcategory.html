@@ -1,0 +1,55 @@
+<a routerLink="../{{routelink}}">Add ITEM Sub TYPE</a>
+<!--<table border="1" class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th>Items</th>
+      <th>Parent</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let x of SubCategorys">
+      <td class="hidden">{{x.ID}}</td>
+      <td>{{x.DESCRIPTION}}</td>
+      <td>{{x.PARENT_ID}}</td>
+
+      <td>
+        <button (click)="deleteSubCategory(x)" class="btn btn-info"> Delete</button>
+        <button (click)="editSubCategory(x)" style="margin-left: 20px;" class="btn btn-info"> Edit</button>
+      </td>
+
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr><td colspan="3"><jw-pagination [items]="userpage" (changePage)="onChangePage($event)"></jw-pagination></td></tr>
+
+  </tfoot>
+</table>-->
+<mat-form-field>
+  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+</mat-form-field>
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource">
+
+    <!-- Position Column -->
+    <ng-container matColumnDef="DESCRIPTION">
+      <th mat-header-cell *matHeaderCellDef> DESCRIPTION </th>
+      <td mat-cell *matCellDef="let row"> {{row.DESCRIPTION}} </td>
+    </ng-container>
+    <ng-container matColumnDef="PARENT_ID">
+      <th mat-header-cell *matHeaderCellDef> PARENT_ID </th>
+      <td mat-cell *matCellDef="let row"> {{row.PARENT_ID}} </td>
+    </ng-container>   
+    <ng-container matColumnDef="Edit/Delete">
+      <th mat-header-cell *matHeaderCellDef> Edit/Delete </th>
+      <td mat-cell *matCellDef="let row">
+        <button (click)="editSubCategory(row)" style="margin-right: 10px;" class="btn btn-info">  <mat-icon>edit</mat-icon></button>
+        <button (click)="deleteSubCategory(row)" class="btn btn-info"> <mat-icon>delete</mat-icon></button>        
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>

@@ -1,0 +1,148 @@
+<div class=" card mt-4">
+  <div class="card-header">
+    <h3>Add/Edit STATIONARY REPOSITORY</h3>
+  </div>
+  <div class="card-body">
+    <form [formGroup]="StationaryRepository" class="example-container col-md-6">
+      <mat-form-field>
+        <mat-label>Item</mat-label>
+        <select formControlName="Category" matNativeControl name="Category" #category (change)="categorychange(category.value)" [ngClass]="{'disabled': role}">
+          <option value="" selected></option>
+          <option *ngFor="let Cat of Category" [value]="Cat.ITEMCODE">
+            {{Cat.ITEMS_DESCRIPTION}}
+          </option>
+        </select>
+      </mat-form-field>
+      <mat-form-field *ngIf="subcategory">
+        <mat-label>Item Type</mat-label>
+        <select formControlName="SUBCATEGORY" matNativeControl name="SUBCATEGORY" #subcategory (change)="subcategorychange(subcategory.value)"  [ngClass]="{'disabled': role}">
+          <option value="" selected></option>
+          <option *ngFor="let Sub of SubCategory" [value]="Sub.ID">
+            {{Sub.ITEMS_DESCRIPTION}}
+          </option>
+        </select>
+      </mat-form-field>
+      <mat-form-field *ngIf="subchildcategory">
+        <mat-label>Item Sub Type</mat-label>
+        <select formControlName="SUBCHILDCATEGORY" matNativeControl name="SUBCHILDCATEGORY" #subchildcategory (change)="subchildcategorychange(subchildcategory.value)"  [ngClass]="{'disabled': role}">
+          <option value="" selected></option>
+          <option *ngFor="let SubChild of SubChildCategory" [value]="SubChild.ID">
+            {{SubChild.ITEMS_DESCRIPTION}}
+          </option>
+        </select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Company</mat-label>
+        <select formControlName="Company" matNativeControl name="Company" #company   [ngClass]="{'disabled': role}">
+          <option value="" selected></option>
+          <option *ngFor="let Com of Company" [value]="Com.ID">
+            {{Com.COMPANYNAME}}
+          </option>
+        </select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput numbersOnly required placeholder="Estimated Quantity" formControlName="Estimated_Quantity" [ngClass]="{ 'is-invalid': submitted && f.Estimated_Quantity.errors,'disabled':role }" >
+        <mat-error *ngIf="submitted && f.Estimated_Quantity.errors">Item is required</mat-error>
+
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Units</mat-label>
+        <select formControlName="UNIT" matNativeControl name="UNIT"   [ngClass]="{'disabled': role}">
+          <option value="" selected></option>
+          <option *ngFor="let unit of Unit" [value]="unit.ID">
+            {{unit.UNITS_DESCRIPTION}}
+          </option>
+        </select>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Basic Amount" formControlName="Basic_Amount" [ngClass]="{ 'is-invalid': submitted && f.Basic_Amount.errors ,'disabled':role}"  >
+        <mat-error *ngIf="submitted && f.Basic_Amount.errors">Basic Amount is required</mat-error>
+
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput numbersOnly required max="100" placeholder="GST in %" formControlName="GST" [ngClass]="{ 'is-invalid': submitted && f.GST.errors,'disabled':role }"  >
+        <mat-error *ngIf="submitted && f.GST.errors?.max">GST is less than 100%</mat-error>
+
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput numbersOnly required placeholder="Total Item Order" formControlName="Total_Item_Order" [ngClass]="{ 'is-invalid': submitted && f.Total_Item_Order.errors,'disabled':role }">
+        <mat-error *ngIf="submitted && f.Total_Item_Order.errors">Total Item Order is required</mat-error>
+
+      </mat-form-field>
+      <div class="row">
+        <div class="col-md-8">
+          <mat-form-field>
+            <input matInput readonly [matDatepicker]="picker" placeholder="Total Item Order date" formControlName="DATEOFORDER" >
+            <mat-datepicker-toggle matSuffix [for]="picker"  [ngClass]="{'disabled':role}"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+
+          </mat-form-field>
+        </div>
+        <div class="col-md-4">
+          <input [ngxTimepicker]="picker2" placeholder="Order time" class="form-control" formControlName="TIMEOFORDER" [ngClass]="{'disabled':role}">
+          <ngx-material-timepicker #picker2></ngx-material-timepicker>
+          <mat-error *ngIf="submitted && f.TIMEOFORDER.errors">Time Required</mat-error>
+
+        </div>
+      </div>
+
+     
+    
+         
+         
+
+      <div formArrayName="ORDERRECEIVED" *ngFor="let other of StationaryRepository.get('ORDERRECEIVED').controls; let i = index" class="form-group">
+        <div [formGroupName]="i">
+          <div class="row">
+          <input type="hidden" formControlName="ID" />
+            <div class="col-md-8 border">
+              <div class="row">
+                <div class="col-md-8">
+                  <mat-form-field>
+                    <input matInput numbersOnly required placeholder="Total Item Received" formControlName="TOTAL_ITEM_RECEIVED" id="Total_Item_Received+i">
+                    <!--<mat-error *ngIf="submitted && f.Total_Item_Received.errors">Total Item Received is required</mat-error>-->
+
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                  <button *ngIf="StationaryRepository.get('ORDERRECEIVED').length>1" (click)="deleteitem(i)"  class="btn btn-sm"><mat-icon>delete_forever</mat-icon></button>
+                </div>
+
+              </div>
+              <div class="row">
+                <div class="col-md-8">
+                  <mat-form-field>
+                    <input matInput readonly [matDatepicker]="picker1" placeholder="Total Item Received date" formControlName="DATEOFRECEIVED" id="DATEOFRECEIVED+i">
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                  <input [ngxTimepicker]="picker3" placeholder="Received time" class="form-control" formControlName="TIMEOFRECEIVED" id="TIMEOFRECEIVED+i">
+                  <ngx-material-timepicker #picker3></ngx-material-timepicker>
+                  <!--<mat-error *ngIf="submitted && f.TIMEOFRECEIVED.errors">Time Required</mat-error>-->
+                </div>
+              </div>
+
+            </div>
+
+            <div class="col-md-4">
+              <button class="btn btn-success btn-sm" type="button" (click)="addSkillButtonClick()" [disabled]="StationaryRepository.get('ORDERRECEIVED').controls.errors" style="margin-right:10px">Add More Item</button>
+            </div>
+          </div>
+          <hr *ngIf="i>0"/>
+        </div>
+      </div>
+              <button mat-raised-button color="primary" [disabled]="loading" *ngIf="btnvisibility" (click)="onSubmit()">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                Submit
+              </button>
+              <button mat-raised-button color="primary" [disabled]="loading" *ngIf="!btnvisibility" (click)="onUpdate()">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                Update
+              </button>
+</form>
+    </div>
+  </div>

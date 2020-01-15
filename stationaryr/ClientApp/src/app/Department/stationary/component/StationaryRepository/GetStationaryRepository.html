@@ -1,0 +1,109 @@
+<a [routerLink]="['../AddStationaryRepository']">Add Stationary Repository</a>
+<!--<table border="1" class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th>CATEGORY</th>
+      <th>COMPANY</th>
+      <th>ESTD.QTY.</th>
+      <th>UNIT</th>
+      <th>BASIC_AMOUNT</th>
+      <th>GST</th>
+      <th>ITEM_ORDER</th>
+      <th>ITEM_RECEIVED</th>
+      <th>DATE</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let x of StationaryRepositorys">
+      <td class="hidden">{{x.ID}}</td>
+      <td>{{x.CATEGORY}}</td>
+      <td>{{x.COMPANY}}</td>
+      <td>{{x.ESTIMATED_QUANTITY}}</td>
+      <td>{{x.UNIT}}</td>
+      <td>{{x.BASIC_AMOUNT}}</td>
+      <td>{{x.GST}}</td>
+      <td>{{x.TOTAL_ITEM_ORDER}}</td>
+      <td>{{x.TOTAL_ITEM_RECEIVED}}</td>
+      <td>{{x.DATEOFRECEIVED}}</td>
+      <td>
+        <button (click)="deleteStationaryRepository(x)" class="btn btn-info"> Delete</button>
+        <button (click)="editStationaryRepository(x)" style="margin-left: 20px;" class="btn btn-info"> Edit</button>
+      </td>
+
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr><td colspan="3"><jw-pagination [items]="userpage" (changePage)="onChangePage($event)"></jw-pagination></td></tr>
+
+  </tfoot>
+</table>-->
+
+  <mat-form-field>
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+  </mat-form-field>
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" style="overflow-x:scroll;">
+
+      <!-- Position Column -->
+
+      <ng-container matColumnDef="CATEGORY">
+        <th mat-header-cell *matHeaderCellDef> ITEM </th>
+        <td mat-cell *matCellDef="let row"> {{row.CATEGORY}} </td>
+      </ng-container>
+      <ng-container matColumnDef="SUBCATEGORY">
+        <th mat-header-cell *matHeaderCellDef> ITEM Type</th>
+        <td mat-cell *matCellDef="let row"> {{row.SUBCATEGORY}} </td>
+      </ng-container>
+      <ng-container matColumnDef="SUBCHILDCATEGORY">
+        <th mat-header-cell *matHeaderCellDef> ITEM Sub Type</th>
+        <td mat-cell *matCellDef="let row"> {{row.SUBCHILDCATEGORY}} </td>
+      </ng-container>
+      <ng-container matColumnDef="COMPANY">
+        <th mat-header-cell *matHeaderCellDef> ITEM CODE </th>
+        <td mat-cell *matCellDef="let row"> {{row.COMPANY}} </td>
+      </ng-container>
+      <ng-container matColumnDef="ESTIMATED_QUANTITY">
+        <th mat-header-cell *matHeaderCellDef> ESTIMATED_QUANTITY </th>
+        <td mat-cell *matCellDef="let row"> {{row.ESTIMATED_QUANTITY}} </td>
+      </ng-container>
+      <ng-container matColumnDef="UNIT">
+        <th mat-header-cell *matHeaderCellDef> UNIT </th>
+        <td mat-cell *matCellDef="let row"> {{row.UNIT}} </td>
+      </ng-container>
+      <ng-container matColumnDef="BASIC_AMOUNT">
+        <th mat-header-cell *matHeaderCellDef> BASIC_AMOUNT </th>
+        <td mat-cell *matCellDef="let row"> {{row.BASIC_AMOUNT}} </td>
+      </ng-container>
+      <ng-container matColumnDef="GST">
+        <th mat-header-cell *matHeaderCellDef> GST </th>
+        <td mat-cell *matCellDef="let row"> {{row.GST}} </td>
+      </ng-container>
+      <ng-container matColumnDef="TOTAL_ITEM_ORDER">
+        <th mat-header-cell *matHeaderCellDef> TOTAL_ITEM_ORDER </th>
+        <td mat-cell *matCellDef="let row"> {{row.TOTAL_ITEM_ORDER}} </td>
+      </ng-container>
+      <ng-container matColumnDef="TOTAL_ITEM_RECEIVED">
+        <th mat-header-cell *matHeaderCellDef> TOTAL_ITEM_RECEIVED </th>
+        <td mat-cell *matCellDef="let row"> {{row.TOTAL_ITEM_RECEIVED}} </td>
+      </ng-container>
+      <ng-container matColumnDef="DATEOFRECEIVED">
+        <th mat-header-cell *matHeaderCellDef> DATEOFRECEIVED </th>
+        <td mat-cell *matCellDef="let row"> {{row.DATEOFRECEIVED|date}} </td>
+      </ng-container>
+      <ng-container matColumnDef="Edit/Delete">
+        <th mat-header-cell *matHeaderCellDef> Edit/Delete </th>
+        <td mat-cell *matCellDef="let row">
+          <button (click)="editStationaryRepository(row)" style="margin-left: 10px;" class="btn btn-info"><mat-icon>edit</mat-icon></button>
+          <button (click)="deleteStationaryRepository(row)" class="btn btn-info"><mat-icon>delete</mat-icon> </button>
+
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns sticky: true" ></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+

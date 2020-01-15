@@ -1,0 +1,37 @@
+
+  <form [formGroup]="UsersForm" class="example-container col-md-6">
+
+    <mat-form-field>
+      <input matInput placeholder="USERNAME" formControlName="USERNAME" [ngClass]="{ 'is-invalid': submitted && f.USERNAME.errors }">
+      <mat-error *ngIf="submitted && f.USERNAME.errors">USERNAME is required</mat-error>
+
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="EMAILID" formControlName="EMAILID" [ngClass]="{ 'is-invalid': submitted && f.EMAILID.errors }">
+      <mat-error *ngIf="submitted && f.EMAILID.errors?.required">EMAILID is required</mat-error>
+      <mat-error *ngIf="f.EMAILID.errors?.email">Email must be a valid email address</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="PHONENO" formControlName="PHONENO" [ngClass]="{ 'is-invalid': submitted && f.PHONENO.errors }">
+      <mat-error *ngIf="submitted && f.PHONENO.errors?.required">PHONENO is required</mat-error>
+      <mat-error *ngIf="f.PHONENO.errors?.minlength">PHONENO must be at least 10 characters</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>DEPARTMENT</mat-label>
+      <select formControlName="DEPTID" matNativeControl name="DEPTID" #department>
+        <option value="" selected></option>
+        <option *ngFor="let Dept of Department" [value]="Dept.ID">
+          {{Dept.NAME}}
+        </option>
+      </select>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" [disabled]="loading" *ngIf="btnvisibility" (click)="onSubmit()">
+      <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+      Submit
+    </button>
+    <button mat-raised-button color="primary" [disabled]="loading" *ngIf="!btnvisibility" (click)="onUpdate()">
+      <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+      Update
+    </button>
+  </form>

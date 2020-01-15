@@ -1,0 +1,57 @@
+
+<div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
+  <mat-toolbar color="primary" class="example-toolbar">
+    <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+    <!--<mat-icon aria-hidden="false" aria-label="Example home icon">menu</mat-icon>-->
+    <button mat-icon-button (click)="redirecthome()"><mat-icon>home</mat-icon></button>
+    <h1 class="example-app-name">IT</h1>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="example-sidenav-container"
+                         [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+    <mat-sidenav #snav [mode]="mobileQuery.matches ? 'slide' : 'side'"
+                 [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+      <mat-nav-list>
+        <!--<a mat-list-item routerLink="." *ngFor="let nav of fillerNav">11</a>-->
+        <a mat-list-item [routerLink]="['GetCategory']">Category</a>
+        <a mat-list-item [routerLink]="['GetSubCategory']">Subcategory</a>
+        <a mat-list-item [routerLink]="['GetSubChildCategory']">SubChildcategory</a>
+        <a mat-list-item [routerLink]="['GetDevice']">Device</a>
+        <a mat-list-item [routerLink]="['GetContractMaster']">Contract Master</a>
+        <!--<a mat-list-item [routerLink]="['GetCompany']">Item code</a>
+
+
+  <a mat-list-item [routerLink]="['GetUnits']">Units</a>
+  <a mat-list-item [routerLink]="['GetUsers']">Users</a>
+
+  <a mat-list-item [routerLink]="['GetSubCategory']">Item type</a>
+  <a mat-list-item [routerLink]="['GetSubChildCategory']">Item Sub type</a>
+
+
+  <a mat-list-item [routerLink]="['StationaryRepository']">Stationary Repository</a>
+  <a mat-list-item [routerLink]="['GetPrintRepository']">Print Repository</a>
+
+  <a mat-list-item [routerLink]="['GetDghuserRepository']">Issue Items</a>
+  <a mat-list-item [routerLink]="['GetReport']">Reports</a>-->
+
+
+        <a mat-list-item (click)="logout()">Logout</a>
+
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <!--<p *ngFor="let content of fillerContent">{{content}}</p>-->
+      <div class="container-fluid">
+        <div class="row no-gutters ">
+          <div class="col-md-12 mr-4">
+            <router-outlet>
+            </router-outlet>
+          </div>
+        </div>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
+
+

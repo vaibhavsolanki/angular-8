@@ -1,0 +1,37 @@
+
+<div class=" card mt-4">
+  <div class="card-header">
+    <h3>Add/Edit ITEM Sub TYPE</h3>
+  </div>
+  <div class="card-body">
+    <form [formGroup]="SubCategoryForm" class="example-container col-md-6">
+
+      <mat-form-field>
+        <mat-label>Item type</mat-label>
+        <select formControlName="PARENT_ID" matNativeControl name="Category">
+          <option value="" selected></option>
+          <option *ngFor="let Cat of Category" [value]="Cat.CHILDITEMCODE">
+            {{Cat.DESCRIPTION}}
+          </option>
+        </select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="DESCRIPTION" formControlName="DESCRIPTION" [ngClass]="{ 'is-invalid': submitted && f.DESCRIPTION.errors }">
+        <mat-error *ngIf="submitted && f.DESCRIPTION.errors">Item is required</mat-error>
+
+      </mat-form-field>
+
+
+
+      <button mat-raised-button color="primary" [disabled]="loading" *ngIf="btnvisibility" (click)="onSubmit()">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+        Submit
+      </button>
+      <button mat-raised-button color="primary" [disabled]="loading" *ngIf="!btnvisibility" (click)="onUpdate()">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+        Update
+      </button>
+    </form>
+  </div>
+</div>

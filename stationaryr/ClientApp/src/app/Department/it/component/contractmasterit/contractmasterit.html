@@ -1,0 +1,105 @@
+<div class=" card mt-4">
+  <div class="card-header">
+    <h3>Add/Edit Contract</h3>
+  </div>
+  <div class="card-body">
+    <form [formGroup]="ContractForm" class="example-container col-md-6">
+      <mat-form-field>
+        <input matInput placeholder="Contract No." formControlName="CONTRACTNO" [ngClass]="{ 'is-invalid': submitted && f.CONTRACTNO.errors }">
+        <mat-error *ngIf="submitted && f.CONTRACTNO.errors">Contract No. is required</mat-error>
+
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Vendor Name" formControlName="VENDORNAME" [ngClass]="{ 'is-invalid': submitted && f.VENDORNAME.errors }">
+        <mat-error *ngIf="submitted && f.VENDORNAME.errors">Vendor Name is required</mat-error>
+
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput readonly [matDatepicker]="picker" placeholder="Contract Start Date" formControlName="STARTDATE">
+        <mat-datepicker-toggle matSuffix [for]="picker" [ngClass]="{'disabled':role}"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput readonly [matDatepicker]="picker1" placeholder="Contract End Date" formControlName="ENDDATE">
+        <mat-datepicker-toggle matSuffix [for]="picker1" [ngClass]="{'disabled':role}"></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+
+      </mat-form-field>
+      <div formArrayName="ORDERITEM" *ngFor="let item of ContractForm.get('ORDERITEM').controls; let i = index"  class="form-group">
+        <div [formGroupName]="i">
+          <div class="row">
+            <input type="hidden" formControlName="ID" />
+            <div class="col-md-10 border">
+              <div class="row">
+                <div class="col-md-3">
+                  <mat-form-field>
+                    <mat-label>Item</mat-label>
+                    <select formControlName="CATEGORY" matNativeControl name="Category+i" #category (change)="categorychange(category.value,i)" [ngClass]="{'disabled': role}">
+                      <option value="" selected></option>
+                      <option *ngFor="let Cat of Category;let i = index" [value]="Cat.ITEMCODE">
+                        {{Cat.ITEMS_DESCRIPTION}}
+                      </option>
+                    </select>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-3">
+                  <mat-form-field *ngIf="subcategory">
+                    <mat-label>Item Type</mat-label>
+                    <select   ngModel formControlName="SUBCATEGORY" matNativeControl name="SUBCATEGORY+i" #subcategory (change)="subcategorychange(item.get('SUBCATEGORY').value,i)" [ngClass]="{'disabled': role}">
+                      <option value="" selected></option>
+                      <option *ngFor="let Sub of getarray(item.get('SUBCATEGORY').value); let i = index" [value]="Sub.ID">
+                        {{Sub.ITEMS_DESCRIPTION}}
+                      </option>
+                    </select>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-3">
+                  <mat-form-field *ngIf="subchildcategory">
+                    <mat-label>Item Sub Type</mat-label>
+                    <select formControlName="SUBCHILDCATEGORY" matNativeControl name="SUBCHILDCATEGORY+i" #subchildcategory (change)="subchildcategorychange(subchildcategory.value)" [ngClass]="{'disabled': role}">
+                      <option value="" selected></option>
+                      <option *ngFor="let SubChild of SubChildCategory ;let i = index" [value]="SubChildCategory[i].ID">
+                        {{SubChildCategory[i].ITEMS_DESCRIPTION}}
+                      </option>
+                    </select>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-2">
+                 
+                  <mat-form-field>
+                    <input matInput numbersOnly required placeholder="QUANTITY" formControlName="QUANTITY" id="QUANTITY+i">
+
+                  </mat-form-field>
+                </div>
+                <div class="col-md-1">
+                  <button *ngIf="ContractForm.get('ORDERITEM').length>1" (click)="deleteitem(i)" class="btn btn-sm"><mat-icon>delete_forever</mat-icon></button>
+
+                </div>
+                </div>
+              </div>
+            <div class="col-md-2">
+              <button class="btn btn-success btn-sm" type="button" (click)="addItemButtonClick()" [disabled]="ContractForm.get('ORDERITEM').controls.errors" style="margin-right:10px">Add Item</button>
+
+            
+            </div>
+            </div>
+          </div>
+        </div>
+
+
+
+              <button mat-raised-button color="primary" [disabled]="loading" *ngIf="btnvisibility" (click)="onSubmit()">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                Submit
+              </button>
+              <button mat-raised-button color="primary" [disabled]="loading" *ngIf="!btnvisibility" (click)="onUpdate()">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                Update
+              </button>
+</form>
+    </div>
+  </div>
+

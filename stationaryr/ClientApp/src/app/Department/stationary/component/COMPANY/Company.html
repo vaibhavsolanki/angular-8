@@ -1,0 +1,27 @@
+
+<div class=" card mt-4">
+  <div class="card-header">
+    <h3>Add/Edit ITEM CODE</h3>
+    </div>
+  <div class="card-body">
+    <form [formGroup]="CompanyForm" class="example-container col-md-6">
+
+      <mat-form-field>
+        <input matInput placeholder="COMPANYNAME" formControlName="COMPANYNAME" [ngClass]="{ 'is-invalid': submitted && f.COMPANYNAME.errors }">
+        <mat-error *ngIf="submitted && f.COMPANYNAME.errors">Item is required</mat-error>
+
+      </mat-form-field>
+
+
+
+      <button mat-raised-button color="primary" [disabled]="loading" *ngIf="btnvisibility" (click)="onSubmit()">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+        Submit
+      </button>
+      <button mat-raised-button color="primary" [disabled]="loading" *ngIf="!btnvisibility" (click)="onUpdate()">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+        Update
+      </button>
+    </form>
+  </div>
+ </div>

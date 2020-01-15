@@ -1,0 +1,117 @@
+<div class=" card mt-4">
+  <div class="card-header">
+    <h3>Add/Edit Item Issue</h3>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <form [formGroup]="DghuserRepos" class="example-container col-md-6">
+        <mat-form-field>
+          <mat-label>Items</mat-label>
+          <select formControlName="CATEGORY" matNativeControl name="CATEGORY" #category (change)="categorychange(category.value)" [ngClass]="{ 'is-invalid': submitted && f.CATEGORY.errors }">
+            <option value="" selected></option>
+            <option *ngFor="let Cat of Category" [value]="Cat.ITEMCODE">
+              {{Cat.ITEMS_DESCRIPTION}}
+            </option>
+          </select>
+          <mat-error *ngIf="submitted && f.CATEGORY.errors">CATEGORY is required</mat-error>
+
+        </mat-form-field>
+        <mat-form-field *ngIf="subcategory">
+          <mat-label>Item Type</mat-label>
+          <select formControlName="SUBCATEGORY" matNativeControl name="SUBCATEGORY" #subcategory (change)="subcategorychange(subcategory.value)">
+            <option value="" selected></option>
+            <option *ngFor="let Sub of SubCategory" [value]="Sub.ID">
+              {{Sub.ITEMS_DESCRIPTION}}
+            </option>
+          </select>
+        </mat-form-field>
+        <mat-form-field *ngIf="subchildcategory">
+          <mat-label>Item Type</mat-label>
+          <select formControlName="SUBCHILDCATEGORY" matNativeControl name="SUBCHILDCATEGORY" #subchildcategory (change)="subchildcategorychange(subchildcategory.value)">
+            <!--(change)="subchildcategorychange(subchildcategory.value)-->
+            <option value="" selected></option>
+            <option *ngFor="let SubChild of SubChildCategory" [value]="SubChild.ID">
+              {{SubChild.ITEMS_DESCRIPTION}}
+            </option>
+          </select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>EMPLOYEE</mat-label>
+          <select formControlName="EMPLOYEE" matNativeControl name="EMPLOYEE" #employee [ngClass]="{ 'is-invalid': submitted && f.EMPLOYEE.errors }">
+            <!--(change)="employeechange(employee.value)-->
+            <option value="" selected></option>
+            <option *ngFor="let emp of User" [value]="emp.EMP_ID">
+              {{emp.NAME}}
+            </option>
+          </select>
+          <mat-error *ngIf="submitted && f.CATEGORY.errors">Employee is required</mat-error>
+
+        </mat-form-field>
+        <!--<mat-form-field>
+      <input matInput readonly [matDatepicker]="picker" placeholder="DATE_OF_RECEIPT" formControlName="DATE_OF_RECEIPT">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>-->
+
+
+
+
+
+
+
+        <mat-form-field>
+          <input matInput numbersOnly placeholder="QUANTITY" formControlName="QUANTITY"   [(ngModel)]="QUANTITY" [ngClass]="{ 'is-invalid': submitted && f.QUANTITY.errors }">
+          <mat-error *ngIf="submitted && f.QUANTITY.errors">QUANTITY is required</mat-error>
+
+        </mat-form-field>
+
+
+        <mat-form-field>
+          <input matInput readonly [matDatepicker]="picker1" placeholder="DATE_OF_ISSUE" formControlName="DATE_OF_ISSUE">
+          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput placeholder="ISSUER" formControlName="ISSUER" >
+        
+
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput placeholder="REMARK" formControlName="REMARK">
+
+
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" [disabled]="loading" *ngIf="btnvisibility" (click)="onSubmit()">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+          Submit
+        </button>
+        <button mat-raised-button color="primary" [disabled]="loading" *ngIf="!btnvisibility" (click)="onUpdate()">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+          Update
+        </button>
+      </form>
+      
+      <div class="col-offset-md-2 col-md-2 mt-15 ml-6" *ngIf="stockdiv">
+        <div class="row">
+
+          <div class="card  bg-danger ">
+            <div class="card-header text-light card-header-warning card-header-icon">
+              <div class="card-icon">
+                <i class="material-icons">list</i>
+              </div>
+              <p class="card-category">In Stock</p>
+              <h3 class="card-title">
+                {{QUANTITY==null?0:QUANTITY}}/{{Stock}}
+                <small>Qty.</small>
+              </h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>

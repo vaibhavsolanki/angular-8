@@ -1,0 +1,33 @@
+
+    <div class="card" [class.hidden]="!show">
+      <div class="card-header" style="background-color:dodgerblue" >
+        <h2 style="color:#fff">Login</h2>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="example-container">
+
+          <mat-form-field>
+            <input matInput placeholder="Input" formControlName="username" [ngClass]="{ 'is-invalid': submitted && f.username.errors }">
+            <mat-error *ngIf="submitted && f.username.errors">Username is required</mat-error>
+
+          </mat-form-field>
+          <mat-form-field>
+            <input type="password" matInput placeholder="password" formControlName="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
+            <mat-error *ngIf="submitted && f.password.errors">Password is required</mat-error>
+
+          </mat-form-field>
+          <button mat-raised-button color="primary" [disabled]="loading">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+            Submit
+          </button>
+        </form>
+
+      </div>
+    </div>
+  
+
+
+
+
+
+

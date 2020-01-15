@@ -1,0 +1,203 @@
+<div class=" card mt-4">
+  <div class="card-header">
+    <h3>Report</h3>
+  </div>
+   <div class="card-body" >
+<form [formGroup]="Report" class="example-container col-md-12">
+<div class="row">
+  <div class="col-md-3">
+<mat-form-field>
+        <mat-label>Items</mat-label>
+        <select formControlName="CATEGORY" matNativeControl name="CATEGORY"  #category (change)="categorychange(category.value)" >
+          <option value="" selected></option>
+          <option *ngFor="let Cat of Category" [value]="Cat.ITEMCODE">
+            {{Cat.ITEMS_DESCRIPTION}}
+          </option>
+        </select>
+   
+
+      </mat-form-field>
+  </div>
+    <div class="col-md-3">
+        <mat-form-field *ngIf="subcategory">
+        <mat-label>Item Type</mat-label>
+        <select formControlName="SUBCATEGORY" matNativeControl name="SUBCATEGORY" #subcategory (change)="subcategorychange(subcategory.value)">
+          <option value="" selected></option>
+          <option *ngFor="let Sub of SubCategory" [value]="Sub.ID">
+            {{Sub.ITEMS_DESCRIPTION}}
+          </option>
+        </select>
+      </mat-form-field>
+      </div>
+   <div class="col-md-3">
+        <mat-form-field *ngIf="subchildcategory">
+        <mat-label>Item Sub Type</mat-label>
+        <select formControlName="SUBCHILDCATEGORY" matNativeControl name="SUBCHILDCATEGORY" #subchildcategory (change)="subchildcategorychange(subchildcategory.value)">
+          <option value="" selected></option>
+          <option *ngFor="let Sub of SubChildCategory" [value]="Sub.ID">
+            {{Sub.ITEMS_DESCRIPTION}}
+          </option>
+        </select>
+      </mat-form-field>
+      </div>
+  </div>
+<div class="row">
+  <div class="col-md-3">
+    <mat-form-field>
+      <mat-label>Emplyee Status</mat-label>
+      <select formControlName="EMPLOYEE_STATUS" matNativeControl name="EMPLOYEE_STATUS" #empstatus (change)="employee_status(empstatus.value)">
+        <option value="" selected></option>
+        <option *ngFor="let status of EMP_Status" [value]="status.EMP_Status_ID">
+          {{status.EMP_Status_ID}}
+        </option>
+      </select>
+    </mat-form-field>
+  </div>
+  <div class="col-md-3">
+    <mat-form-field>
+      <mat-label>EMPLOYEE</mat-label>
+      <select formControlName="EMPLOYEE" matNativeControl name="EMPLOYEE" #employee>
+        <option value="" selected></option>
+        <option *ngFor="let emp of User" [value]="emp.EMP_ID">
+          {{emp.NAME}}
+        </option>
+      </select>
+    </mat-form-field>
+  </div>
+  <div class="col-md-3">
+    <mat-form-field>
+      <mat-label>DEPARTMENT</mat-label>
+      <select formControlName="DEPTID" matNativeControl name="DEPTID" #department>
+        <option value="" selected></option>
+        <option *ngFor="let Dept of Department" [value]="Dept.ID">
+          {{Dept.NAME}}
+        </option>
+      </select>
+    </mat-form-field>
+  </div>
+</div>
+  <div class="row">
+     <div class="col-md-3">
+        <mat-form-field>
+        <input matInput readonly [matDatepicker]="picker" placeholder="FROMDATE" formControlName="FROM_DATE">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+       </div>
+     <div class="col-md-3">
+        <mat-form-field>
+        <input matInput readonly [matDatepicker]="picker1" placeholder="TODATE" formControlName="TO_DATE">
+        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+      </mat-form-field>
+       </div>
+    </div>
+
+  <div class="row">
+  <div class="col-md-6">
+   <button mat-raised-button  color="primary" [disabled]="loading" *ngIf="btnvisibility" (click)="onSubmit()">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+        Submit
+      </button>
+     </div>
+    </div>
+    
+   </form>
+
+
+
+  </div>
+</div>
+<br/>
+
+<div class="row" *ngIf="stockrow">
+
+  <div class="col-md-3">
+    <b>In Stock : </b> <button mat-mini-fab color="primary"><span> {{Stock}}</span></button>
+  </div>
+  <div class="col-md-3">
+    <b>Consume Stock: </b><button mat-mini-fab color="warn"><span>{{Consumestock }} </span></button>
+  </div>
+  <div class="col-md-3">
+    <b>Available Stock: </b><button mat-mini-fab color="accent"><span>{{available }} </span></button>
+  </div>
+
+
+
+
+  <button (click)="ExportToExcel()" class="btn btn-success btn-sm">ExportTOExcel1</button>
+
+
+  <!--<table border="1" class="table" id="excel-table">
+  <thead class="thead-dark" >
+    <tr>
+
+      <th>Item</th>
+         <th>Item Type</th>
+       <th>Item Sub Type</th>
+       <th>QUANTITY</th>
+        <th>EMPLOYEE</th>
+     <th> DEPARTMENT</th>
+      </tr>
+    </thead>
+    <tbody >
+      <tr *ngFor="let x of DghuserRepositorys">
+
+      <td>{{x.CATEGORY}}</td>
+      <td>{{x.SUBCATEGORY }}</td>
+        <td>{{x.SUBCHILDCATEGORY }}</td>
+
+          <td>{{x.QUANTITY }}</td>
+        <td>{{x.EMPLOYEE }}</td>
+         <td>{{x.DEPT_ID }}</td>
+        </tr>
+      </tbody>
+    </table>-->
+  <mat-form-field>
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+  </mat-form-field>
+  <div class="mat-elevation-z8" style="width: 100%;margin-top:2%" id="print-section">
+    <table mat-table [dataSource]="dataSource" id="excel-table">
+
+      <!-- Position Column -->
+
+      <ng-container matColumnDef="CATEGORY">
+        <th mat-header-cell *matHeaderCellDef> Item </th>
+        <td mat-cell *matCellDef="let row"> {{row.CATEGORY}} </td>
+      </ng-container>
+      <ng-container matColumnDef="SUBCATEGORY">
+        <th mat-header-cell *matHeaderCellDef> Item Type </th>
+        <td mat-cell *matCellDef="let row"> {{row.SUBCATEGORY}} </td>
+      </ng-container>
+      <ng-container matColumnDef="SUBCHILDCATEGORY">
+        <th mat-header-cell *matHeaderCellDef> ITEM Sub Type</th>
+        <td mat-cell *matCellDef="let row"> {{row.SUBCHILDCATEGORY}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="EMPLOYEE">
+        <th mat-header-cell *matHeaderCellDef>EMPLOYEE </th>
+        <td mat-cell *matCellDef="let row"> {{row.EMPLOYEE}} </td>
+      </ng-container>
+      <ng-container matColumnDef="QUANTITY">
+        <th mat-header-cell *matHeaderCellDef> QUANTITY </th>
+        <td mat-cell *matCellDef="let row"> {{row.QUANTITY}} </td>
+      </ng-container>
+      <ng-container matColumnDef="DEPT_ID">
+        <th mat-header-cell *matHeaderCellDef> DEPARTMENT </th>
+        <td mat-cell *matCellDef="let row"> {{row.DEPT_ID}} </td>
+      </ng-container>
+      <ng-container matColumnDef="DATEOFISSUE">
+        <th mat-header-cell *matHeaderCellDef> DATEOFISSUE </th>
+        <td mat-cell *matCellDef="let row"> {{row.DATE_OF_ISSUE}} </td>
+      </ng-container>
+
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+</div>
+  
+  
+

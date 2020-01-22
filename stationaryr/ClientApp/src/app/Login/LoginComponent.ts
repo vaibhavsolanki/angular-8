@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit {
 
 
             this.login = data, console.log(this.login),
-                this.loading = false; if (this.login.username == "admin") { this.router.navigate([this.returnUrl]); this.dashboard = true;  } else {  }
+                this.loading = false; this.router.navigate([this.returnUrl]); this.dashboard = true;  
         },
             (error: Response) => {
                

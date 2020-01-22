@@ -3,23 +3,15 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
-
-//import { MaterialComponent } from './component/Material/MaterialComponent';
-//import { GetMaterial } from './component/Material/GetMaterial';
 import { GetUnits } from './component/Units/GetUnit';
 import { UnitComponent } from './component/Units/UnitComponent';
-//import { GetSubCategory } from './component/subcategory/GetSubcategory';
-//import { SubCategoryComponent } from './component/subcategory/SubCategoryComponent';
-//import { GetSubChildCategory } from './component/subchildcategory/GetSubChildcategory';
-//import { SubChildCategoryComponent } from './component/subchildcategory/SubCategoryChildComponent';
 import { StationaryRepositoryComponent } from './component/StationaryRepository/StationaryRepositoryComponent';
 import { GetStationaryRepository } from './component/StationaryRepository/GetStationaryRepository';
 import { PrintRepositoryComponent } from './component/Print/PrintRepository';
 import { GetPrintRepository } from './component/Print/GetPrintRepository';
 import { DGHuserRepositoryComponent } from './component/dghuser/dghuserRepository'
 import { GetDghuserRepository } from './component/dghuser/GetdghuserRepository'
-import { GetUsers } from './component/Users/GetUsers';
-import { UsersComponent } from './component/Users/UsersComponent';
+
 import { GetReport } from './component/Reports/GetReport';
 
 import { NavMenuComponent } from './component/nav-menu/nav-menu.component';
@@ -38,12 +30,12 @@ import {
   MatInputModule,
   MatCardModule,
   MatTableModule, MatToolbarModule, MatSidenavModule, MatListModule, MatIconModule,
-  MatPaginatorModule, MatSortModule, MatDatepickerModule, MatNativeDateModule
+  MatPaginatorModule, MatSortModule, MatDatepickerModule, MatNativeDateModule,MatDialogModule
 } from '@angular/material';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 @NgModule({
     imports: [FormsModule, ReactiveFormsModule, HttpClientModule, CommonModule, sharedModule,
-    MatIconModule,
+    MatIconModule,MatDialogModule,
     MatDatepickerModule, MatNativeDateModule,
     NgxMaterialTimepickerModule,
     MatTableModule,
@@ -55,7 +47,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
   exports: [RouterModule],
   declarations: [stationarydepart,
   
-    GetUsers, UsersComponent,
+  
     NavMenuComponent,
     StationaryHomeComponent,
     GetCompany, CompanyComponent,

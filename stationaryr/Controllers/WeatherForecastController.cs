@@ -42,7 +42,7 @@ namespace Stationary.Controllers
             {
 
                 logindata.role = user[0].ROLE;
-                logindata.approle = user[0].APPROLE;
+                logindata.approle = user[0].APPROLE.ToList();
                 var tokenString = GenerateJWT(logindata);
                 logindata.token = tokenString;
                 return Ok(logindata);
@@ -88,7 +88,7 @@ namespace Stationary.Controllers
         public string username { get; set; }
         public string passward { get; set; }
         public string role { get; set; }
-        public string approle { get; set; }
+        public List<role> approle { get; set; }
         public string? token { get; set; }
     }
 }

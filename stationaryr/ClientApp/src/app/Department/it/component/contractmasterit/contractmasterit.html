@@ -36,8 +36,8 @@
               <div class="row">
                 <div class="col-md-3">
                   <mat-form-field>
-                    <mat-label>Item</mat-label>
-                    <select formControlName="CATEGORY" matNativeControl name="Category+i" #category (change)="categorychange(category.value,i)" [ngClass]="{'disabled': role}">
+                    <!--<mat-label>Item</mat-label>-->
+                    <select formControlName="CATEGORY" placeholder="CATEGORY" matNativeControl name="Category+i" #category (change)="categorychange(category.value,i)" [ngClass]="{'disabled': role}">
                       <option value="" selected></option>
                       <option *ngFor="let Cat of Category;let i = index" [value]="Cat.ITEMCODE">
                         {{Cat.ITEMS_DESCRIPTION}}
@@ -47,19 +47,19 @@
                 </div>
                 <div class="col-md-3">
                   <mat-form-field *ngIf="subcategory">
-                    <mat-label>Item Type</mat-label>
-                    <select   ngModel formControlName="SUBCATEGORY" matNativeControl name="SUBCATEGORY+i" #subcategory (change)="subcategorychange(item.get('SUBCATEGORY').value,i)" [ngClass]="{'disabled': role}">
+                    <!--<mat-label>Item Type</mat-label>-->
+                    <select ngModel formControlName="SUBCATEGORY" placeholder="SUBCATEGORY" matNativeControl name="SUBCATEGORY+i" #subcategory (change)="subcategorychange(subcategory.value,i)" [ngClass]="{'disabled': role}">
                       <option value="" selected></option>
-                      <option *ngFor="let Sub of getarray(item.get('SUBCATEGORY').value); let i = index" [value]="Sub.ID">
-                        {{Sub.ITEMS_DESCRIPTION}}
+                      <option *ngFor="let Sub of finaldata[i]; let i = index" [value]="Sub.ID">
+                        {{Sub.DESCRIPTION}}
                       </option>
-                    </select>
-                  </mat-form-field>
+                      </select>
+</mat-form-field>
                 </div>
                 <div class="col-md-3">
                   <mat-form-field *ngIf="subchildcategory">
-                    <mat-label>Item Sub Type</mat-label>
-                    <select formControlName="SUBCHILDCATEGORY" matNativeControl name="SUBCHILDCATEGORY+i" #subchildcategory (change)="subchildcategorychange(subchildcategory.value)" [ngClass]="{'disabled': role}">
+                    <!--<mat-label>Item Sub Type</mat-label>-->
+                    <select formControlName="SUBCHILDCATEGORY"  placeholder="SUBCHILDCATEGORY" matNativeControl name="SUBCHILDCATEGORY+i" #subchildcategory (selectionChange)="subchildcategorychange(subchildcategory.value)" [ngClass]="{'disabled': role}">
                       <option value="" selected></option>
                       <option *ngFor="let SubChild of SubChildCategory ;let i = index" [value]="SubChildCategory[i].ID">
                         {{SubChildCategory[i].ITEMS_DESCRIPTION}}

@@ -17,6 +17,9 @@ import { itcontractmaster } from './component/contractmasterit/contractmasterit'
 import { ItDevicename } from './component/devicename/devicename';
 import { ItGetDevicename } from './component/devicename/getdevicename';
 import { getitcontractmaster } from './component/contractmasterit/getcontractmasterit';
+import { getuserit } from './component/User/getuser';
+import { userit } from './component/User/user';
+
 import {
   
   MatButtonModule,
@@ -43,7 +46,7 @@ import { CommonModule } from '@angular/common';
   exports: [RouterModule],
   declarations: [ItDevicename, ItGetDevicename, itcontractmaster,getitcontractmaster,ithardwaredepart, ItCategoryComponent, ItHomeComponent, NavITMenuComponent, GetItCategoryComponent
     , GetItSubCategoryComponent, ItSubCategoryComponent, GetItSubChildCategoryComponent, ItSubChildCategoryComponent,
-    // , ContractMasterComponent
+  getuserit,userit  // , ContractMasterComponent
     
   ]
 

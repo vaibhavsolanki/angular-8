@@ -18,18 +18,23 @@ export class itcontractmaster implements OnInit {
   Contracts: contract[];
   listofdropdown: listofdropdown[];
   Category: Material[];
-  SubCategory: SubCategory[];
+SubCategory: SubCategory[] =[];
+  SubCategory1: SubCategory[];
   SubChildCategory: SubCategory[];
   subcategory = true;
   subchildcategory = true;
- private prices = [];
+ 
+Subcategories:any[];
+blankrow1:Array<BlankRow>=[];
   btnvisibility: boolean = true;
+ finaldata :  any[] = [];
   constructor(private formbuilder: FormBuilder, private Componentservices: ComponentService, private router: Router) {
 
 
   }
   ngOnInit() {
     this.GetCategoryDropdown();
+this.getSubCategories();
     this.ContractForm = this.formbuilder.group({
 
       CONTRACTNO: ['', Validators.required],
@@ -50,7 +55,7 @@ export class itcontractmaster implements OnInit {
         this.ContractForm.controls['VENDORNAME'].setValue(this.Contracts[0].VENDORNAME);
         this.ContractForm.controls['STARTDATE'].setValue(this.Contracts[0].STARTDATE);
         this.ContractForm.controls['ENDDATE'].setValue(this.Contracts[0].ENDDATE);
-        this.ContractForm.controls['ID'].setValue(this.Contracts[0].ID);
+        //this.ContractForm.controls['ID'].setValue(this.Contracts[0].ID);
       })
 
       this.btnvisibility = false;
@@ -60,54 +65,39 @@ export class itcontractmaster implements OnInit {
 
   categorychangeload(value, i) {
 
-    var item = this.ORDERITEM.at(i);
-   
-
-    this.Componentservices.Getsubcategoryonchange(value).subscribe(data => {
+this.finaldata[i]=this.SubCategory.filter(x=>x.PARENT_ID == value);
 
 
+ }
+getSubCategories()
+{
 
-    // item.setValue['SUBCATEGORY']= data; console.log(this.SubCategory);
-item.controls['SUBCATEGORY'].setValue( data);
+ this.Componentservices.Getsubcategoryonchange(1).subscribe(data => {
+this.SubCategory=data;
+});
+console.log(this.SubCategory);
+return this.SubCategory
 
-this.SubCategory=item.get('SUBCATEGORY').value;
-console.log(item);
-     // if (this.SubCategory.length > 0) {
-        //this.subcategory = true;
-      //}
-     // else {
-       // this.subcategory = false;
-       // this.ContractForm.controls['SUBCATEGORY'].setValue(null);
-        //this.ContractForm.controls['SUBCHILDCATEGORY'].setValue(null);
-
-      //}
-    })
-
-  }
-
-  categorychange(value: string,i:number) {
-    this.categorychangeload(value,i);g
-
-
-  }
-
-getarray(sub):any[]{
- let array = [];
-  for(let key in sub){
-   if(sub.hasOwnProperty(key)){
-     array.push(sub[key]);
-   }
-  }
-return array;
 }
+  categorychange(value: string,i:number) {
 
+    this.categorychangeload(value,i);
+
+
+  }
+
+transform(objects : any = []) {
+    return Object.values(objects);
+  }
   subcategorychange(value,i) {
 console.log(value);
 var item = this.ORDERITEM.at(i);
-var aa=item.get('SUBCATEGORY').value
+item.get('SUBCATEGORY').setValue(value,{
+      onlySelf: true
+    })
 
-   this.Componentservices.Getsubcategoryonchange(aa).subscribe(data => {
-item.controls['SUBCHILDCATEGORY'].setValue( data);
+  // this.Componentservices.Getsubcategoryonchange(aa).subscribe(data => {
+//item.controls['SUBCHILDCATEGORY'].setValue( data);
      // this.SubChildCategory = data; console.log(this.SubCategory);
 
       //if (this.SubChildCategory.length > 0) {
@@ -118,7 +108,7 @@ item.controls['SUBCHILDCATEGORY'].setValue( data);
         //this.StationaryRepository.controls['SUBCATEGORY'].setValue(null);
         //this.ContractForm.controls['SUBCHILDCATEGORY'].setValue(null);
 //}
-   })
+  // })
 
   }
   addItemButtonClick(): void {
@@ -217,3 +207,9 @@ item.controls['SUBCHILDCATEGORY'].setValue( data);
 }
 
 
+public export class BlankRow {  
+    
+    SUBCATEGORY:[];  
+   
+   
+}  

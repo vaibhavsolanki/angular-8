@@ -61,8 +61,14 @@ namespace Stationary.Models
         public string PASSWORD { get; set; }
         public List<Department> DEPARTMENTS { get; set; }
 
-        public string APPROLE { get; set; }
+        public List<role> APPROLE { get; set; }
 
+    }
+
+    public class role
+    {
+        public string EMP_ID { get; set; }
+        public string Approle { get; set; }
     }
 
   public  enum approle

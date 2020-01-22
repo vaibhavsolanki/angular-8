@@ -8,6 +8,15 @@ import { Component, OnInit, ViewChild } from '@angular/core';
     templateUrl: './home.component.html',
 })
 export class HomeComponent  {
+approle:any[];
+constructor()
+{
+this.approle=localStorage.getItem('currentAppRole');
+
+
+}
+
+
    
    
     // config: any;

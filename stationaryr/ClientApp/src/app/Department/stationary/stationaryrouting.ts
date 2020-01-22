@@ -42,15 +42,15 @@ export const routes: Routes = [
        { path: 'AddSubChildCategory', component: SubChildCategoryComponent },
        { path: 'AddStationaryRepository', component: StationaryRepositoryComponent },
        { path: 'StationaryRepository', component: GetStationaryRepository },
-       { path: 'AddUsers', component: UsersComponent},
-       { path: 'GetUsers', component: GetUsers},
+      { path: 'AddUsers', component: UsersComponent},
+      { path: 'GetUsers', component: GetUsers},
 
 
         { path: 'AddPrintRepository', component: PrintRepositoryComponent },
         { path: 'GetPrintRepository', component: GetPrintRepository },
         { path: 'DghuserRepository', component: DGHuserRepositoryComponent },
         { path: 'GetDghuserRepository', component: GetDghuserRepository },
-        { path: 'GetReport', component: GetReport },
+        { path: 'GetReport', component: GetReport }
 
 
 

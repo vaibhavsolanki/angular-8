@@ -35,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\app\Department\it\component\Rolemaster\RoleMaster.ts" />
     <None Remove="ClientApp\src\app\Department\it\component\subcategory\getsubcategory.component.ts" />
 
    
@@ -42,12 +43,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app\Department\it\component\Rolemaster\RoleMaster.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\Department\it\component\subcategory\getsubcategory.component.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\jwt.interceptor.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ClientApp\src\app\Department\stationary\component\" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

@@ -35,11 +35,11 @@ export class ComponentService {
     return this.httpclient.post<string>(this.actionUrl + "api/Role/Saverole", RoleViewModel)
 
   }
-  deleterole(id: number) {
+  deleterole(id: string) {
     return this.httpclient.delete<string>(this.actionUrl + "api/Role/deleterole/" + id);
   }
 
-  getRoleId(id: number): Observable<RoleViewModel[]> {
+  getRoleId(id: string): Observable<RoleViewModel[]> {
     let body = {
       'ID': id
     }

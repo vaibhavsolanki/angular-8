@@ -11,7 +11,7 @@ export class HomeComponent  {
 approle:any[];
 constructor()
 {
-this.approle=localStorage.getItem('currentAppRole');
+//this.approle=localStorage.getItem('currentAppRole');
 
 
 }

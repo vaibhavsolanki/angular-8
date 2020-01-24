@@ -8,8 +8,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using stationaryr.Models;
+using stationaryr.Authorization;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace stationaryr
 {
@@ -33,6 +36,41 @@ namespace stationaryr
                 o.JsonSerializerOptions.PropertyNamingPolicy = null;
                 o.JsonSerializerOptions.DictionaryKeyPolicy = null;
             });
+            //services.AddIdentity<ApplicationUser, ApplicationRole>();
+            //// Configure Identity options and password complexity here
+            //services.Configure<IdentityOptions>(options =>
+            //{
+            //    // User settings
+            //    options.User.RequireUniqueEmail = true;
+
+            //    //    //// Password settings
+            //    //    //options.Password.RequireDigit = true;
+            //    //    //options.Password.RequiredLength = 8;
+            //    //    //options.Password.RequireNonAlphanumeric = false;
+            //    //    //options.Password.RequireUppercase = true;
+            //    //    //options.Password.RequireLowercase = false;
+
+            //    //    //// Lockout settings
+            //    //    //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+            //    //    //options.Lockout.MaxFailedAccessAttempts = 10;
+            //});
+
+
+            //services.AddIdentityServer()
+            //   // The AddDeveloperSigningCredential extension creates temporary key material for signing tokens.
+            //   // This might be useful to get started, but needs to be replaced by some persistent key material for production scenarios.
+            //   // See http://docs.identityserver.io/en/release/topics/crypto.html#refcrypto for more information.
+            //   .AddDeveloperSigningCredential()
+            //   .AddInMemoryPersistedGrants()
+            //   // To configure IdentityServer to use EntityFramework (EF) as the storage mechanism for configuration data (rather than using the in-memory implementations),
+            //   // see https://identityserver4.readthedocs.io/en/release/quickstarts/8_entity_framework.html
+            //   .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources())
+            //   .AddInMemoryApiResources(IdentityServerConfig.GetApiResources())
+            //   .AddInMemoryClients(IdentityServerConfig.GetClients())
+            //    .AddAspNetIdentity<ApplicationUser>()
+            //   .AddProfileService<ProfileService>();
+
+            //var applicationUrl = Configuration["ApplicationUrl"].TrimEnd('/');
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                .AddJwtBearer(options =>
@@ -84,7 +122,13 @@ namespace stationaryr
             }
 
             app.UseRouting();
+            app.UseCors(builder => builder
+              .AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod());
 
+        //  app.UseIdentityServer();
+         
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseHttpsRedirection();

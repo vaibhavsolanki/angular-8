@@ -14,7 +14,10 @@ export class Rolemaster implements OnInit {
  Role: RoleViewModel;
   Roles: RoleViewModel[];
  datasubmit: string;
- btnvisibility: boolean = true;
+  btnvisibility: boolean = true;
+  RoleForm: FormGroup;
+  submitted = false;
+  loading = false;
  constructor(private formbuilder: FormBuilder, private Componentservices: ComponentService, private router: Router) {
 
     }
@@ -46,8 +49,8 @@ let empid = localStorage.getItem('editRoleId');
         this.Componentservices.getRoleId(empid).subscribe(data => {
               this.Roles = data,
                 console.log(this.Roles),
-            this.RoleForm.controls['NAME'].setValue(this.Roles[0].NAME);
-          this.RoleForm.controls['DESCRIPTION'].setValue(this.Roles[0].DESCRIPTION);
+                this.RoleForm.controls['Name'].setValue(this.Roles[0].Name);
+          this.RoleForm.controls['Description'].setValue(this.Roles[0].Description);
         
               
             })
@@ -72,7 +75,7 @@ get f() { return this.RoleForm.controls; }
                 error => () => {
 
                 },
-          () => console.log(this.users)
+          () => console.log(this.datasubmit)
             );
 
     }

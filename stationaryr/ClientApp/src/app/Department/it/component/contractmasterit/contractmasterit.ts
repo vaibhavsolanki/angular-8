@@ -25,7 +25,7 @@ SubCategory: SubCategory[] =[];
   subchildcategory = true;
  
 Subcategories:any[];
-blankrow1:Array<BlankRow>=[];
+
   btnvisibility: boolean = true;
  finaldata :  any[] = [];
   constructor(private formbuilder: FormBuilder, private Componentservices: ComponentService, private router: Router) {
@@ -50,7 +50,7 @@ this.getSubCategories();
     if (+empid > 0) {
       this.Componentservices.getContractformId(+empid).subscribe(data => {
         this.Contracts = data,
-          console.log(this.data),
+         
           this.ContractForm.controls['CONTRACTNO'].setValue(this.Contracts[0].CONTRACTNO);
         this.ContractForm.controls['VENDORNAME'].setValue(this.Contracts[0].VENDORNAME);
         this.ContractForm.controls['STARTDATE'].setValue(this.Contracts[0].STARTDATE);
@@ -72,7 +72,7 @@ this.finaldata[i]=this.SubCategory.filter(x=>x.PARENT_ID == value);
 getSubCategories()
 {
 
- this.Componentservices.Getsubcategoryonchange(1).subscribe(data => {
+ this.Componentservices.Getsubcategoryonchange("1").subscribe(data => {
 this.SubCategory=data;
 });
 console.log(this.SubCategory);
@@ -207,9 +207,3 @@ item.get('SUBCATEGORY').setValue(value,{
 }
 
 
-public export class BlankRow {  
-    
-    SUBCATEGORY:[];  
-   
-   
-}  

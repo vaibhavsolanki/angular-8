@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SubCategory, UsersDgh, PrintRepository, contract,devicename,DGHUserRepository, Report, User, Units, Material, COMPANY, listofdropdown, StationaryRepository } from '../TableEntity/TableEntityClass';
+import { SubCategory, UsersDgh,RoleViewModel, PrintRepository, contract,devicename,DGHUserRepository, Report, User, Units, Material, COMPANY, listofdropdown, StationaryRepository } from '../TableEntity/TableEntityClass';
 import { ActivatedRoute  } from '@angular/router';
 
 const httpOptions = {
@@ -23,6 +23,36 @@ export class ComponentService {
     return localStorage.getItem('currentRole');
 
   }
+
+//rolemaster
+ public GetRoles(): Observable<RoleViewModel[]> {
+
+    return this.httpclient.post<RoleViewModel[]>(this.actionUrl + "api/Role/GetRoles", null)
+
+  }
+  public Saverole(RoleViewModel: RoleViewModel): Observable<string> {
+
+    return this.httpclient.post<string>(this.actionUrl + "api/Role/Saverole", RoleViewModel)
+
+  }
+  deleterole(id: number) {
+    return this.httpclient.delete<string>(this.actionUrl + "api/Role/deleterole/" + id);
+  }
+
+  getRoleId(id: number): Observable<RoleViewModel[]> {
+    let body = {
+      'ID': id
+    }
+    return this.httpclient.get<RoleViewModel[]>(this.actionUrl + "api/Role/getRoleId/" + id);
+  }
+
+
+  //public UpdateDevicename(contract: devicename): Observable<string> {
+   // const firstParam: string = this.route.snapshot.queryParamMap.get('id')
+    //contract.ID = Number(firstParam);
+    //return this.httpclient.post<string>(this.actionUrl + "api/Data/UpdateDevicename", contract)
+
+  //}
 
   //device name
   public GetDevicename(): Observable<devicename[]> {

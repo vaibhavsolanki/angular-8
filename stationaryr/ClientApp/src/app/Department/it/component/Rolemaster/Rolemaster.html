@@ -1,1 +1,24 @@
-sff
+<form [formGroup]="RoleForm" class="example-container col-md-6">
+
+  <mat-form-field>
+    <input matInput placeholder="NAME" formControlName="NAME" [ngClass]="{ 'is-invalid': submitted && f.NAME.errors }">
+    <mat-error *ngIf="submitted && f.NAME.errors">NAME is required</mat-error>
+
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="DESCRIPTION" formControlName="DESCRIPTION" [ngClass]="{ 'is-invalid': submitted && f.DESCRIPTION.errors }">
+
+  </mat-form-field>
+
+
+  
+  <button mat-raised-button color="primary" [disabled]="loading" *ngIf="btnvisibility" (click)="onSubmit()">
+    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+    Submit
+  </button>
+  <button mat-raised-button color="primary" [disabled]="loading" *ngIf="!btnvisibility" (click)="onUpdate()">
+    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+    Update
+  </button>
+</form>
+

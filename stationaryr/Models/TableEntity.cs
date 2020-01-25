@@ -61,8 +61,14 @@ namespace Stationary.Models
         public string PASSWORD { get; set; }
         public List<Department> DEPARTMENTS { get; set; }
 
-        public string APPROLE { get; set; }
+        public List<role> APPROLE { get; set; }
 
+    }
+
+    public class role
+    {
+        public string EMP_ID { get; set; }
+        public string Approle { get; set; }
     }
 
   public  enum approle
@@ -275,6 +281,26 @@ namespace Stationary.Models
         public string CREATED_DATE { get; set; }
 
     }
+    public class RoleViewModel
+    {
+        public string Id { get; set; }
 
+       public string Name { get; set; }
 
-}
+        public string Description { get; set; }
+
+        public int UsersCount { get; set; }
+
+        public PermissionViewModel[] Permissions { get; set; }
+    }
+
+    public class PermissionViewModel
+    {
+        public string Name { get; set; }
+        public string Value { get; set; }
+        public string GroupName { get; set; }
+        public string Description { get; set; }
+
+    }
+
+    }

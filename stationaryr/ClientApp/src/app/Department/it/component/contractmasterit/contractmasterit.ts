@@ -18,19 +18,23 @@ export class itcontractmaster implements OnInit {
   Contracts: contract[];
   listofdropdown: listofdropdown[];
   Category: Material[];
-  SubCategory: SubCategory[];
+SubCategory: SubCategory[] =[];
+  SubCategory1: SubCategory[];
   SubChildCategory: SubCategory[];
   subcategory = true;
   subchildcategory = true;
-  subcate: subcat[];
+ 
+Subcategories:any[];
+
   btnvisibility: boolean = true;
-   contactList: FormArray;
+ finaldata :  any[] = [];
   constructor(private formbuilder: FormBuilder, private Componentservices: ComponentService, private router: Router) {
 
 
   }
   ngOnInit() {
     this.GetCategoryDropdown();
+this.getSubCategories();
     this.ContractForm = this.formbuilder.group({
 
       CONTRACTNO: ['', Validators.required],
@@ -41,84 +45,58 @@ export class itcontractmaster implements OnInit {
 
      
     })
-    this.contactList = this.ContractForm.get('ORDERITEM') as FormArray;
     let empid = localStorage.getItem('editContractId');
 
     if (+empid > 0) {
       this.Componentservices.getContractformId(+empid).subscribe(data => {
         this.Contracts = data,
-         // console.log(this.data),
+         
           this.ContractForm.controls['CONTRACTNO'].setValue(this.Contracts[0].CONTRACTNO);
         this.ContractForm.controls['VENDORNAME'].setValue(this.Contracts[0].VENDORNAME);
         this.ContractForm.controls['STARTDATE'].setValue(this.Contracts[0].STARTDATE);
         this.ContractForm.controls['ENDDATE'].setValue(this.Contracts[0].ENDDATE);
-        this.ContractForm.controls['ID'].setValue(this.Contracts[0].ID);
+        //this.ContractForm.controls['ID'].setValue(this.Contracts[0].ID);
       })
 
       this.btnvisibility = false;
     }
   }
-  getContactsFormGroup(index): FormGroup {
-    // this.contactList = this.form.get('contacts') as FormArray;
-    const formGroup = this.contactList.controls[index] as FormGroup;
-    return formGroup;
-  }
+
 
   categorychangeload(value, i) {
 
-    var item = this.ORDERITEM.at(i);
-   
+this.finaldata[i]=this.SubCategory.filter(x=>x.PARENT_ID == value);
 
-    this.Componentservices.Getsubcategoryonchange(value).subscribe(data => {
 
-      //item.get('SUBCATEGORY').setValue(data);
-      this.getContactsFormGroup(i).get('SUBCATEGORY').setValue(data);
-     
-      // this.SubCategory.push( data);
-      //this.SubCategory.forEach(function (id, item) {
-      //  this.subcate[i].sub.push(this.SubCategory.push());
-      //});
-     
-   //   this.subcate[i].sub.push();
-   //   item.get('SUBCATEGORY').setValue(data);
-      
-      console.log(item );
-   //  item.setValue['SUBCATEGORY']= data; console.log(this.SubCategory);
-   // item.controls['SUBCATEGORY'].setValue( data);
+ }
+getSubCategories()
+{
 
-//this.SubCategory=item.get('SUBCATEGORY').value;
-     // console.log(this.SubCategory);
-     // if (this.SubCategory.length > 0) {
-        //this.subcategory = true;
-      //}
-     // else {
-       // this.subcategory = false;
-       // this.ContractForm.controls['SUBCATEGORY'].setValue(null);
-        //this.ContractForm.controls['SUBCHILDCATEGORY'].setValue(null);
+ this.Componentservices.Getsubcategoryonchange("1").subscribe(data => {
+this.SubCategory=data;
+});
+console.log(this.SubCategory);
+return this.SubCategory
 
-      //}
-    })
-
-  }
-
+}
   categorychange(value: string,i:number) {
+
     this.categorychangeload(value,i);
 
 
   }
 
-getarray(data){
-  let array = [];
-  array.push(data);
-return array;
-}
-
+transform(objects : any = []) {
+    return Object.values(objects);
+  }
   subcategorychange(value,i) {
 console.log(value);
 var item = this.ORDERITEM.at(i);
-  //item.get('SUBCATEGORY').setValue(value)
+item.get('SUBCATEGORY').setValue(value,{
+      onlySelf: true
+    })
 
-    this.Componentservices.Getsubcategoryonchange(item.get('SUBCATEGORY').value).subscribe(data => {
+  // this.Componentservices.Getsubcategoryonchange(aa).subscribe(data => {
 //item.controls['SUBCHILDCATEGORY'].setValue( data);
      // this.SubChildCategory = data; console.log(this.SubCategory);
 
@@ -130,7 +108,7 @@ var item = this.ORDERITEM.at(i);
         //this.StationaryRepository.controls['SUBCATEGORY'].setValue(null);
         //this.ContractForm.controls['SUBCHILDCATEGORY'].setValue(null);
 //}
-   })
+  // })
 
   }
   addItemButtonClick(): void {
@@ -185,7 +163,6 @@ var item = this.ORDERITEM.at(i);
 
   }
   GetCategoryDropdown() {
-   
     this.Componentservices.GetMaterialforstaOrprint("IT").subscribe(data => {
       this.listofdropdown = data; console.log(this.Category);
    
@@ -197,7 +174,7 @@ var item = this.ORDERITEM.at(i);
 
 
   get ORDERITEM(): FormArray {
-    return (this.ContractForm.get('ORDERITEM') as FormArray);
+    return this.ContractForm.get('ORDERITEM') as FormArray;
   }
   deleteitem(deleteitem: number) {
     var item = this.ORDERITEM.at(deleteitem);
@@ -228,8 +205,5 @@ var item = this.ORDERITEM.at(i);
   }
 
 }
-export  class subcat {
 
-  public sub:SubCategory[] 
-}
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild,Input } from '@angular/core';
 import { ComponentService } from '../../../../services/ComponentService';
 import { UsersDgh, Department, User } from '../../../../TableEntity/TableEntityClass';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -9,6 +9,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 
 export class UsersComponent {
+  @Input() link1: string;
+  routelink: string;
+  editroutelink: string;
   UsersForm: FormGroup;
     submitted = false;
     loading = false;
@@ -23,6 +26,19 @@ export class UsersComponent {
     }
  
   ngOnInit() {
+ if (this.link1 == undefined) {
+      this.routelink = "GetUsers";
+      this.editroutelink = "stationary/GetUsers";
+    
+
+    }
+
+    else {
+     
+      this.routelink = this.link1;
+      this.editroutelink = "IT/" + this.link1
+      
+    }
     this.departmentload();
       this.UsersForm = this.formbuilder.group({
           
@@ -66,7 +82,7 @@ export class UsersComponent {
         this.loading = true;
       this.Componentservices
         .SaveUsers(this.UsersForm.value)
-        .subscribe(data => { this.users = data, alert(this.users), this.loading = false; console.log(this.users); this.router.navigate(['GetUsers']); },
+        .subscribe(data => { this.users = data, alert(this.users), this.loading = false; console.log(this.users); this.router.navigate([this.editroutelink]); },
                 error => () => {
 
                 },
@@ -83,7 +99,7 @@ export class UsersComponent {
         this.loading = true;
       this.Componentservices
         .Updateusers(this.UsersForm.value)
-          .subscribe(data => { this.users = data, alert(this.users), this.loading = false; console.log(this.users); this.router.navigate(['GetUsers']); },
+          .subscribe(data => { this.users = data, alert(this.users), this.loading = false; console.log(this.users); this.router.navigate([this.editroutelink]); },
                 error => () => {
 
                 },

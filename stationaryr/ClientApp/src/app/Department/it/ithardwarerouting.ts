@@ -14,6 +14,11 @@ import { getitcontractmaster } from './component/contractmasterit/getcontractmas
 import { itcontractmaster } from './component/contractmasterit/contractmasterit';
 import { ItDevicename } from './component/devicename/devicename';
 import { ItGetDevicename } from './component/devicename/getdevicename';
+
+import { GetRolemaster } from './component/Rolemaster/getrolemaster';
+import { Rolemaster } from './component/Rolemaster/RoleMaster';
+import { getuserit } from './component/User/getuser';
+import { userit } from './component/User/user';
 export const routes: Routes = [
   {
     path: '', component: ithardwaredepart, canActivate: [AuthGuard]
@@ -21,6 +26,7 @@ export const routes: Routes = [
       {
         path: 'home', component: ItHomeComponent 
         },
+
       { path: 'GetContractMaster', component: getitcontractmaster },
       { path: 'ContractMaster', component: itcontractmaster },
       { path: 'GetCategory', data: { link: 'Category' }, component: GetItCategoryComponent },
@@ -31,6 +37,10 @@ export const routes: Routes = [
       { path: 'SubChildCategory', component: ItSubChildCategoryComponent },
       { path: 'GetDevice', component: ItGetDevicename },
       { path: 'AddDevice', component: ItDevicename },
+ { path: 'GetRolemaster', component: GetRolemaster },
+{ path: 'Rolemaster', component: Rolemaster },
+ { path: 'GetUsers', component: getuserit },
+{ path: 'AddUsers', component: userit },
       //{ path: 'ContractMaster', component: ContractMasterComponent },
 
     ]

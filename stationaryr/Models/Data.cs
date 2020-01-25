@@ -22,15 +22,14 @@ namespace Stationary.Models
         //report
         public static List<USER> getuser()
         {
-            var numbers = new List<string>();
-        numbers.Add("STATIONARY");
-        numbers.Add("IT");
-            numbers.Add("BOTH");
+            var numbers = new List<role>();
+        numbers.Add(new role() { EMP_ID="1",Approle="STATIONARY"});
+         numbers.Add(new role() { EMP_ID = "2", Approle = "IT" });
             List<USER> user = new List<USER>();
-            user.Add(new USER { ID = 1, EMP_ID = "", NAME = "admin1", PASSWORD = "admin@1234", ROLE = "admin", APPROLE = numbers[0] });
-            user.Add(new USER { ID = 2, EMP_ID = "", NAME = "admin2", PASSWORD = "admin@12345", ROLE = "admin", APPROLE = numbers[1] });
-            user.Add(new USER { ID = 3, EMP_ID = "", NAME = "admin", PASSWORD = "admin@123", ROLE = "admin", APPROLE= numbers[2] });
-            user.Add(new USER { ID = 4, EMP_ID = "", NAME = "user1", PASSWORD = "user@123", ROLE = "user" , APPROLE = numbers[0] });
+            user.Add(new USER { ID = 1, EMP_ID = "", NAME = "admin1", PASSWORD = "admin@1234", ROLE = "admin", APPROLE = numbers.Where(x=>x.EMP_ID=="1").ToList() });
+            user.Add(new USER { ID = 2, EMP_ID = "", NAME = "admin2", PASSWORD = "admin@12345", ROLE = "admin", APPROLE = numbers.Where(x => x.EMP_ID == "1" || x.EMP_ID=="2").ToList() });
+            user.Add(new USER { ID = 3, EMP_ID = "", NAME = "admin", PASSWORD = "admin@123", ROLE = "admin", APPROLE= numbers.Where(x => x.EMP_ID == "2").ToList() });
+            user.Add(new USER { ID = 4, EMP_ID = "", NAME = "user1", PASSWORD = "user@123", ROLE = "user" , APPROLE = numbers.Where(x => x.EMP_ID == "1").ToList() });
             return user;
 
         }
@@ -1914,9 +1913,9 @@ namespace Stationary.Models
             return ret;
 
         }
-        public List<Material> Getsubcategoryonchange(string materialtype)
+        public List<SubCategory> Getsubcategoryonchange(string materialtype)
         {
-            List<Material> ret = new List<Material>();
+            List<SubCategory> ret = new List<SubCategory>();
             using (OracleConnection con = new OracleConnection(connection))
             {
 
@@ -1940,7 +1939,7 @@ namespace Stationary.Models
 
                 da.Fill(ds);
 
-                ret = ds.ToList<Material>();
+                ret = ds.ToList<SubCategory>();
             }
             return ret;
         }

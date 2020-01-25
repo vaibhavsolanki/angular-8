@@ -64,8 +64,8 @@ import {
           { path: 'login', component: LoginComponent },
          
 
-       { path: 'stationary', loadChildren: () => import('./Department/stationary/stationarymodule').then(m => m.StationaryModule), canActivate: [AuthGuard] },
-      { path: 'IT', loadChildren: () => import('./Department/it/ithardwaremodule').then(m => m.IthardwareModule), canActivate: [AuthGuard] },
+      { path: 'stationary', loadChildren: () => import('./Department/stationary/stationarymodule').then(m => m.StationaryModule), canActivate: [AuthGuard] },
+    { path: 'IT', loadChildren: () => import('./Department/it/ithardwaremodule').then(m => m.IthardwareModule), canActivate: [AuthGuard] },
 
          
             { path: '**', redirectTo: '' }

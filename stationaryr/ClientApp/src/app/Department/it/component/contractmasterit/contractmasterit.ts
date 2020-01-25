@@ -22,8 +22,9 @@ export class itcontractmaster implements OnInit {
   SubChildCategory: SubCategory[];
   subcategory = true;
   subchildcategory = true;
- private prices = [];
+  subcate: subcat[];
   btnvisibility: boolean = true;
+   contactList: FormArray;
   constructor(private formbuilder: FormBuilder, private Componentservices: ComponentService, private router: Router) {
 
 
@@ -40,12 +41,13 @@ export class itcontractmaster implements OnInit {
 
      
     })
+    this.contactList = this.ContractForm.get('ORDERITEM') as FormArray;
     let empid = localStorage.getItem('editContractId');
 
     if (+empid > 0) {
       this.Componentservices.getContractformId(+empid).subscribe(data => {
         this.Contracts = data,
-          console.log(this.data),
+         // console.log(this.data),
           this.ContractForm.controls['CONTRACTNO'].setValue(this.Contracts[0].CONTRACTNO);
         this.ContractForm.controls['VENDORNAME'].setValue(this.Contracts[0].VENDORNAME);
         this.ContractForm.controls['STARTDATE'].setValue(this.Contracts[0].STARTDATE);
@@ -56,7 +58,11 @@ export class itcontractmaster implements OnInit {
       this.btnvisibility = false;
     }
   }
-
+  getContactsFormGroup(index): FormGroup {
+    // this.contactList = this.form.get('contacts') as FormArray;
+    const formGroup = this.contactList.controls[index] as FormGroup;
+    return formGroup;
+  }
 
   categorychangeload(value, i) {
 
@@ -65,13 +71,23 @@ export class itcontractmaster implements OnInit {
 
     this.Componentservices.Getsubcategoryonchange(value).subscribe(data => {
 
+      //item.get('SUBCATEGORY').setValue(data);
+      this.getContactsFormGroup(i).get('SUBCATEGORY').setValue(data);
+     
+      // this.SubCategory.push( data);
+      //this.SubCategory.forEach(function (id, item) {
+      //  this.subcate[i].sub.push(this.SubCategory.push());
+      //});
+     
+   //   this.subcate[i].sub.push();
+   //   item.get('SUBCATEGORY').setValue(data);
+      
+      console.log(item );
+   //  item.setValue['SUBCATEGORY']= data; console.log(this.SubCategory);
+   // item.controls['SUBCATEGORY'].setValue( data);
 
-
-    // item.setValue['SUBCATEGORY']= data; console.log(this.SubCategory);
-item.controls['SUBCATEGORY'].setValue( data);
-
-this.SubCategory=item.get('SUBCATEGORY').value;
-console.log(item);
+//this.SubCategory=item.get('SUBCATEGORY').value;
+     // console.log(this.SubCategory);
      // if (this.SubCategory.length > 0) {
         //this.subcategory = true;
       //}
@@ -86,28 +102,24 @@ console.log(item);
   }
 
   categorychange(value: string,i:number) {
-    this.categorychangeload(value,i);g
+    this.categorychangeload(value,i);
 
 
   }
 
-getarray(sub):any[]{
- let array = [];
-  for(let key in sub){
-   if(sub.hasOwnProperty(key)){
-     array.push(sub[key]);
-   }
-  }
+getarray(data){
+  let array = [];
+  array.push(data);
 return array;
 }
 
   subcategorychange(value,i) {
 console.log(value);
 var item = this.ORDERITEM.at(i);
-var aa=item.get('SUBCATEGORY').value
+  //item.get('SUBCATEGORY').setValue(value)
 
-   this.Componentservices.Getsubcategoryonchange(aa).subscribe(data => {
-item.controls['SUBCHILDCATEGORY'].setValue( data);
+    this.Componentservices.Getsubcategoryonchange(item.get('SUBCATEGORY').value).subscribe(data => {
+//item.controls['SUBCHILDCATEGORY'].setValue( data);
      // this.SubChildCategory = data; console.log(this.SubCategory);
 
       //if (this.SubChildCategory.length > 0) {
@@ -173,6 +185,7 @@ item.controls['SUBCHILDCATEGORY'].setValue( data);
 
   }
   GetCategoryDropdown() {
+   
     this.Componentservices.GetMaterialforstaOrprint("IT").subscribe(data => {
       this.listofdropdown = data; console.log(this.Category);
    
@@ -184,7 +197,7 @@ item.controls['SUBCHILDCATEGORY'].setValue( data);
 
 
   get ORDERITEM(): FormArray {
-    return this.ContractForm.get('ORDERITEM') as FormArray;
+    return (this.ContractForm.get('ORDERITEM') as FormArray);
   }
   deleteitem(deleteitem: number) {
     var item = this.ORDERITEM.at(deleteitem);
@@ -215,5 +228,8 @@ item.controls['SUBCHILDCATEGORY'].setValue( data);
   }
 
 }
+export  class subcat {
 
+  public sub:SubCategory[] 
+}
 

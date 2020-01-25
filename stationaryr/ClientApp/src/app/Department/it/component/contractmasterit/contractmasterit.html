@@ -48,10 +48,10 @@
                 <div class="col-md-3">
                   <mat-form-field *ngIf="subcategory">
                     <mat-label>Item Type</mat-label>
-                    <select   ngModel formControlName="SUBCATEGORY" matNativeControl name="SUBCATEGORY+i" #subcategory (change)="subcategorychange(item.get('SUBCATEGORY').value,i)" [ngClass]="{'disabled': role}">
+                    <select   ngModel formControlName="SUBCATEGORY" matNativeControl name="SUBCATEGORY+i" #subcategory (change)="subcategorychange(subcategory.value,i)" [ngClass]="{'disabled': role}">
                       <option value="" selected></option>
-                      <option *ngFor="let Sub of getarray(item.get('SUBCATEGORY').value); let i = index" [value]="Sub.ID">
-                        {{Sub.ITEMS_DESCRIPTION}}
+                      <option *ngFor="let Sub of getContactsFormGroup(i).get('SUBCATEGORY').value|keyvalue; let i = index" [ngValue]="Sub.value.ID">
+                        {{Sub.value.ITEMS_DESCRIPTION}}
                       </option>
                     </select>
                   </mat-form-field>

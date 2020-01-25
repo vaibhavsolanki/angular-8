@@ -28,6 +28,7 @@ export interface Login {
     username: string;
   password: string;
   role: string;
+  approle: string;
     token?: string;   
 }
 export interface PML {

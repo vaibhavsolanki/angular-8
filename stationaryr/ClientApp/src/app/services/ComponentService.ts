@@ -253,7 +253,7 @@ export class ComponentService {
     }
     public Getsubcategoryonchange(str: string): Observable<SubCategory[]> {
 
-        return this.httpclient.get<SubCategory[]>(this.actionUrl + "api/Data/Getsubcategoryonchange/" + str)
+      return this.httpclient.get<SubCategory[]>(this.actionUrl + "api/Data/Getsubcategoryonchange/" + str);
 
     }
     

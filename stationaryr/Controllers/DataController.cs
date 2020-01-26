@@ -363,42 +363,7 @@ namespace Stationary.Controllers
 
 
 
-        [HttpPost("[action]")]
-        public IActionResult GetUsers()
-        {
-            return Ok(new Data().GetUsers());
-        }
-        [HttpGet("getuserId/{id}")]
-        public IActionResult getuserId(int ID)
-        {
-            return Ok(new Data().getuserId(ID));
-        }
-
-        [HttpPost("[action]")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-
-        public string SaveUsers(UsersDgh UsersDgh)
-        {
-
-            return new Data().SaveUsers(UsersDgh);
-        }
-
-        [HttpPost("[action]")]
-
-
-        public string Updateusers(UsersDgh UsersDgh)
-        {
-
-            return new Data().Updateusers(UsersDgh);
-        }
-        [HttpDelete("deleteusers/{id}")]
-
-
-        public string deleteusers(int ID)
-        {
-            return new Data().deleteusers(ID);
-        }
-
+        
         //contract
 
 

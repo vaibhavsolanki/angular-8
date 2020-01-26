@@ -196,6 +196,7 @@ export interface UsersDgh {
   STATUS: string;
   DEPTID: string;
   CREATED_DATE: string;
+PASSWORD:string;
 }
 
 export interface dynamicdata {

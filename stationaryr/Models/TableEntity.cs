@@ -243,6 +243,7 @@ namespace Stationary.Models
         public string PHONENO { get; set; }
         public string DEPTID { get; set; }
         public string STATUS { get; set; }
+        public string PASSWORD { get; set; }
         public string CREATED_DATE { get; set; }
     }
 

@@ -1,18 +1,73 @@
-﻿using Oracle.ManagedDataAccess.Client;
+﻿using Microsoft.AspNetCore.Identity;
+using Oracle.ManagedDataAccess.Client;
 using Stationary.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace stationaryr.Models
 {
-    public class Role
+    public class RoleStore: IRoleStore<ApplicationRole>
     {
-        string connection = "User ID=xuser;Connection Timeout=600;Password=xuser;data source=(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST= 192.168.0.111)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME= dgh)));";
+        string connection = "User ID=system;Connection Timeout=600;Password=123;data source=(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST= localhost)(PORT=1522))(CONNECT_DATA=(SERVICE_NAME= user)));";
 
+        public Task<IdentityResult> CreateAsync(ApplicationRole role, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
 
+        public Task<IdentityResult> DeleteAsync(ApplicationRole role, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ApplicationRole> FindByIdAsync(string roleId, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ApplicationRole> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> GetNormalizedRoleNameAsync(ApplicationRole role, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> GetRoleIdAsync(ApplicationRole role, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> GetRoleNameAsync(ApplicationRole role, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SetNormalizedRoleNameAsync(ApplicationRole role, string normalizedName, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SetRoleNameAsync(ApplicationRole role, string roleName, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IdentityResult> UpdateAsync(ApplicationRole role, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            //throw new NotImplementedException();
+        }
         public string Saverole(RoleViewModel Role)
         {
             string ret = "";
@@ -120,10 +175,8 @@ namespace stationaryr.Models
                 cmd.Parameters.Add("P_ID", id);
 
 
-                cmd.Parameters.Add("P_CONTRACTNO", "");
-                cmd.Parameters.Add("P_VENDORNAME", "");
-                cmd.Parameters.Add("P_STARTDATE", "");
-                cmd.Parameters.Add("P_ENDDATE", "");
+                cmd.Parameters.Add("P_NAME", "");
+                cmd.Parameters.Add("P_DESCRIPTION", "");
 
 
                 cmd.Parameters.Add("CALLVAL", "2");
@@ -143,6 +196,6 @@ namespace stationaryr.Models
 
         }
 
-
+       
     }
 }

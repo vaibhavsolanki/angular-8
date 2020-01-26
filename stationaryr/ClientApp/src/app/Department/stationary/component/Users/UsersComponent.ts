@@ -45,8 +45,8 @@ export class UsersComponent {
             USERNAME: ['', Validators.required],
         EMAILID: ['', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
         PHONENO: ['', [Validators.required, Validators.minLength(10)]],
-        DEPTID: ['', Validators.required]
-
+        DEPTID: [],
+        PASSWORD: ['', Validators.required]
         })
         let empid = localStorage.getItem('editusersId');
 

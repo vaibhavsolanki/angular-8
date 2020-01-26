@@ -118,12 +118,12 @@ export class ComponentService {
   //users
   public GetUsers(): Observable<UsersDgh[]> {
 
-    return this.httpclient.post<UsersDgh[]>(this.actionUrl + "api/Data/GetUsers", null)
+    return this.httpclient.post<UsersDgh[]>(this.actionUrl + "api/Account/GetUsers", null)
 
   }
   public SaveUsers(users: UsersDgh): Observable<string> {
 
-    return this.httpclient.post<string>(this.actionUrl + "api/Data/SaveUsers", users)
+    return this.httpclient.post<string>(this.actionUrl + "api/Account/Register", users)
 
   }
   deleteusers(id: number) {
@@ -141,7 +141,7 @@ export class ComponentService {
   public Updateusers(users: UsersDgh): Observable<string> {
     const firstParam: string = this.route.snapshot.queryParamMap.get('id')
     users.ID = Number(firstParam);
-    return this.httpclient.post<string>(this.actionUrl + "api/Data/Updateusers", users)
+    return this.httpclient.post<string>(this.actionUrl + "api/Account/Updateusers", users)
 
   }
 

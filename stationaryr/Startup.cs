@@ -12,7 +12,7 @@ using stationaryr.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Text;
-using Microsoft.Extensions.DependencyInjection;
+
 
 namespace stationaryr
 {
@@ -36,6 +36,11 @@ namespace stationaryr
                 o.JsonSerializerOptions.PropertyNamingPolicy = null;
                 o.JsonSerializerOptions.DictionaryKeyPolicy = null;
             });
+            services.AddTransient<IUserStore<ApplicationUser>, UserStore>();
+            services.AddTransient<IRoleStore<ApplicationRole>, RoleStore>();
+
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
+                .AddDefaultTokenProviders();
             //services.AddIdentity<ApplicationUser, ApplicationRole>();
             //// Configure Identity options and password complexity here
             //services.Configure<IdentityOptions>(options =>
@@ -69,6 +74,9 @@ namespace stationaryr
             //   .AddInMemoryClients(IdentityServerConfig.GetClients())
             //    .AddAspNetIdentity<ApplicationUser>()
             //   .AddProfileService<ProfileService>();
+
+
+
 
             //var applicationUrl = Configuration["ApplicationUrl"].TrimEnd('/');
 
@@ -127,7 +135,7 @@ namespace stationaryr
               .AllowAnyHeader()
               .AllowAnyMethod());
 
-        //  app.UseIdentityServer();
+          //app.UseIdentityServer();
          
             app.UseAuthentication();
             app.UseAuthorization();

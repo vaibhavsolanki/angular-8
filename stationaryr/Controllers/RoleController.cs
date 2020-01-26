@@ -17,41 +17,41 @@ namespace stationaryr.Controllers
     {
        
 
-        [HttpPost("[action]")]
-        public IActionResult GetRoles()
-        {
-            return Ok(new Role().GetRoles());
-        }
-        [HttpGet("getRoleId/{id}")]
-        public IActionResult getRoleId(string ID)
-        {
-            return Ok(new Role().getRoleId(ID));
-        }
+        //[HttpPost("[action]")]
+        //public IActionResult GetRoles()
+        //{
+        //    return Ok(new Role().GetRoles());
+        //}
+        //[HttpGet("getRoleId/{id}")]
+        //public IActionResult getRoleId(string ID)
+        //{
+        //    return Ok(new Role().getRoleId(ID));
+        //}
 
-        [HttpPost("[action]")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        //[HttpPost("[action]")]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
 
-        public string Saverole(RoleViewModel role)
-        {
-
-            return new Role().Saverole(role);
-        }
-
-        [HttpPost("[action]")]
-
-
-        //public string Updaterole(RoleViewModel role)
+        //public string Saverole(RoleViewModel role)
         //{
 
-        //    return new Role().Updaterole(role);
+        //    return new Role().Saverole(role);
         //}
-        [HttpDelete("deleterole/{id}")]
+
+        //[HttpPost("[action]")]
 
 
-        public string deleterole(string ID)
-        {
-            return new Role().deleterole(ID);
-        }
+        ////public string Updaterole(RoleViewModel role)
+        ////{
+
+        ////    return new Role().Updaterole(role);
+        ////}
+        //[HttpDelete("deleterole/{id}")]
+
+
+        //public string deleterole(string ID)
+        //{
+        //    return new Role().deleterole(ID);
+        //}
 
 
 

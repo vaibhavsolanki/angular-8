@@ -25,6 +25,11 @@
         </option>
       </select>
     </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="PASSWORD" formControlName="PASSWORD" [ngClass]="{ 'is-invalid': submitted && f.PHONENO.errors }">
+      <mat-error *ngIf="submitted && f.PASSWORD.errors?.required">PASSWORD is required</mat-error>
+      
+    </mat-form-field>
 
     <button mat-raised-button color="primary" [disabled]="loading" *ngIf="btnvisibility" (click)="onSubmit()">
       <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>

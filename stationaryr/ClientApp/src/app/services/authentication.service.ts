@@ -26,9 +26,10 @@ export class AuthenticationService {
         
         let logindata = {
             username: username,
-            passward: password
+          passward: password,
+          RememberMe:true
         }
-      return this.http.post<any>(this.actionUrl + "WeatherForecast/logincheck", logindata, httpOptions).pipe(map(user =>
+      return this.http.post<any>(this.actionUrl + "api/Account/Login", logindata, httpOptions).pipe(map(user =>
         this.processLoginResponse(user)));
 
       

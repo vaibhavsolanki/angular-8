@@ -24,7 +24,7 @@ namespace stationaryr.Core
 
         }
 
-        public async Task<(bool Succeeded, string[] Errors)> CreateUserAsync(ApplicationUser user, IEnumerable<string> roles,string password)// ,
+        public async Task<(bool Succeeded, string[] Errors)> CreateUserAsync(ApplicationUser user, IEnumerable<string> roles,string password)
         {
             var result = await _userManager.CreateAsync(user, password);
 
@@ -33,15 +33,11 @@ namespace stationaryr.Core
 
             user = await _userManager.FindByNameAsync(user.UserName);
 
-            try
+            foreach (var role in roles)
             {
-                result = await this._userManager.AddToRolesAsync(user, roles.Distinct());
+                result = await this._userManager.AddToRoleAsync(user, role);
             }
-            catch
-            {
-                await DeleteUserAsync(user);
-                throw;
-            }
+          
             return (true, new string[] { });
         }
 
@@ -63,12 +59,41 @@ namespace stationaryr.Core
             throw new NotImplementedException();
         }
 
-        public Task<List<(ApplicationUser User, string[] Roles)>> GetUsersAndRolesAsync(int page, int pageSize)
+        public    Task<List<(ApplicationUser User, string[] Roles)>> GetUsersAndRolesAsync(int page, int pageSize)
         {
-           
 
+            //List<string> role1 = new List<string>();
+
+            //var user = new Data().GetUsers().GroupBy(x=>x.Id) ;
+            //foreach (var val in user)
+            //{
+
+            //    // Here salary is the key value 
+            //    Console.WriteLine("Group By Salary: {0}", val.Key);
+
+            //    // Display name of the employees 
+            //    // Inner collection according to 
+            //    // the key value 
+            //    foreach (ApplicationUser e in val)
+            //    {
+            //        Console.WriteLine("Employee Name: {0}",
+            //                                   e.FullName);
+            //        role1.Add(e.FullName);
+            //    }
+                
+             
+            //}
+
+            List<ApplicationUser> users = new Data().GetUsers();
+            var userRoleIds = users.SelectMany(u => u.Roles.Select(r => r.RoleId)).ToList();
+
+            
+           var roles = new Data().GetRoles().Where(r => userRoleIds.Contains(r.Id));
+           return Task.Run(()=>users.Select(u => (u, roles.Where(r => u.Roles.Select(ur => ur.RoleId).Contains(r.Id)).Select(r => r.Name).ToArray())).ToList());
+
+           
             // throw new NotImplementedException();
-            throw new NotImplementedException();
+           
         }
 
         public async Task<ApplicationRole> GetRoleByIdAsync(string roleId)

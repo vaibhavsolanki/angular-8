@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace stationaryr.Models
 {
-    public class UserStore : IUserStore<ApplicationUser>, IUserPasswordStore<ApplicationUser>
+    public class UserStore : IUserStore<ApplicationUser>, IUserPasswordStore<ApplicationUser>,IUserRoleStore<ApplicationUser>
 
     {
         private readonly string _connectionString;
@@ -134,7 +134,7 @@ namespace stationaryr.Models
 
                     ret = ds.Rows[0][0].ToString();
                     Userdgh.Id = ds.Rows[0][1].ToString();
-                    userrole(Userdgh);
+                   // userrole(Userdgh);
                     //  ret[0].App_status = ds.Tables[1].ToList<ApplicationStatus>();
                     con.Close();
 
@@ -148,35 +148,7 @@ namespace stationaryr.Models
             return ret;
         }
 
-        public string userrole(ApplicationUser user)
-        {
-            string ret = "";
-            var userid = user.Id;
-            foreach (var role in user.Roles)
-            {
-                using (OracleConnection con = new OracleConnection(_connectionString))
-                {
-
-
-                    OracleCommand cmd = new OracleCommand("STATIONARY_USER_ROLE_INSERT", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    OracleDataAdapter da = new OracleDataAdapter(cmd);
-                    // OracleParameter op = new OracleParameter("data_cursor", OracleDbType.RefCursor) { Direction = ParameterDirection.Output };
-                    cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
-                    cmd.Parameters.Add("P_USERID", userid);
-                    cmd.Parameters.Add("P_ROLEID", role.RoleId);
-                    cmd.Parameters.Add("CALLVAL", "0");
-                    // cmd.ExecuteNonQuery();
-                    DataTable ds = new DataTable();
-
-
-                    da.Fill(ds);
-
-                    ret = ds.Rows[0][0].ToString();
-                }
-            }
-            return ret;
-        }
+     
         public async Task<ApplicationUser> getuserId(string id,CancellationToken cancellationToken)
         {
             
@@ -213,6 +185,35 @@ namespace stationaryr.Models
             }
             return ret[0];
 
+        }
+
+
+        public string userrole(string userid,string roleid)
+        {
+            string ret = "";
+            
+                using (OracleConnection con = new OracleConnection(_connectionString))
+                {
+
+
+                    OracleCommand cmd = new OracleCommand("STATIONARY_USER_ROLE_INSERT", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    OracleDataAdapter da = new OracleDataAdapter(cmd);
+                    // OracleParameter op = new OracleParameter("data_cursor", OracleDbType.RefCursor) { Direction = ParameterDirection.Output };
+                    cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("P_USERID", userid);
+                    cmd.Parameters.Add("P_ROLEID",roleid);
+                    cmd.Parameters.Add("CALLVAL", "0");
+                    // cmd.ExecuteNonQuery();
+                    DataTable ds = new DataTable();
+
+
+                    da.Fill(ds);
+
+                    ret = ds.Rows[0][0].ToString();
+             
+            }
+            return ret;
         }
         public async Task<ApplicationUser> getusername(string usename, CancellationToken cancellationToken)
         {
@@ -324,38 +325,7 @@ namespace stationaryr.Models
             }
             return ret;
         }
-        public List<ApplicationUser> GetUsers()
-        {
-            List<ApplicationUser> ret = new List<ApplicationUser>();
-            using (OracleConnection con = new OracleConnection(_connectionString))
-            {
-
-                con.Open();
-                OracleCommand cmd = new OracleCommand("STATIONARY_USERDGH_CRUD", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                OracleDataAdapter da = new OracleDataAdapter(cmd);
-                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
-                cmd.Parameters.Add("P_ID", "");
-                cmd.Parameters.Add("P_USERNAME", "");
-                cmd.Parameters.Add("P_EMAILID", "");
-                cmd.Parameters.Add("P_PHONENO", "");
-                cmd.Parameters.Add("P_DEPTID", "");
-                cmd.Parameters.Add("P_PASSWORD", "");
-
-                cmd.Parameters.Add("CALLVAL", "1");
-
-                DataTable ds = new DataTable();
-
-
-                da.Fill(ds);
-
-                ret = ds.ToList<ApplicationUser>();
-            }
-            return ret;
-        }
-
-
+    
         public Task<string> GetPasswordHashAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
             return Task.FromResult(user.PasswordHash);
@@ -373,10 +343,29 @@ namespace stationaryr.Models
             return Task.FromResult(0);
         }
 
-     
+        public  Task AddToRoleAsync(ApplicationUser user, string roleName, CancellationToken cancellationToken)
+        {
+            return  Task.Run(() => userrole(user.Id, roleName));
+        }
 
-     
+        public Task<IList<string>> GetRolesAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
 
-    
+        public Task<IList<ApplicationUser>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> IsInRoleAsync(ApplicationUser user, string roleName, CancellationToken cancellationToken)
+        {
+            return Task.Run(()=>false);
+        }
+
+        public Task RemoveFromRoleAsync(ApplicationUser user, string roleName, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

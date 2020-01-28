@@ -19,7 +19,7 @@ namespace Stationary.Models
 {
     public class Data
     {
-        string connection = "User ID=xuser;Connection Timeout=600;Password=xuser;data source=(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST= 192.168.0.111)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME= dgh)));";
+        string connection = "User ID=system;Connection Timeout=600;Password=123;data source=(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST= localhost)(PORT=1522))(CONNECT_DATA=(SERVICE_NAME= user)));";
         //report
         public static List<USER> getuser()
         {
@@ -2067,6 +2067,66 @@ namespace Stationary.Models
             }
             return  ret;
         }
+        //public List<ApplicationRole> getrolebyuser()
+        //{
+           
+                 
+        //    List<ApplicationRole> ret = new List<ApplicationRole>();
+        //    using (OracleConnection con = new OracleConnection(connection))
+        //    {
+
+        //        con.Open();
+        //        OracleCommand cmd = new OracleCommand("STATIONARY_USER_ROLE_INSERT", con);
+        //        cmd.CommandType = CommandType.StoredProcedure;
+
+        //        OracleDataAdapter da = new OracleDataAdapter(cmd);
+        //                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+        //                cmd.Parameters.Add("P_USERID", role);
+        //                cmd.Parameters.Add("P_ROLEID", role.RoleId);
+        //                cmd.Parameters.Add("CALLVAL", "0");
+
+        //                cmd.Parameters.Add("CALLVAL", "1");
+
+        //        DataTable ds = new DataTable();
+
+
+        //        da.Fill(ds);
+
+        //        ret = ds.ToList<ApplicationRole>();
+        //    }
+        //    return ret;
+        //}
+        public List<ApplicationUser> GetUsers()
+        {
+            List<ApplicationUser> ret = new List<ApplicationUser>();
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_USERDGH_CRUD", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", "");
+                cmd.Parameters.Add("P_USERNAME", "");
+                cmd.Parameters.Add("P_EMAILID", "");
+                cmd.Parameters.Add("P_PHONENO", "");
+                cmd.Parameters.Add("P_DEPTID", "");
+                cmd.Parameters.Add("P_PASSWORD", "");
+
+                cmd.Parameters.Add("CALLVAL", "1");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.ToList<ApplicationUser>();
+            }
+            return ret;
+        }
+
 
     }
 }

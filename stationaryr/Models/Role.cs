@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace stationaryr.Models
 {
-    public class RoleStore: IRoleStore<ApplicationRole>,IQueryableRoleStore<ApplicationRole> 
+    public class RoleStore: IQueryableRoleStore<ApplicationRole>,IRoleStore<ApplicationRole>
     {
         private readonly string _connectionString;
 
@@ -297,55 +297,5 @@ namespace stationaryr.Models
             return ret1;
         }
 
-        public Task AddToRoleAsync(ApplicationRole user, string roleName, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IList<string>> GetRolesAsync(ApplicationRole user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-
-        }
-
-        public async Task<IList<ApplicationRole>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
-        {
-            return await Task.Run(() => new Data().GetRoles());
-        }
-
-        public Task<bool> IsInRoleAsync(ApplicationRole user, string roleName, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task RemoveFromRoleAsync(ApplicationRole user, string roleName, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<string> GetNormalizedUserNameAsync(ApplicationRole user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<string> GetUserIdAsync(ApplicationRole user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<string> GetUserNameAsync(ApplicationRole user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task SetNormalizedUserNameAsync(ApplicationRole user, string normalizedName, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task SetUserNameAsync(ApplicationRole user, string userName, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

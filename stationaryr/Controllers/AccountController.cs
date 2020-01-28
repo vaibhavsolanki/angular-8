@@ -93,13 +93,15 @@ namespace stationaryr.Controllers
         }
 
 
-        [HttpPatch("Account/GetUsers")]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
-        public async Task<IActionResult> GetUsers(ApplicationUser model)
+
+        [HttpGet("users")]
+    //    [Authorize(Authorization.Policies.ViewAllUsersPolicy)]
+        [ProducesResponseType(200, Type = typeof(List<UserViewModel>))]
+        public async Task<IActionResult> GetUsers()
         {
             return await GetUsers(-1, -1);
         }
+
 
         [HttpGet("users/{pageNumber:int}/{pageSize:int}")]
      //   [Authorize(Authorization.Policies.ViewAllUsersPolicy)]

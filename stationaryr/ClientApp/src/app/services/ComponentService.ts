@@ -119,7 +119,7 @@ export class ComponentService {
   //users
   public GetUsers(): Observable<UserEdit[]> {
 
-    return this.httpclient.post<UserEdit[]>(this.actionUrl + "api/Account/GetUsers", null)
+    return this.httpclient.get<UserEdit[]>(this.actionUrl + "api/Account/users")
 
   }
   public SaveUsers(users: UserEdit): Observable<string> {

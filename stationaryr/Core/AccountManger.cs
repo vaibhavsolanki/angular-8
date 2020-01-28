@@ -30,6 +30,18 @@ namespace stationaryr.Core
 
             if (!result.Succeeded)
                 return (false, result.Errors.Select(e => e.Description).ToArray());
+
+            user = await _userManager.FindByNameAsync(user.UserName);
+
+            try
+            {
+                result = await this._userManager.AddToRolesAsync(user, roles.Distinct());
+            }
+            catch
+            {
+                await DeleteUserAsync(user);
+                throw;
+            }
             return (true, new string[] { });
         }
 
@@ -117,6 +129,23 @@ namespace stationaryr.Core
         public Task<IList<string>> GetUserRolesAsync(ApplicationUser user)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<(bool Succeeded, string[] Errors)> DeleteUserAsync(ApplicationUser user)
+        {
+            var result = await _userManager.DeleteAsync(user);
+            return (result.Succeeded, result.Errors.Select(e => e.Description).ToArray());
+
+        }
+
+        public async Task<(bool Succeeded, string[] Errors)> DeleteUserAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user != null)
+                return await DeleteUserAsync(user);
+
+            return (true, new string[] { });
         }
     }
 }

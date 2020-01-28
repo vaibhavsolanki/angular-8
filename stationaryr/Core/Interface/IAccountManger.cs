@@ -10,7 +10,8 @@ namespace stationaryr.Core.Interface
     {
         Task<ApplicationUser> GetUserByIdAsync(string userId);
         Task<ApplicationUser> GetUserByUserNameAsync(string userName);
-
+        Task<(bool Succeeded, string[] Errors)> DeleteUserAsync(ApplicationUser user);
+        Task<(bool Succeeded, string[] Errors)> DeleteUserAsync(string userId);
         Task<(bool Succeeded, string[] Errors)> DeleteRoleAsync(ApplicationRole role);
         Task<(bool Succeeded, string[] Errors)> DeleteRoleAsync(string roleName);
         Task<List<ApplicationRole>> GetRolesLoadRelatedAsync(int page, int pageSize);

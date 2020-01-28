@@ -12,7 +12,10 @@ using stationaryr.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Text;
-
+using stationaryr.Core.Interface;
+using stationaryr.Core;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace stationaryr
 {
@@ -36,11 +39,19 @@ namespace stationaryr
                 o.JsonSerializerOptions.PropertyNamingPolicy = null;
                 o.JsonSerializerOptions.DictionaryKeyPolicy = null;
             });
+            services.AddAutoMapper(typeof(Startup));
             services.AddTransient<IUserStore<ApplicationUser>, UserStore>();
             services.AddTransient<IRoleStore<ApplicationRole>, RoleStore>();
 
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddDefaultTokenProviders();
+            services.AddScoped<IAccountManager, AccountManager>(); 
+
+            //services.AddSingleton<IAuthorizationHandler, ViewUserAuthorizationHandler>();
+            //services.AddSingleton<IAuthorizationHandler, ManageUserAuthorizationHandler>();
+            //services.AddSingleton<IAuthorizationHandler, ViewRoleAuthorizationHandler>();
+            //services.AddSingleton<IAuthorizationHandler, AssignRolesAuthorizationHandler>();
+
             //services.AddIdentity<ApplicationUser, ApplicationRole>();
             //// Configure Identity options and password complexity here
             //services.Configure<IdentityOptions>(options =>

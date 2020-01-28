@@ -1,9 +1,10 @@
 import { Component, OnInit ,ViewChild,Input,Inject} from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router';
 import { ComponentService } from '../../../../services/ComponentService';
-import { Units, UsersDgh, Department, User } from '../../../../TableEntity/TableEntityClass';
+import { Units, UsersDgh, Department } from '../../../../TableEntity/TableEntityClass';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { UserEdit } from '../../../../modal/edit-user.modal'
 export interface DialogData {
   animal: string;
   name: string;
@@ -20,9 +21,9 @@ export class GetUsers  {
   routelink: string;
   editroutelink: string;
   message: string;
-  User: UsersDgh[];
-  Users: UsersDgh[];
-  user: User[]
+  User: UserEdit[];
+  Users: UserEdit[];
+  //user: User[]
   Department: Department[];
   animal: string;
   name: string;
@@ -30,7 +31,7 @@ export class GetUsers  {
     dataSource;
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
-    displayedColumns: string[] = ['USERNAME','EMAILID','PHONENO','DEPTID', 'Edit/Delete'];
+  displayedColumns: string[] = ['USERNAME', 'EMAILID', 'PHONENO', 'DEPTID','ROLES', 'Edit/Delete'];
     constructor(private Componentservices: ComponentService, private router: Router) { }
 
     ngOnInit() {
@@ -50,29 +51,29 @@ if (this.link1 == undefined) {
         .GetUsers().subscribe(
                 data => {
             this.Users = data, console.log(this.User),
-              this.dataSource = new MatTableDataSource<UsersDgh>(this.Users),
+              this.dataSource = new MatTableDataSource<UserEdit>(this.Users),
                         this.dataSource.paginator = this.paginator
                 })
 
   }
 
 
-  editUsers(users: UsersDgh): void {
-      localStorage.removeItem('editusersId');
-    localStorage.setItem('editusersId', users.ID.toString());
-    this.router.navigate([this.editroutelink], { queryParams: { id: users.ID.toString() } } );
+  editUsers(users: UserEdit): void {
+    localStorage.removeItem('editusersId');
+    localStorage.setItem('editusersId', users.Id.toString());
+    this.router.navigate([this.editroutelink], { queryParams: { id: users.Id.toString() } });
       
 
     }
-  deleteUsers(users: UsersDgh): void {
+  deleteUsers(users: UserEdit): void {
         if (confirm("Are you sure you want to delete this ?")) {
           this.Componentservices
-            .deleteusers(users.ID).subscribe(
+            .deleteusers(users.Id).subscribe(
                     data => {
                         this.message = data,
                           
                           this.Users = this.Users.filter(u => u !== users)
-                  this.dataSource = new MatTableDataSource<UsersDgh>(this.Users),
+                this.dataSource = new MatTableDataSource<UserEdit>(this.Users),
                             this.dataSource.paginator = this.paginator
                     }
                 )

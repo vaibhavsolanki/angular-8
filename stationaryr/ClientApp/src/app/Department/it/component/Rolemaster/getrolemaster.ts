@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild ,Input} from '@angular/core';
 import { ComponentService } from '../../../../services/ComponentService';
-import { RoleViewModel } from '../../../../TableEntity/TableEntityClass';
+import { Role } from '../../../../modal/role.modal';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
 @Component({
@@ -12,8 +12,8 @@ export class GetRolemaster implements OnInit {
 @Input() link1: string;
   routelink: string;
   editroutelink: string;
- Role: RoleViewModel[];
-  Roles: RoleViewModel[];
+  Role: Role[];
+  Roles: Role[];
 message:string;
     dataSource;
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -39,20 +39,22 @@ localStorage.removeItem('editRoleId');
         .GetRoles().subscribe(
                 data => {
             this.Roles = data, console.log(this.Roles),
-              this.dataSource = new MatTableDataSource<RoleViewModel>(this.Roles),
+              this.dataSource = new MatTableDataSource<Role>(this.Roles),
                         this.dataSource.paginator = this.paginator
                 })
 
 }
 
- editRole(role: RoleViewModel): void {
+  editRole(role: Role): void {
+
+
       localStorage.removeItem('editRoleId');
-    localStorage.setItem('editRoleId', role.Id.toString());
-    this.router.navigate([this.editroutelink], { queryParams: { id: role.Id.toString() } } );
+    localStorage.setItem('editRoleId', role.Id);
+    this.router.navigate([this.editroutelink], { queryParams: { id: role.Id } } );
       
 
     }
-  deleteRole(role: RoleViewModel): void {
+  deleteRole(role: Role): void {
         if (confirm("Are you sure you want to delete this ?")) {
           this.Componentservices
             .deleterole(role.Id).subscribe(
@@ -60,7 +62,7 @@ localStorage.removeItem('editRoleId');
                         this.message = data,
                           
                           this.Roles = this.Roles.filter(u => u !== role)
-                  this.dataSource = new MatTableDataSource<RoleViewModel>(this.Roles),
+                this.dataSource = new MatTableDataSource<Role>(this.Roles),
                             this.dataSource.paginator = this.paginator
                     }
                 )

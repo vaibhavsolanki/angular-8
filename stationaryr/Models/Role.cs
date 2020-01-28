@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Oracle.ManagedDataAccess.Client;
 using Stationary.Models;
 using System;
@@ -10,71 +11,100 @@ using System.Threading.Tasks;
 
 namespace stationaryr.Models
 {
-    public class RoleStore: IRoleStore<ApplicationRole>
+    public class RoleStore: IRoleStore<ApplicationRole>,IQueryableRoleStore<ApplicationRole> 
     {
-        string connection = "User ID=system;Connection Timeout=600;Password=123;data source=(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST= localhost)(PORT=1522))(CONNECT_DATA=(SERVICE_NAME= user)));";
+        private readonly string _connectionString;
 
-        public Task<IdentityResult> CreateAsync(ApplicationRole role, CancellationToken cancellationToken)
+        public IQueryable<ApplicationRole> Roles => new Data().GetRoles().AsQueryable();
+
+        public RoleStore(IConfiguration configuration)
         {
-            throw new NotImplementedException();
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
+        }
+        public async Task<IdentityResult> CreateAsync(ApplicationRole role, CancellationToken cancellationToken)
+        {
+            await Saverole(role, cancellationToken);
+            return IdentityResult.Success;
+            //throw new NotImplementedException();
         }
 
-        public Task<IdentityResult> DeleteAsync(ApplicationRole role, CancellationToken cancellationToken)
+        public async Task<IdentityResult> DeleteAsync(ApplicationRole role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            await deleterole(role, cancellationToken);
+
+            return IdentityResult.Success;
         }
 
-        public Task<ApplicationRole> FindByIdAsync(string roleId, CancellationToken cancellationToken)
+        public async Task<ApplicationRole> FindByIdAsync(string roleId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            ApplicationRole app = await getRoleId(roleId, cancellationToken);
+
+
+            return app;
         }
 
-        public Task<ApplicationRole> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken)
+        public async Task<ApplicationRole> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            var app = await getuserrole(normalizedRoleName, cancellationToken);
+            if (app == null)
+            {
+                return await Task.FromResult((ApplicationRole)null);
+            }
+            else
+            {
+                return app;
+            }
         }
 
         public Task<string> GetNormalizedRoleNameAsync(ApplicationRole role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+
+            return Task.FromResult(role.NormalizedName);
         }
 
-        public Task<string> GetRoleIdAsync(ApplicationRole role, CancellationToken cancellationToken)
+            public Task<string> GetRoleIdAsync(ApplicationRole role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(role.Id.ToString());
         }
 
         public Task<string> GetRoleNameAsync(ApplicationRole role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(role.Name);
         }
 
         public Task SetNormalizedRoleNameAsync(ApplicationRole role, string normalizedName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(role.NormalizedName);
+           
         }
 
         public Task SetRoleNameAsync(ApplicationRole role, string roleName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            role.Name = roleName;
+            return Task.FromResult(0);
+
         }
 
-        public Task<IdentityResult> UpdateAsync(ApplicationRole role, CancellationToken cancellationToken)
+        public async Task<IdentityResult> UpdateAsync(ApplicationRole role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await Updaterole(role, cancellationToken);
+            return IdentityResult.Success;
         }
 
         public void Dispose()
         {
-            //throw new NotImplementedException();
+            throw new NotImplementedException();
         }
-        public string Saverole(RoleViewModel Role)
+        public async  Task<string> Saverole(ApplicationRole Role, CancellationToken cancellationToken)
         {
             string ret = "";
-            using (OracleConnection con = new OracleConnection(connection))
+            using (OracleConnection con = new OracleConnection(_connectionString))
             {
 
-                con.Open();
+                await con.OpenAsync(cancellationToken);
                 OracleCommand cmd = new OracleCommand("STATIONARY_ROLE_CRUD", con);
                 cmd.CommandType = CommandType.StoredProcedure;
                 OracleDataAdapter da = new OracleDataAdapter(cmd);
@@ -97,22 +127,52 @@ namespace stationaryr.Models
             }
             return ret;
         }
-
-
-        public string deleterole(string id)
+        public async Task<string> Updaterole(ApplicationRole Role, CancellationToken cancellationToken)
         {
             string ret = "";
-            using (OracleConnection con = new OracleConnection(connection))
+            using (OracleConnection con = new OracleConnection(_connectionString))
             {
 
-                con.Open();
+                await con.OpenAsync(cancellationToken);
+                OracleCommand cmd = new OracleCommand("STATIONARY_USERDGH_CRUD", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                // OracleParameter op = new OracleParameter("data_cursor", OracleDbType.RefCursor) { Direction = ParameterDirection.Output };
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", "");
+                cmd.Parameters.Add("P_NAME", Role.Name);
+                cmd.Parameters.Add("P_DESCRIPTION", Role.Description);
+
+                cmd.Parameters.Add("CALLVAL", "4");
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.Rows[0][0].ToString();
+                //  cmd.ExecuteNonQuery();
+
+                //  ret[0].App_status = ds.Tables[1].ToList<ApplicationStatus>();
+                con.Close();
+
+            }
+            return ret;
+        }
+
+        public async Task<string> deleterole(ApplicationRole role, CancellationToken cancellationToken)
+        {
+            string ret = "";
+            using (OracleConnection con = new OracleConnection(_connectionString))
+            {
+                await con.OpenAsync(cancellationToken);
+              
                 OracleCommand cmd = new OracleCommand("STATIONARY_ROLE_CRUD", con);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 OracleDataAdapter da = new OracleDataAdapter(cmd);
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
 
-                cmd.Parameters.Add("P_ID", id);
+                cmd.Parameters.Add("P_ID", role.Id);
                 cmd.Parameters.Add("P_NAME","");
                 cmd.Parameters.Add("P_DESCRIPTION","");
 
@@ -130,43 +190,43 @@ namespace stationaryr.Models
 
         }
 
-        public List<RoleViewModel> GetRoles()
+        //public  List<RoleViewModel> GetRoles()
+        //{
+        //    List<RoleViewModel> ret = new List<RoleViewModel>();
+        //    using (OracleConnection con = new OracleConnection(_connectionString))
+        //    {
+
+        //        con.Open();
+        //        OracleCommand cmd = new OracleCommand("STATIONARY_ROLE_CRUD", con);
+        //        cmd.CommandType = CommandType.StoredProcedure;
+
+        //        OracleDataAdapter da = new OracleDataAdapter(cmd);
+        //        cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+        //        cmd.Parameters.Add("P_ID","");
+        //        cmd.Parameters.Add("P_NAME", "");
+        //        cmd.Parameters.Add("P_DESCRIPTION", "");
+
+
+        //        cmd.Parameters.Add("CALLVAL", "1");
+
+        //        DataTable ds = new DataTable();
+
+
+        //        da.Fill(ds);
+
+        //        ret = ds.ToList<RoleViewModel>();
+        //    }
+        //    return ret;
+        //}
+
+
+        public async Task<ApplicationRole> getRoleId(string id, CancellationToken cancellationToken)
         {
-            List<RoleViewModel> ret = new List<RoleViewModel>();
-            using (OracleConnection con = new OracleConnection(connection))
+            List<ApplicationRole> ret = new List<ApplicationRole>();
+            using (OracleConnection con = new OracleConnection(_connectionString))
             {
 
-                con.Open();
-                OracleCommand cmd = new OracleCommand("STATIONARY_ROLE_CRUD", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                OracleDataAdapter da = new OracleDataAdapter(cmd);
-                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
-                cmd.Parameters.Add("P_ID","");
-                cmd.Parameters.Add("P_NAME", "");
-                cmd.Parameters.Add("P_DESCRIPTION", "");
-
-
-                cmd.Parameters.Add("CALLVAL", "1");
-
-                DataTable ds = new DataTable();
-
-
-                da.Fill(ds);
-
-                ret = ds.ToList<RoleViewModel>();
-            }
-            return ret;
-        }
-
-
-        public List<RoleViewModel> getRoleId(string id)
-        {
-            List<RoleViewModel> ret = new List<RoleViewModel>();
-            using (OracleConnection con = new OracleConnection(connection))
-            {
-
-                con.Open();
+                await con.OpenAsync(cancellationToken);
                 OracleCommand cmd = new OracleCommand("STATIONARY_ROLE_CRUD", con);
                 cmd.CommandType = CommandType.StoredProcedure;
 
@@ -190,12 +250,102 @@ namespace stationaryr.Models
 
 
 
-                ret = ds.ToList<RoleViewModel>();
+                ret = ds.ToList<ApplicationRole>();
             }
-            return ret;
+          return ret[0]; 
+
+        }
+        public async Task<ApplicationRole> getuserrole(string id, CancellationToken cancellationToken)
+        {
+            List<ApplicationRole> ret = new List<ApplicationRole>();
+            ApplicationRole ret1 = new ApplicationRole();
+            using (OracleConnection con = new OracleConnection(_connectionString))
+            {
+
+                await con.OpenAsync(cancellationToken);
+                OracleCommand cmd = new OracleCommand("STATIONARY_ROLE_CRUD", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", id);
+
+
+                cmd.Parameters.Add("P_NAME", "");
+                cmd.Parameters.Add("P_DESCRIPTION", "");
+
+
+                cmd.Parameters.Add("CALLVAL", "2");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+
+
+
+
+                ret = ds.ToList<ApplicationRole>();
+                if (ret.Count == 0)
+                {
+                    ret1 = null;
+                }
+                else
+                { ret1 = ret[0]; }
+            }
+            return ret1;
+        }
+
+        public Task AddToRoleAsync(ApplicationRole user, string roleName, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IList<string>> GetRolesAsync(ApplicationRole user, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
 
         }
 
-       
+        public async Task<IList<ApplicationRole>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
+        {
+            return await Task.Run(() => new Data().GetRoles());
+        }
+
+        public Task<bool> IsInRoleAsync(ApplicationRole user, string roleName, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RemoveFromRoleAsync(ApplicationRole user, string roleName, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> GetNormalizedUserNameAsync(ApplicationRole user, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> GetUserIdAsync(ApplicationRole user, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> GetUserNameAsync(ApplicationRole user, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SetNormalizedUserNameAsync(ApplicationRole user, string normalizedName, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SetUserNameAsync(ApplicationRole user, string userName, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

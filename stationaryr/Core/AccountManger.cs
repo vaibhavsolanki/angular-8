@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Stationary.Models;
 using stationaryr.Core.Interface;
 using stationaryr.Models;
 
@@ -32,6 +33,14 @@ namespace stationaryr.Core
             return (true, new string[] { });
         }
 
+        public Task<List<ApplicationRole>> GetRolesLoadRelatedAsync(int page, int pageSize)
+        {
+            List<ApplicationRole> rr= new Data().GetRoles();
+          var role=  Task.Run(() => new List<ApplicationRole>(rr));
+            return role;
+         //   throw new NotImplementedException();
+        }
+
         public async Task<ApplicationUser> GetUserByIdAsync(string userId)
         {
             return await _userManager.FindByIdAsync(userId);
@@ -43,6 +52,69 @@ namespace stationaryr.Core
         }
 
         public Task<List<(ApplicationUser User, string[] Roles)>> GetUsersAndRolesAsync(int page, int pageSize)
+        {
+           
+
+            // throw new NotImplementedException();
+            throw new NotImplementedException();
+        }
+
+        public async Task<ApplicationRole> GetRoleByIdAsync(string roleId)
+        {
+            return await _roleManager.FindByIdAsync(roleId);
+        }
+
+
+        public async Task<ApplicationRole> GetRoleByNameAsync(string roleName)
+        {
+            return await _roleManager.FindByNameAsync(roleName);
+        }
+
+        public  async Task<ApplicationRole> GetRoleLoadRelatedAsync(string roleName)
+        {
+            ApplicationRole app= new Data().GetRoles().Where(r => r.Name == roleName).SingleOrDefault();
+            var role = await Task.Run(() =>app);
+            return role;
+            
+           
+        }
+
+        public async Task<(bool Succeeded, string[] Errors)> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims)
+        {
+            var result = await _roleManager.CreateAsync(role);
+
+            if (!result.Succeeded)
+                return (false, result.Errors.Select(e => e.Description).ToArray());
+            return (true, new string[] { });
+        }
+
+        public async Task<(bool Succeeded, string[] Errors)> DeleteRoleAsync(ApplicationRole role)
+        {
+            var result = await _roleManager.DeleteAsync(role);
+            return (result.Succeeded, result.Errors.Select(e => e.Description).ToArray());
+
+        }
+
+        public async Task<(bool Succeeded, string[] Errors)> DeleteRoleAsync(string roleName)
+        {
+            var role = await _roleManager.FindByNameAsync(roleName);
+
+            if (role != null)
+                return await DeleteRoleAsync(role);
+
+            return (true, new string[] { });
+           
+        }
+
+        public async Task<(bool Succeeded, string[] Errors)> UpdateRoleAsync(ApplicationRole role, IEnumerable<string> claims)
+        {
+            var result = await _roleManager.UpdateAsync(role);
+            if (!result.Succeeded)
+                return (false, result.Errors.Select(e => e.Description).ToArray());
+            return (true, new string[] { });
+        }
+
+        public Task<IList<string>> GetUserRolesAsync(ApplicationUser user)
         {
             throw new NotImplementedException();
         }

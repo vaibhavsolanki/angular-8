@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild,Input } from '@angular/core';
 import { ComponentService } from '../../../../services/ComponentService';
-import { RoleViewModel } from '../../../../TableEntity/TableEntityClass';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Role } from '../../../../modal/role.modal';
+import { Router, ActivatedRoute } from '@angular/router'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-role-master',
@@ -11,8 +11,8 @@ export class Rolemaster implements OnInit {
      @Input() link1: string;
   routelink: string;
   editroutelink: string;
- Role: RoleViewModel;
-  Roles: RoleViewModel[];
+  Role: Role;
+  Roles: Role[];
  datasubmit: string;
   btnvisibility: boolean = true;
   RoleForm: FormGroup;
@@ -37,9 +37,9 @@ if (this.link1 == undefined) {
     }
  this.RoleForm = this.formbuilder.group({
           
-            NAME: ['', Validators.required],
+            Name: ['', Validators.required],
       
-        DESCRIPTION: []
+        Description: []
 
         })
 
@@ -47,10 +47,10 @@ let empid = localStorage.getItem('editRoleId');
 
       if (empid !=null) {
         this.Componentservices.getRoleId(empid).subscribe(data => {
-              this.Roles = data,
-                console.log(this.Roles),
-                this.RoleForm.controls['Name'].setValue(this.Roles[0].Name);
-          this.RoleForm.controls['Description'].setValue(this.Roles[0].Description);
+          this.Role = data,
+                console.log(this.Role),
+            this.RoleForm.controls['Name'].setValue(this.Role.Name);
+          this.RoleForm.controls['Description'].setValue(this.Role.Description);
         
               
             })

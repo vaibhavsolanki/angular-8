@@ -36,7 +36,7 @@ namespace stationaryr.Models
 
         public void Dispose()
         {
-            //throw new NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public async Task<ApplicationUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
@@ -108,32 +108,72 @@ namespace stationaryr.Models
         {
          
            string ret = "";
-            using (OracleConnection con = new OracleConnection(_connectionString))
+            try
             {
+                using (OracleConnection con = new OracleConnection(_connectionString))
+                {
 
-                await con.OpenAsync(cancellationToken);
-                OracleCommand cmd = new OracleCommand("STATIONARY_USERDGH_CRUD", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                OracleDataAdapter da = new OracleDataAdapter(cmd);
-                // OracleParameter op = new OracleParameter("data_cursor", OracleDbType.RefCursor) { Direction = ParameterDirection.Output };
-                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
-                cmd.Parameters.Add("P_ID", "");
-                cmd.Parameters.Add("P_USERNAME", Userdgh.UserName);
-                cmd.Parameters.Add("P_EMAILID", Userdgh.Email);
-                cmd.Parameters.Add("P_PHONENO", Userdgh.UserName);
-                cmd.Parameters.Add("P_DEPTID", Userdgh.Department);
-                cmd.Parameters.Add("P_PASSWORD", Userdgh.PasswordHash);
-                cmd.Parameters.Add("CALLVAL", "0");
-                // cmd.ExecuteNonQuery();
-                DataTable ds = new DataTable();
+                    await con.OpenAsync(cancellationToken);
+                    OracleCommand cmd = new OracleCommand("STATIONARY_USERDGH_CRUD", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    OracleDataAdapter da = new OracleDataAdapter(cmd);
+                    // OracleParameter op = new OracleParameter("data_cursor", OracleDbType.RefCursor) { Direction = ParameterDirection.Output };
+                    cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("P_ID", "");
+                    cmd.Parameters.Add("P_USERNAME", Userdgh.UserName);
+                    cmd.Parameters.Add("P_EMAILID", Userdgh.Email);
+                    cmd.Parameters.Add("P_PHONENO", Userdgh.UserName);
+                    cmd.Parameters.Add("P_DEPTID", Userdgh.Department);
+                    cmd.Parameters.Add("P_PASSWORD", Userdgh.PasswordHash);
+                    cmd.Parameters.Add("CALLVAL", "0");
+                    // cmd.ExecuteNonQuery();
+                    DataTable ds = new DataTable();
 
 
-                da.Fill(ds);
+                    da.Fill(ds);
 
-                ret = ds.Rows[0][0].ToString();
-                //  ret[0].App_status = ds.Tables[1].ToList<ApplicationStatus>();
-                con.Close();
+                    ret = ds.Rows[0][0].ToString();
+                    Userdgh.Id = ds.Rows[0][1].ToString();
+                    userrole(Userdgh);
+                    //  ret[0].App_status = ds.Tables[1].ToList<ApplicationStatus>();
+                    con.Close();
 
+                }
+            }
+            catch(Exception ex)
+                {
+               
+
+            }
+            return ret;
+        }
+
+        public string userrole(ApplicationUser user)
+        {
+            string ret = "";
+            var userid = user.Id;
+            foreach (var role in user.Roles)
+            {
+                using (OracleConnection con = new OracleConnection(_connectionString))
+                {
+
+
+                    OracleCommand cmd = new OracleCommand("STATIONARY_USER_ROLE_INSERT", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    OracleDataAdapter da = new OracleDataAdapter(cmd);
+                    // OracleParameter op = new OracleParameter("data_cursor", OracleDbType.RefCursor) { Direction = ParameterDirection.Output };
+                    cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("P_USERID", userid);
+                    cmd.Parameters.Add("P_ROLEID", role.RoleId);
+                    cmd.Parameters.Add("CALLVAL", "0");
+                    // cmd.ExecuteNonQuery();
+                    DataTable ds = new DataTable();
+
+
+                    da.Fill(ds);
+
+                    ret = ds.Rows[0][0].ToString();
+                }
             }
             return ret;
         }

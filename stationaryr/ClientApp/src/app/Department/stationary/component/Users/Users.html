@@ -2,23 +2,23 @@
   <form [formGroup]="UsersForm" class="example-container col-md-6">
 
     <mat-form-field>
-      <input matInput placeholder="USERNAME" formControlName="USERNAME" [ngClass]="{ 'is-invalid': submitted && f.USERNAME.errors }">
-      <mat-error *ngIf="submitted && f.USERNAME.errors">USERNAME is required</mat-error>
+      <input matInput placeholder="USERNAME" formControlName="UserName" [ngClass]="{ 'is-invalid': submitted && f.UserName.errors }">
+      <mat-error *ngIf="submitted && f.UserName.errors">USERNAME is required</mat-error>
 
     </mat-form-field>
     <mat-form-field>
-      <input matInput placeholder="EMAILID" formControlName="EMAILID" [ngClass]="{ 'is-invalid': submitted && f.EMAILID.errors }">
-      <mat-error *ngIf="submitted && f.EMAILID.errors?.required">EMAILID is required</mat-error>
-      <mat-error *ngIf="f.EMAILID.errors?.email">Email must be a valid email address</mat-error>
+      <input matInput placeholder="EMAILID" formControlName="Email" [ngClass]="{ 'is-invalid': submitted && f.Email.errors }">
+      <mat-error *ngIf="submitted && f.Email.errors?.required">EMAILID is required</mat-error>
+      <mat-error *ngIf="f.Email.errors?.email">Email must be a valid email address</mat-error>
     </mat-form-field>
     <mat-form-field>
-      <input matInput placeholder="PHONENO" formControlName="PHONENO" [ngClass]="{ 'is-invalid': submitted && f.PHONENO.errors }">
-      <mat-error *ngIf="submitted && f.PHONENO.errors?.required">PHONENO is required</mat-error>
-      <mat-error *ngIf="f.PHONENO.errors?.minlength">PHONENO must be at least 10 characters</mat-error>
+      <input matInput placeholder="PhoneNumber" formControlName="PhoneNumber" [ngClass]="{ 'is-invalid': submitted && f.PhoneNumber.errors }">
+      <mat-error *ngIf="submitted && f.PhoneNumber.errors?.required">PHONENO is required</mat-error>
+      <mat-error *ngIf="f.PhoneNumber.errors?.minlength">PHONENO must be at least 10 characters</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>DEPARTMENT</mat-label>
-      <select formControlName="DEPTID" matNativeControl name="DEPTID" #department>
+      <select formControlName="Department" matNativeControl name="Department" #department>
         <option value="" selected></option>
         <option *ngFor="let Dept of Department" [value]="Dept.ID">
           {{Dept.NAME}}
@@ -26,9 +26,18 @@
       </select>
     </mat-form-field>
     <mat-form-field>
-      <input matInput placeholder="PASSWORD" formControlName="PASSWORD" [ngClass]="{ 'is-invalid': submitted && f.PHONENO.errors }">
-      <mat-error *ngIf="submitted && f.PASSWORD.errors?.required">PASSWORD is required</mat-error>
-      
+      <mat-label>ROLES</mat-label>
+      <select multiple formControlName="Roles" matNativeControl name="Roles" #department>
+        <option value="" selected></option>
+        <option *ngFor="let role of Roles" [value]="role.Id">
+          {{role.Name}}
+        </option>
+      </select>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Password" formControlName="NewPassword" [ngClass]="{ 'is-invalid': submitted && f.NewPassword.errors }">
+      <mat-error *ngIf="submitted && f.NewPassword.errors?.required">PASSWORD is required</mat-error>
+
     </mat-form-field>
 
     <button mat-raised-button color="primary" [disabled]="loading" *ngIf="btnvisibility" (click)="onSubmit()">

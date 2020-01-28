@@ -13,12 +13,13 @@ using System.Text.RegularExpressions;
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
+using stationaryr.Models;
 
 namespace Stationary.Models
 {
     public class Data
     {
-        string connection = "User ID=system;Connection Timeout=600;Password=123;data source=(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST= localhost)(PORT=1522))(CONNECT_DATA=(SERVICE_NAME= user)));";
+        string connection = "User ID=xuser;Connection Timeout=600;Password=xuser;data source=(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST= 192.168.0.111)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME= dgh)));";
         //report
         public static List<USER> getuser()
         {
@@ -2037,6 +2038,34 @@ namespace Stationary.Models
 
             }
             return ret;
+        }
+        public List<ApplicationRole> GetRoles()
+        {
+            List<ApplicationRole> ret = new List<ApplicationRole>();
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_ROLE_CRUD", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", "");
+                cmd.Parameters.Add("P_NAME", "");
+                cmd.Parameters.Add("P_DESCRIPTION", "");
+
+
+                cmd.Parameters.Add("CALLVAL", "1");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret =  ds.ToList<ApplicationRole>();
+            }
+            return  ret;
         }
 
     }

@@ -12,7 +12,7 @@ export class AuthenticationService {
     private currentUserSubject: BehaviorSubject<Login>;
   public currentUser: Observable<Login>;
   //private actionUrl: string = "http://192.168.0.42/";
-  private actionUrl: string = "https://localhost:44324/";
+  private actionUrl: string = "https://localhost:44324/"//;
     constructor(private http: HttpClient) {
         this.currentUserSubject = new BehaviorSubject<Login>(JSON.parse(localStorage.getItem('currentUser')));
         this.currentUser = this.currentUserSubject.asObservable();

@@ -48,12 +48,16 @@
       <th mat-header-cell *matHeaderCellDef> Dept </th>
       <td mat-cell *matCellDef="let row"> {{row.DEPTID}} </td>
     </ng-container>
+    <ng-container matColumnDef="ROLES">
+      <th mat-header-cell *matHeaderCellDef> Role </th>
+      <td mat-cell *matCellDef="let row"> {{row.Roles}} </td>
+    </ng-container>
     <ng-container matColumnDef="Edit/Delete">
       <th mat-header-cell *matHeaderCellDef> Edit/Delete </th>
       <td mat-cell *matCellDef="let row">
         <button (click)="editUsers(row)" style="margin-right: 10px;" class="btn btn-info"> <mat-icon>edit</mat-icon></button>
         <button (click)="deleteUsers(row)" class="btn btn-info"> <mat-icon>delete</mat-icon></button>
-      
+
       </td>
 
     </ng-container>

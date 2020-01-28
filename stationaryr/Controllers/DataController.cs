@@ -11,7 +11,7 @@ namespace Stationary.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+   // [Authorize]
     public class DataController : ControllerBase
     {
         [HttpPost("[action]")]

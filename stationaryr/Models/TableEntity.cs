@@ -282,26 +282,7 @@ namespace Stationary.Models
         public string CREATED_DATE { get; set; }
 
     }
-    public class RoleViewModel
-    {
-        public string Id { get; set; }
+  
 
-       public string Name { get; set; }
-
-        public string Description { get; set; }
-
-        public int UsersCount { get; set; }
-
-        public PermissionViewModel[] Permissions { get; set; }
-    }
-
-    public class PermissionViewModel
-    {
-        public string Name { get; set; }
-        public string Value { get; set; }
-        public string GroupName { get; set; }
-        public string Description { get; set; }
-
-    }
-
+   
     }

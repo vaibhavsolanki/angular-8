@@ -84,7 +84,7 @@ export class DGHuserRepositoryComponent {
     }
     Employeeload() {
         this.Componentservices.dghemployee('Working').subscribe(data => {
-            this.User = data;
+           // this.User = data;
             console.log(this.User);
         });
 

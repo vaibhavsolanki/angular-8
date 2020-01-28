@@ -134,7 +134,7 @@ export class GetReport {
   
   Employeeload(status) {
     this.Componentservices.dghemployee(status).subscribe(data => {
-            this.User = data;
+            //this.User = data;
             this.Department = this.User[0].DEPARTMENTS;
             console.log(this.User);
             console.log(this.Department);

@@ -3,9 +3,10 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SubCategory, UsersDgh,RoleViewModel, PrintRepository, contract,devicename,DGHUserRepository, Report, User, Units, Material, COMPANY, listofdropdown, StationaryRepository } from '../TableEntity/TableEntityClass';
-import { ActivatedRoute  } from '@angular/router';
-
+import { SubCategory, UsersDgh, PrintRepository, contract,devicename,DGHUserRepository, Report, Units, Material, COMPANY, listofdropdown, StationaryRepository } from '../TableEntity/TableEntityClass';
+import { ActivatedRoute } from '@angular/router';
+import { UserEdit } from '../modal/edit-user.modal';
+import { Role } from '../modal/role.modal';
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded', 'Access-Control-Allow-Headers': 'http://localhost:4200' })
 };
@@ -25,25 +26,25 @@ export class ComponentService {
   }
 
 //rolemaster
- public GetRoles(): Observable<RoleViewModel[]> {
+  public GetRoles(): Observable<Role[]> {
 
-    return this.httpclient.post<RoleViewModel[]>(this.actionUrl + "api/Role/GetRoles", null)
+    return this.httpclient.get<Role[]>(this.actionUrl + "api/Account/roles")
 
   }
-  public Saverole(RoleViewModel: RoleViewModel): Observable<string> {
+  public Saverole(RoleViewModel: Role): Observable<string> {
 
-    return this.httpclient.post<string>(this.actionUrl + "api/Role/Saverole", RoleViewModel)
+    return this.httpclient.post<string>(this.actionUrl + "api/Account/roles", RoleViewModel)
 
   }
   deleterole(id: string) {
-    return this.httpclient.delete<string>(this.actionUrl + "api/Role/deleterole/" + id);
+    return this.httpclient.delete<string>(this.actionUrl + "api/Account/roles/" + id);
   }
 
-  getRoleId(id: string): Observable<RoleViewModel[]> {
+  getRoleId(id: string): Observable<Role> {
     let body = {
       'ID': id
     }
-    return this.httpclient.get<RoleViewModel[]>(this.actionUrl + "api/Role/getRoleId/" + id);
+    return this.httpclient.get<Role>(this.actionUrl + "api/Account/roles/" + id);
   }
 
 
@@ -116,31 +117,32 @@ export class ComponentService {
 
 
   //users
-  public GetUsers(): Observable<UsersDgh[]> {
+  public GetUsers(): Observable<UserEdit[]> {
 
-    return this.httpclient.post<UsersDgh[]>(this.actionUrl + "api/Account/GetUsers", null)
-
-  }
-  public SaveUsers(users: UsersDgh): Observable<string> {
-
-    return this.httpclient.post<string>(this.actionUrl + "api/Account/Register", users)
+    return this.httpclient.post<UserEdit[]>(this.actionUrl + "api/Account/GetUsers", null)
 
   }
-  deleteusers(id: number) {
+  public SaveUsers(users: UserEdit): Observable<string> {
+    console.log(users);
+   
+    return this.httpclient.post<string>(this.actionUrl + "api/Account/Register", users)//, users
+
+  }
+  deleteusers(id: string) {
     return this.httpclient.delete<string>(this.actionUrl + "api/Data/deleteusers/" + id);
   }
 
-  getuserId(id: number): Observable<UsersDgh[]> {
+  getuserId(id: string): Observable<UserEdit[]> {
     let body = {
       'ID': id
     }
-    return this.httpclient.get<UsersDgh[]>(this.actionUrl + "api/Data/getuserId/" + id);
+    return this.httpclient.get<UserEdit[]>(this.actionUrl + "api/Data/getuserId/" + id);
   }
 
 
-  public Updateusers(users: UsersDgh): Observable<string> {
+  public Updateusers(users: UserEdit): Observable<string> {
     const firstParam: string = this.route.snapshot.queryParamMap.get('id')
-    users.ID = Number(firstParam);
+    users.Id = firstParam;
     return this.httpclient.post<string>(this.actionUrl + "api/Account/Updateusers", users)
 
   }
@@ -170,9 +172,9 @@ export class ComponentService {
    
 
     // employee
-    public dghemployee(status:string): Observable<User[]> {
+  public dghemployee(status: string): Observable<UserEdit[]> {
 
-      return this.httpclient.get<User[]>(this.actionUrl + "api/Data/dghemployee/"+status)
+    return this.httpclient.get<UserEdit[]>(this.actionUrl + "api/Data/dghemployee/"+status)
 
     }
 
@@ -272,7 +274,7 @@ export class ComponentService {
     }
     //material
      public GetMaterial(status:string): Observable<Material[]> {
-
+       alert(this.actionUrl);
        return this.httpclient.get<Material[]>(this.actionUrl + "api/Data/GetMaterial/" + status)
 
     }

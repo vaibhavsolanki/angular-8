@@ -1,12 +1,12 @@
 <form [formGroup]="RoleForm" class="example-container col-md-6">
 
   <mat-form-field>
-    <input matInput placeholder="NAME" formControlName="NAME" [ngClass]="{ 'is-invalid': submitted && f.NAME.errors }">
-    <mat-error *ngIf="submitted && f.NAME.errors">NAME is required</mat-error>
+    <input matInput placeholder="Name" formControlName="Name" [ngClass]="{ 'is-invalid': submitted && f.Name.errors }">
+    <mat-error *ngIf="submitted && f.Name.errors">NAME is required</mat-error>
 
   </mat-form-field>
   <mat-form-field>
-    <input matInput placeholder="DESCRIPTION" formControlName="DESCRIPTION" [ngClass]="{ 'is-invalid': submitted && f.DESCRIPTION.errors }">
+    <input matInput placeholder="Description" formControlName="Description" [ngClass]="{ 'is-invalid': submitted && f.Description.errors }">
 
   </mat-form-field>
 

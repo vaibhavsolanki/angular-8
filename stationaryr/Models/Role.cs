@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Oracle.ManagedDataAccess.Client;
 using Stationary.Models;
@@ -6,12 +7,13 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace stationaryr.Models
 {
-    public class RoleStore: IQueryableRoleStore<ApplicationRole>,IRoleStore<ApplicationRole>
+    public class RoleStore: IQueryableRoleStore<ApplicationRole>,IRoleStore<ApplicationRole>,IRoleClaimStore<ApplicationRole>
     {
         private readonly string _connectionString;
 
@@ -96,7 +98,7 @@ namespace stationaryr.Models
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+           // throw new NotImplementedException();
         }
         public async  Task<string> Saverole(ApplicationRole Role, CancellationToken cancellationToken)
         {
@@ -297,5 +299,25 @@ namespace stationaryr.Models
             return ret1;
         }
 
+        public Task AddClaimAsync(ApplicationRole role, Claim claim, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IList<Claim>> GetClaimsAsync(ApplicationRole role, CancellationToken cancellationToken = default)
+        {
+            List<Claim> cl = new List<Claim>();
+
+            var claim = new Data().getclaimbyrole(role.Id);
+            
+
+            // getclaim();
+            return await Task.Run(() => cl);
+        }
+
+        public Task RemoveClaimAsync(ApplicationRole role, Claim claim, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

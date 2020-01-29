@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Oracle.ManagedDataAccess.Client;
+using Stationary.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -36,7 +37,7 @@ namespace stationaryr.Models
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public async Task<ApplicationUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
@@ -133,7 +134,7 @@ namespace stationaryr.Models
                     da.Fill(ds);
 
                     ret = ds.Rows[0][0].ToString();
-                    Userdgh.Id = ds.Rows[0][1].ToString();
+                   // Userdgh.Id = ds.Rows[0][1].ToString();
                    // userrole(Userdgh);
                     //  ret[0].App_status = ds.Tables[1].ToList<ApplicationStatus>();
                     con.Close();
@@ -348,9 +349,9 @@ namespace stationaryr.Models
             return  Task.Run(() => userrole(user.Id, roleName));
         }
 
-        public Task<IList<string>> GetRolesAsync(ApplicationUser user, CancellationToken cancellationToken)
+        public async Task<IList<string>> GetRolesAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return await Task.Run(() => new Data().Getrolebyuser(user.Id));
         }
 
         public Task<IList<ApplicationUser>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)

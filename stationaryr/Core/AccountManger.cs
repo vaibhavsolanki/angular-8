@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Stationary.Models;
@@ -58,43 +59,8 @@ namespace stationaryr.Core
         {
             throw new NotImplementedException();
         }
-
-        public    Task<List<(ApplicationUser User, string[] Roles)>> GetUsersAndRolesAsync(int page, int pageSize)
-        {
-
-            //List<string> role1 = new List<string>();
-
-            //var user = new Data().GetUsers().GroupBy(x=>x.Id) ;
-            //foreach (var val in user)
-            //{
-
-            //    // Here salary is the key value 
-            //    Console.WriteLine("Group By Salary: {0}", val.Key);
-
-            //    // Display name of the employees 
-            //    // Inner collection according to 
-            //    // the key value 
-            //    foreach (ApplicationUser e in val)
-            //    {
-            //        Console.WriteLine("Employee Name: {0}",
-            //                                   e.FullName);
-            //        role1.Add(e.FullName);
-            //    }
-                
-             
-            //}
-
-            List<ApplicationUser> users = new Data().GetUsers();
-            var userRoleIds = users.SelectMany(u => u.Roles.Select(r => r.RoleId)).ToList();
-
-            
-           var roles = new Data().GetRoles().Where(r => userRoleIds.Contains(r.Id));
-           return Task.Run(()=>users.Select(u => (u, roles.Where(r => u.Roles.Select(ur => ur.RoleId).Contains(r.Id)).Select(r => r.Name).ToArray())).ToList());
-
-           
-            // throw new NotImplementedException();
-           
-        }
+      
+       
 
         public async Task<ApplicationRole> GetRoleByIdAsync(string roleId)
         {
@@ -122,6 +88,18 @@ namespace stationaryr.Core
 
             if (!result.Succeeded)
                 return (false, result.Errors.Select(e => e.Description).ToArray());
+            role = await _roleManager.FindByNameAsync(role.Name);
+
+            foreach (string claim in claims.Distinct())
+            {
+                result = await this._roleManager.AddClaimAsync(role, new Claim(ClaimConstants.Permission, ApplicationPermissions.GetPermissionByValue(claim)));
+
+                if (!result.Succeeded)
+                {
+                    await DeleteRoleAsync(role);
+                    return (false, result.Errors.Select(e => e.Description).ToArray());
+                }
+            }
             return (true, new string[] { });
         }
 
@@ -151,9 +129,11 @@ namespace stationaryr.Core
             return (true, new string[] { });
         }
 
-        public Task<IList<string>> GetUserRolesAsync(ApplicationUser user)
+        public async Task<IList<string>> GetUserRolesAsync(ApplicationUser user)
         {
-            throw new NotImplementedException();
+            return await _userManager.GetRolesAsync(user);
+
+
         }
 
         public async Task<(bool Succeeded, string[] Errors)> DeleteUserAsync(ApplicationUser user)
@@ -172,5 +152,62 @@ namespace stationaryr.Core
 
             return (true, new string[] { });
         }
+        public Task<List<(ApplicationUser User, string[] Roles)>> GetUsersAndRolesAsync(int page, int pageSize)
+        {
+
+            //List<string> role1 = new List<string>();
+
+            //var user = new Data().GetUsers().GroupBy(x=>x.Id) ;
+            //foreach (var val in user)
+            //{
+
+            //    // Here salary is the key value 
+            //    Console.WriteLine("Group By Salary: {0}", val.Key);
+
+            //    // Display name of the employees 
+            //    // Inner collection according to 
+            //    // the key value 
+            //    foreach (ApplicationUser e in val)
+            //    {
+            //        Console.WriteLine("Employee Name: {0}",
+            //                                   e.FullName);
+            //        role1.Add(e.FullName);
+            //    }
+
+
+            //}
+
+            List<ApplicationUser> users = new Data().GetUsers();
+            var userRoleIds = users.SelectMany(u => u.Roles.Select(r => r.RoleId)).ToList();
+
+
+            var roles = new Data().GetRoles().Where(r => userRoleIds.Contains(r.Id));
+            return Task.Run(() => users.Select(u => (u, roles.Where(r => u.Roles.Select(ur => ur.RoleId).Contains(r.Id)).Select(r => r.Name).ToArray())).ToList());
+
+
+            // throw new NotImplementedException();
+
+        }
+
+        public async Task<(ApplicationUser User, string[] Roles)> GetUserAndRolesAsync(string user)
+        {
+
+           
+            var users =  await _userManager.FindByIdAsync(user);
+           var roles =await  _userManager.GetRolesAsync(users);
+            //foreach (var role in roles)
+            //{
+            //  aa.a
+            //}
+            // var roles =  _roleManager.Roles.ToList() ;
+
+            // var userRoleIds = users.SelectMany(u => u.Roles.Select(r => r.RoleId)).ToList();
+
+
+            // var roles = new Data().GetRoles().Where(r => userRoleIds.Contains(r.Id));
+            return (users, new string[] { });
+        }
+
+      
     }
 }

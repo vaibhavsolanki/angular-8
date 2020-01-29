@@ -7,6 +7,7 @@ import { SubCategory, UsersDgh, PrintRepository, contract,devicename,DGHUserRepo
 import { ActivatedRoute } from '@angular/router';
 import { UserEdit } from '../modal/edit-user.modal';
 import { Role } from '../modal/role.modal';
+import { Permission } from '../modal/permission.modal';
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded', 'Access-Control-Allow-Headers': 'http://localhost:4200' })
 };
@@ -24,7 +25,18 @@ export class ComponentService {
     return localStorage.getItem('currentRole');
 
   }
+  //permission
 
+  //getUserPreferences(): Observable<pe[]> {
+
+
+  //}
+
+  getpermission(): Observable<Permission[]> {
+    return this.httpclient.get<Permission[]>(this.actionUrl + "api/Account/permissions")
+
+
+  }
 //rolemaster
   public GetRoles(): Observable<Role[]> {
 

@@ -19,7 +19,7 @@ namespace Stationary.Models
 {
     public class Data
     {
-        string connection = "User ID=system;Connection Timeout=600;Password=123;data source=(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST= localhost)(PORT=1522))(CONNECT_DATA=(SERVICE_NAME= user)));";
+        string connection = "User ID=xuser;Connection Timeout=600;Password=xuser;data source=(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST= 192.168.0.111)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME= dgh)));";
         //report
         public static List<USER> getuser()
         {
@@ -2067,35 +2067,64 @@ namespace Stationary.Models
             }
             return  ret;
         }
-        //public List<ApplicationRole> getrolebyuser()
-        //{
-           
-                 
-        //    List<ApplicationRole> ret = new List<ApplicationRole>();
-        //    using (OracleConnection con = new OracleConnection(connection))
-        //    {
+        public List<string>  Getrolebyuser(string userid)
+        {
+            List<string> ret = new List<string>();
+            using (OracleConnection con = new OracleConnection(connection))
+            {
 
-        //        con.Open();
-        //        OracleCommand cmd = new OracleCommand("STATIONARY_USER_ROLE_INSERT", con);
-        //        cmd.CommandType = CommandType.StoredProcedure;
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_USER_ROLE_INSERT", con);
+                cmd.CommandType = CommandType.StoredProcedure;
 
-        //        OracleDataAdapter da = new OracleDataAdapter(cmd);
-        //                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
-        //                cmd.Parameters.Add("P_USERID", role);
-        //                cmd.Parameters.Add("P_ROLEID", role.RoleId);
-        //                cmd.Parameters.Add("CALLVAL", "0");
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_USERID", userid);
+                cmd.Parameters.Add("P_ROLEID", "");
+              
+                cmd.Parameters.Add("CALLVAL", "1");
 
-        //                cmd.Parameters.Add("CALLVAL", "1");
-
-        //        DataTable ds = new DataTable();
+                DataTable ds = new DataTable();
 
 
-        //        da.Fill(ds);
+                da.Fill(ds);
 
-        //        ret = ds.ToList<ApplicationRole>();
-        //    }
-        //    return ret;
-        //}
+                foreach(DataRow row in ds.Rows)
+                {
+                    ret.Add(row["Roles"].ToString());
+                }
+            }
+            return ret;
+        }
+        public List<PermissionViewModels> getclaimbyrole(string roleid)
+        {
+
+
+            List<PermissionViewModels> ret = new List<PermissionViewModels>();
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STTAIONARY_ROLE_PERMISSION", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ROLEID", roleid);
+                cmd.Parameters.Add("P_CLAIMTYPE", "");
+                cmd.Parameters.Add("P_CLAIMVALUE", "");
+
+                cmd.Parameters.Add("CALLVAL", "1");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.ToList<PermissionViewModels>();
+            }
+            return ret;
+        }
         public List<ApplicationUser> GetUsers()
         {
             List<ApplicationUser> ret = new List<ApplicationUser>();

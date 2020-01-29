@@ -27,7 +27,7 @@ namespace stationaryr.Controllers
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
         private readonly IAccountManager _accountManager;
-      //  private readonly SignInManager<ApplicationUser> _signInManager;
+       private readonly SignInManager<ApplicationUser> _signInManager;
         private const string GetUserByIdActionName = "GetUserById";
         private const string GetRoleByIdActionName = "GetRoleById";
         public AccountController(IConfiguration config , IAccountManager accountManager, SignInManager<ApplicationUser> signInManager, IMapper mapper)
@@ -35,7 +35,7 @@ namespace stationaryr.Controllers
             _config = config;
             _mapper = mapper;
              _accountManager = accountManager;
-           // _signInManager = signInManager;
+            _signInManager = signInManager;
         }
 
         [HttpPost("[action]")]
@@ -44,44 +44,60 @@ namespace stationaryr.Controllers
             return Ok(new Data().StateData());
         }
 
-        //[HttpPost("[action]")]
+        [HttpPost("[action]")]
 
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //public async Task<IActionResult> Login([FromBody] logindata model)
-        //{
-        //    var result = "";
-          //  var result = await _signInManager.PasswordSignInAsync(model.username, model.passward, model.RememberMe, lockoutOnFailure: false);
-            //if (result.Succeeded)
-            //{
-            //    return Ok("success");
-            //}
-            //else
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Login([FromBody] logindata model)
+        {
 
-            //{
-            //    return Ok("success");
-            //    // return  BadRequest(new { message = "Username or password is incorrect" });
-            //}
+          
+            var result = await _signInManager.PasswordSignInAsync(model.username, model.passward, model.RememberMe, lockoutOnFailure: false);
+            if (result.Succeeded)
+            {
+                //  var current_User =;
+
+             var   userAndRoles = await  _accountManager.GetUserAndRolesAsync("9E125F5BD4B64710ABD054BC9E95AF8D");
+                // var user = ;
+                //var rolesids = await _accountManager.GetUserRolesAsync(user);
+
+                
+
+                //var userVM = _mapper.Map<UserViewModel>(userAndRoles..User);
+                //userVM.Roles = userAndRoles.Value.Roles;
+
+                //return userVM;
+
+
+
+                return Ok("success");
+            }
+            else
+
+            {
+                return Ok("success");
+                // return  BadRequest(new { message = "Username or password is incorrect" });
+            }
 
                 //return Ok(new Data().StateData());
                 //var user = Data.getuser().Where(x => x.NAME == logindata.username && x.PASSWORD == logindata.passward).ToList();
                 //if (user != null)
                 //{
 
-                //    logindata.role = user[0].ROLE;
-                //    logindata.approle = user[0].APPROLE.ToList();
-                //    var tokenString = GenerateJWT(logindata);
-                //    logindata.token = tokenString;
-                //    return Ok(logindata);
+            //    logindata.role = user[0].ROLE;
+            //    logindata.approle = user[0].APPROLE.ToList();
+            //    var tokenString = GenerateJWT(logindata);
+            //    logindata.token = tokenString;
+            //    return Ok(logindata);
 
-                //}
-                //else
-                //{
+            //}
+            //else
+            //{
 
-                //    return BadRequest(new { message = "Username or password is incorrect" });
+            //    return BadRequest(new { message = "Username or password is incorrect" });
 
-                //}
+            //}
 
-           // }
+            }
         [HttpPatch("Account/Updateusers")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
@@ -183,11 +199,7 @@ namespace stationaryr.Controllers
             {
                 if (role == null)
                     return BadRequest($"{nameof(role)} cannot be null");
-                //ApplicationRole appRole = new ApplicationRole();
-                //appRole.Id = role.Id;
-                //appRole.Name = role.Name;
-                //appRole.Description = role.Description;
-              //  appRole.Id = role.Id;
+              
                 ApplicationRole appRole = _mapper.Map<ApplicationRole>(role);
 
                 var result = await _accountManager.CreateRoleAsync(appRole, role.Permissions?.Select(p => p.Value).ToArray());
@@ -203,6 +215,14 @@ namespace stationaryr.Controllers
             }
 
             return BadRequest(ModelState);
+        }
+
+        [HttpGet("permissions")]
+      //  [Authorize(Authorization.Policies.ViewAllRolesPolicy)]
+        [ProducesResponseType(200, Type = typeof(List<PermissionViewModel>))]
+        public IActionResult GetAllPermissions()
+        {
+            return Ok(_mapper.Map<List<PermissionViewModel>>(ApplicationPermissions.AllPermissions));
         }
 
 

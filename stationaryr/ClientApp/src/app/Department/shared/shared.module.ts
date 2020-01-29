@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import { GetUsers } from '../stationary/component/Users/GetUsers';
 import { UsersComponent } from '../stationary/component/Users/UsersComponent';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { GroupByPipe } from '../../Directive/group-by.pipe'
 import {
 
     MatFormFieldModule, MatSelectModule,
@@ -29,7 +30,7 @@ import {
         MatInputModule, 
         MatToolbarModule, MatSidenavModule, MatListModule,
         MatFormFieldModule, MatSelectModule, MatCardModule, MatPaginatorModule, MatSortModule,MatDialogModule],
-  declarations: [MaterialComponent, GetMaterial, GetSubCategory, SubCategoryComponent, SubChildCategoryComponent, GetSubChildCategory,GetRolemaster,Rolemaster,GetUsers,UsersComponent],
-  exports: [MaterialComponent, GetMaterial, GetSubCategory, SubCategoryComponent, SubChildCategoryComponent, GetSubChildCategory,GetRolemaster,Rolemaster,GetUsers,UsersComponent]
+  declarations: [GroupByPipe,MaterialComponent, GetMaterial, GetSubCategory, SubCategoryComponent, SubChildCategoryComponent, GetSubChildCategory,GetRolemaster,Rolemaster,GetUsers,UsersComponent],
+  exports: [GroupByPipe,MaterialComponent, GetMaterial, GetSubCategory, SubCategoryComponent, SubChildCategoryComponent, GetSubChildCategory,GetRolemaster,Rolemaster,GetUsers,UsersComponent]
 })
 export class sharedModule { }

@@ -1,4 +1,4 @@
-<form [formGroup]="RoleForm" class="example-container col-md-6">
+<form [formGroup]="RoleForm" class="example-container col-md-9">
 
   <mat-form-field>
     <input matInput placeholder="Name" formControlName="Name" [ngClass]="{ 'is-invalid': submitted && f.Name.errors }">
@@ -9,16 +9,54 @@
     <input matInput placeholder="Description" formControlName="Description" [ngClass]="{ 'is-invalid': submitted && f.Description.errors }">
 
   </mat-form-field>
+  <div class="row">
+    <div class="col-sm-12 card card-body bg-light well-sm permissionsRow">
+      <div class="row">
+        <ng-template ngFor let-permissionGroup [ngForOf]="allPermissions | groupBy:'GroupName'" let-i="index">
+          <div class="form-group row col-md-6 permissionsColumn">
+            <label class="col-md-5 col-form-label group-name" for="checkboxes" (click)="toggleGroup(permissionGroup.key)">{{permissionGroup.key}}</label>
+            <div class="col-md-7">
+              <div class="form-check" *ngFor="let permission of permissionGroup.value">
+                <input  name="checkboxes-{{permission.Value}}" id="checkboxes-{{permission.Value}}" type="checkbox" class="form-check-input" value="{{permission.Value}}"   (change)="onCheckboxChange($event)">
+                <label class="form-check-label" for="checkboxes-{{permission.Value}}">{{permission.Name}}</label>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="(i + 1) % 2 === 0" class="clearfix"></div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <hr class="edit-last-separator-hr" />
+    </div>
+  </div>
 
 
-  
-  <button mat-raised-button color="primary" [disabled]="loading" *ngIf="btnvisibility" (click)="onSubmit()">
-    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-    Submit
-  </button>
-  <button mat-raised-button color="primary" [disabled]="loading" *ngIf="!btnvisibility" (click)="onUpdate()">
-    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-    Update
-  </button>
+  <!--<div class="form-group row">
+    <div class="col-sm-5">
+      <div *ngIf="canManageRoles" class="float-left">
+        <a (click)="selectAll()" href="javascript:;" class="btn btn-link">{{'roles.editor.SelectAll'}}</a>|<a (click)="selectNone()" href="javascript:;" class="btn btn-link">{{'roles.editor.SelectNone' }}</a>
+      </div>
+    </div>
+    <div class="col-sm-7">
+      <div ngPreserveWhitespaces class="float-right">
+        <button *ngIf="!canManageRoles" type="button" (click)="cancel()" class="btn btn-outline-secondary">{{'roles.editor.Close' }}</button>
+        <button *ngIf="canManageRoles" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-times'></i> {{'roles.editor.Cancel' }}</button>
+        <button *ngIf="canManageRoles" type="submit" class="btn btn-primary" [disabled]="isSaving">
+          <i *ngIf="!isSaving" class='fa fa-save'></i><i *ngIf="isSaving" class='fa fa-circle-o-notch fa-spin'></i> {{isSaving ? ('roles.editor.Saving' ) : ('roles.editor.Save' )}}
+        </button>
+      </div>
+    </div>
+    </div>-->
+    <button mat-raised-button color="primary" [disabled]="loading" *ngIf="btnvisibility" (click)="onSubmit()">
+      <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+      Submit
+    </button>
+    <button mat-raised-button color="primary" [disabled]="loading" *ngIf="!btnvisibility" (click)="onUpdate()">
+      <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+      Update
+    </button>
 </form>
 

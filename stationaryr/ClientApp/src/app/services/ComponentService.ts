@@ -45,6 +45,8 @@ export class ComponentService {
   }
   public Saverole(RoleViewModel: Role): Observable<string> {
 
+    console.log(RoleViewModel.Permissions);
+    
     return this.httpclient.post<string>(this.actionUrl + "api/Account/roles", RoleViewModel)
 
   }

@@ -43,7 +43,7 @@ import {
 @NgModule({
     declarations: [HomeComponent,
     AppComponent, LoaderComponent, 
-      
+   
     LoginComponent,
     OnlynumberDirective
       

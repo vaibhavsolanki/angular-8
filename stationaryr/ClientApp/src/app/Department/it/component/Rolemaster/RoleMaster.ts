@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild,Input } from '@angular/core';
 import { ComponentService } from '../../../../services/ComponentService';
 import { Role } from '../../../../modal/role.modal';
 import { Router, ActivatedRoute } from '@angular/router'
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { Permission } from '../../../../modal/permission.modal';
 @Component({
   selector: 'app-role-master',
@@ -43,8 +43,9 @@ if (this.link1 == undefined) {
           
             Name: ['', Validators.required],
       
-        Description: []
-
+   Description: [],
+   Permissions: this.formbuilder.array([])
+  
         })
 
 let empid = localStorage.getItem('editRoleId');
@@ -62,12 +63,50 @@ let empid = localStorage.getItem('editRoleId');
             this.btnvisibility = false;
         }
 }
+  onCheckboxChange(e) {
+    const Permissions: FormArray = this.RoleForm.get('Permissions') as FormArray;
 
+    if (e.target.checked) {
+      Permissions.push(new FormControl(e.target.value));
+    } else {
+      let i: number = 0;
+      Permissions.controls.forEach((item: FormControl) => {
+        if (item.value == e.target.value) {
+          Permissions.removeAt(i);
+          return;
+        }
+        i++;
+      });
+    }
+  }
   getUserPreferences() {
     return this.Componentservices.getpermission().subscribe(data => {
       this.allPermissions = data;
 
       console.log(this.allPermissions);
+    });
+  }
+  selectAll() {
+    this.allPermissions.forEach(p => this.selectedValues[p.value] = true);
+  }
+
+
+  selectNone() {
+    this.allPermissions.forEach(p => this.selectedValues[p.value] = false);
+  }
+  toggleGroup(groupName: string) {
+    let firstMemberValue: boolean;
+
+    this.allPermissions.forEach(p => {
+      if (p.groupName != groupName) {
+        return;
+      }
+
+      if (firstMemberValue == null) {
+        firstMemberValue = this.selectedValues[p.value] == true;
+      }
+
+      this.selectedValues[p.value] = !firstMemberValue;
     });
   }
 
@@ -79,7 +118,8 @@ get f() { return this.RoleForm.controls; }
             return;
         }
    this.loading = true;
-   this.Role.Permissions = this.getSelectedPermissions();
+ this.Role.Permissions = this.getSelectedPermissions();
+   
   // this.Role.permissions = this.getSelectedPermissions();
       this.Componentservices
         .Saverole(this.RoleForm.value)

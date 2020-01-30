@@ -282,7 +282,12 @@ namespace Stationary.Models
         public string CREATED_DATE { get; set; }
 
     }
-  
+    public class UserIDROLEID
 
-   
+    {
+        public string UserID { get; set; }
+        public string ROLEID { get; set; }
+    }
+
+
     }

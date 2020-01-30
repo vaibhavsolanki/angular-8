@@ -43,11 +43,11 @@ export class ComponentService {
     return this.httpclient.get<Role[]>(this.actionUrl + "api/Account/roles")
 
   }
-  public Saverole(RoleViewModel: Role): Observable<string> {
-
+  public Saverole(RoleViewModel: Role, permission: Permission[]): Observable<string> {
+    RoleViewModel.Permissions = permission;
     console.log(RoleViewModel.Permissions);
     
-    return this.httpclient.post<string>(this.actionUrl + "api/Account/roles", RoleViewModel)
+    return this.httpclient.post<string>(this.actionUrl + "api/Account/roles22", RoleViewModel)
 
   }
   deleterole(id: string) {

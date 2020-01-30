@@ -7,22 +7,23 @@ using Microsoft.AspNetCore.Identity;
 using Stationary.Models;
 using stationaryr.Core.Interface;
 using stationaryr.Models;
-
+using stationaryr.ViewModel;
+using AutoMapper;
 namespace stationaryr.Core
 {
     public class AccountManager:IAccountManager
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
-
+        private readonly IMapper _mapper;
 
         public AccountManager(UserManager<ApplicationUser> userManager,
-            RoleManager<ApplicationRole> roleManager)
+            RoleManager<ApplicationRole> roleManager, IMapper mapper)
         {
             
             _userManager = userManager;
             _roleManager = roleManager;
-
+            _mapper = mapper;
         }
 
         public async Task<(bool Succeeded, string[] Errors)> CreateUserAsync(ApplicationUser user, IEnumerable<string> roles,string password)
@@ -152,60 +153,59 @@ namespace stationaryr.Core
 
             return (true, new string[] { });
         }
-        public Task<List<(ApplicationUser User, string[] Roles)>> GetUsersAndRolesAsync(int page, int pageSize)
+
+      
+        public async  Task<List<(ApplicationUser User, string[] Roles)>> GetUsersAndRolesAsync(int page, int pageSize)
         {
 
-            //List<string> role1 = new List<string>();
+            //var xx= new Data().Getrolealluser();
+            var users = _userManager.Users.ToList();
 
-            //var user = new Data().GetUsers().GroupBy(x=>x.Id) ;
-            //foreach (var val in user)
+            //ApplicationUser usersVM = new ApplicationUser();
+            //foreach (var user in users)
             //{
+            //    var userAndRoles = await GetUserAndRolesAsync(user.Id);
+            //    if (userAndRoles == null)
+            //        return null;
 
-            //    // Here salary is the key value 
-            //    Console.WriteLine("Group By Salary: {0}", val.Key);
+            //    usersVM = _mapper.Map<ApplicationUser>(userAndRoles.Value.User);
+            //    usersVM.Roles = userAndRoles.Value.Roles;
 
-            //    // Display name of the employees 
-            //    // Inner collection according to 
-            //    // the key value 
-            //    foreach (ApplicationUser e in val)
-            //    {
-            //        Console.WriteLine("Employee Name: {0}",
-            //                                   e.FullName);
-            //        role1.Add(e.FullName);
-            //    }
+            //}
+
 
 
             //}
 
-            List<ApplicationUser> users = new Data().GetUsers();
-            var userRoleIds = users.SelectMany(u => u.Roles.Select(r => r.RoleId)).ToList();
+            var roles = _roleManager.Roles.ToList();
+            string[] role = { };
+
+           // return (users, role);
+            throw new NotImplementedException();
+            //foreach (var u in users)
+            //{
+            //    var role1 = _userManager.GetRolesAsync(u);
+            //    string[] role =  role1.ToArray();
+            //}
 
 
-            var roles = new Data().GetRoles().Where(r => userRoleIds.Contains(r.Id));
-            return Task.Run(() => users.Select(u => (u, roles.Where(r => u.Roles.Select(ur => ur.RoleId).Contains(r.Id)).Select(r => r.Name).ToArray())).ToList());
+            //var roles = new Data().GetRoles().Where(r => userRoleIds.Contains(r.Id));
+            // return await Task.Run(() => users.Select(u => (u, roles.ToArray())));
 
 
-            // throw new NotImplementedException();
+
 
         }
 
-        public async Task<(ApplicationUser User, string[] Roles)> GetUserAndRolesAsync(string user)
+        public async Task<(ApplicationUser User, string[] Roles)?> GetUserAndRolesAsync(string user)
         {
 
            
             var users =  await _userManager.FindByIdAsync(user);
            var roles =await  _userManager.GetRolesAsync(users);
-            //foreach (var role in roles)
-            //{
-            //  aa.a
-            //}
-            // var roles =  _roleManager.Roles.ToList() ;
-
-            // var userRoleIds = users.SelectMany(u => u.Roles.Select(r => r.RoleId)).ToList();
-
-
-            // var roles = new Data().GetRoles().Where(r => userRoleIds.Contains(r.Id));
-            return (users, new string[] { });
+            string[] role = roles.ToArray();
+           
+            return (users, role);
         }
 
       

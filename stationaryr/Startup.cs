@@ -15,6 +15,7 @@ using System.Text;
 using stationaryr.Core.Interface;
 using stationaryr.Core;
 using AutoMapper;
+using AppPermissions =stationaryr.Models.ApplicationPermissions;
 using Microsoft.AspNetCore.Authorization;
 
 namespace stationaryr
@@ -45,7 +46,7 @@ namespace stationaryr
 
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddDefaultTokenProviders();
-            services.AddScoped<IAccountManager, AccountManager>(); 
+            services.AddScoped<IAccountManager, AccountManager>();
 
             //services.AddSingleton<IAuthorizationHandler, ViewUserAuthorizationHandler>();
             //services.AddSingleton<IAuthorizationHandler, ManageUserAuthorizationHandler>();
@@ -109,7 +110,19 @@ namespace stationaryr
                    };
                    services.AddCors();
                });
-            services.AddAuthorization();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(Authorization.Policies.ViewAllUsersPolicy, policy => policy.RequireClaim(ClaimConstants.Permission, AppPermissions.ViewUsers));
+                options.AddPolicy(Authorization.Policies.ManageAllUsersPolicy, policy => policy.RequireClaim(ClaimConstants.Permission, AppPermissions.ManageUsers));
+
+                options.AddPolicy(Authorization.Policies.ViewAllRolesPolicy, policy => policy.RequireClaim(ClaimConstants.Permission, AppPermissions.ViewRoles));
+            //    options.AddPolicy(Authorization.Policies.ViewRoleByRoleNamePolicy, policy => policy.Requirements.Add(new ViewRoleAuthorizationRequirement()));
+                options.AddPolicy(Authorization.Policies.ManageAllRolesPolicy, policy => policy.RequireClaim(ClaimConstants.Permission, AppPermissions.ManageRoles));
+
+               // options.AddPolicy(Authorization.Policies.AssignAllowedRolesPolicy, policy => policy.Requirements.Add(new AssignRolesAuthorizationRequirement()));
+            });
+
             //services.AddAuthorization(config =>
             //{
             //    config.AddPolicy(Policies.Admin, Policies.AdminPolicy());

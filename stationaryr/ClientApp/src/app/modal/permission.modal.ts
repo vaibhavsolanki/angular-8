@@ -21,15 +21,15 @@ export class Permission {
   public static readonly assignRolesPermission: PermissionValues = 'roles.assign';
 
 
-  constructor(name?: PermissionNames, value?: PermissionValues, groupName?: string, description?: string) {
-    this.name = name;
-    this.value = value;
-    this.groupName = groupName;
-    this.description = description;
+  constructor(Name?: PermissionNames, Value?: PermissionValues, GroupName?: string, Description?: string) {
+    this.Name = Name;
+    this.Value = Value;
+    this.GroupName = GroupName;
+    this.Description = Description;
   }
 
-  public name: PermissionNames;
-  public value: PermissionValues;
-  public groupName: string;
-  public description: string;
+  public Name: PermissionNames;
+  public Value: PermissionValues;
+  public GroupName: string;
+  public Description: string;
 }

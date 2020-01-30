@@ -15,7 +15,7 @@ namespace stationaryr.Core.Interface
         Task<(bool Succeeded, string[] Errors)> DeleteRoleAsync(ApplicationRole role);
         Task<(bool Succeeded, string[] Errors)> DeleteRoleAsync(string roleName);
         Task<List<ApplicationRole>> GetRolesLoadRelatedAsync(int page, int pageSize);
-        Task<(ApplicationUser User, string[] Roles)> GetUserAndRolesAsync(string user);
+        Task<(ApplicationUser User, string[] Roles)?> GetUserAndRolesAsync(string user);
       Task<List<(ApplicationUser User, string[] Roles)>> GetUsersAndRolesAsync(int page, int pageSize);
         Task<IList<string>> GetUserRolesAsync(ApplicationUser user);
 

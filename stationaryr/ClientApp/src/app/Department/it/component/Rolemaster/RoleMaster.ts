@@ -12,7 +12,7 @@ export class Rolemaster implements OnInit {
      @Input() link1: string;
   routelink: string;
   editroutelink: string;
-  Role: Role;
+  public Role: Role = new Role();
   Roles: Role[];
  datasubmit: string;
   btnvisibility: boolean = true;
@@ -20,6 +20,7 @@ export class Rolemaster implements OnInit {
   submitted = false;
   loading = false;
   allPermissions: Permission[] = [];
+  pp: string[]=[];
   public selectedValues: { [key: string]: boolean; } = {};
  constructor(private formbuilder: FormBuilder, private Componentservices: ComponentService, private router: Router) {
 
@@ -68,11 +69,14 @@ let empid = localStorage.getItem('editRoleId');
 
     if (e.target.checked) {
       Permissions.push(new FormControl(e.target.value));
+      this.pp.push(e.target.value);
+     
     } else {
       let i: number = 0;
       Permissions.controls.forEach((item: FormControl) => {
         if (item.value == e.target.value) {
           Permissions.removeAt(i);
+          this.pp.indexOf(e.target.value);
           return;
         }
         i++;
@@ -82,31 +86,32 @@ let empid = localStorage.getItem('editRoleId');
   getUserPreferences() {
     return this.Componentservices.getpermission().subscribe(data => {
       this.allPermissions = data;
-
       console.log(this.allPermissions);
+      
+      
     });
   }
   selectAll() {
-    this.allPermissions.forEach(p => this.selectedValues[p.value] = true);
+    this.allPermissions.forEach(p => this.selectedValues[p.Value] = true);
   }
 
 
   selectNone() {
-    this.allPermissions.forEach(p => this.selectedValues[p.value] = false);
+    this.allPermissions.forEach(p => this.selectedValues[p.Value] = false);
   }
   toggleGroup(groupName: string) {
     let firstMemberValue: boolean;
 
     this.allPermissions.forEach(p => {
-      if (p.groupName != groupName) {
+      if (p.GroupName != groupName) {
         return;
       }
 
       if (firstMemberValue == null) {
-        firstMemberValue = this.selectedValues[p.value] == true;
+        firstMemberValue = this.selectedValues[p.Value] == true;
       }
 
-      this.selectedValues[p.value] = !firstMemberValue;
+      this.selectedValues[p.Value] = !firstMemberValue;
     });
   }
 
@@ -118,11 +123,13 @@ get f() { return this.RoleForm.controls; }
             return;
         }
    this.loading = true;
- this.Role.Permissions = this.getSelectedPermissions();
+
    
-  // this.Role.permissions = this.getSelectedPermissions();
+   this.Role.Permissions = this.allPermissions;
+   
+  //this.Role.permissions = this.getSelectedPermissions();
       this.Componentservices
-        .Saverole(this.RoleForm.value)
+        .Saverole(this.RoleForm.value, this.Role.Permissions)
         .subscribe(data => { this.datasubmit = data, alert(this.datasubmit), this.loading = false; console.log(this.datasubmit); this.router.navigate([this.editroutelink]); },
                 error => () => {
 
@@ -132,8 +139,10 @@ get f() { return this.RoleForm.controls; }
 
   }
 
-  private getSelectedPermissions() {
-    return this.allPermissions.filter(p => this.selectedValues[p.value] == true);
+  private getSelectedPermissions(value: string ) {
+
+    return this.allPermissions.filter(p => this.selectedValues[value] == true);
+    //.filter(p => this.selectedValues[p.value] == true)
   }
     onUpdate() {
        // this.submitted = true;

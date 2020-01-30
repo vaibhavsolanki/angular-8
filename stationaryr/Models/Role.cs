@@ -10,18 +10,19 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-
+using AutoMapper;
 namespace stationaryr.Models
 {
     public class RoleStore: IQueryableRoleStore<ApplicationRole>,IRoleStore<ApplicationRole>,IRoleClaimStore<ApplicationRole>
     {
         private readonly string _connectionString;
-
+        private readonly IMapper _mapper;
         public IQueryable<ApplicationRole> Roles => new Data().GetRoles().AsQueryable();
 
-        public RoleStore(IConfiguration configuration)
+        public RoleStore(IConfiguration configuration, IMapper mapper)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection");
+            _mapper = mapper;
         }
         public async Task<IdentityResult> CreateAsync(ApplicationRole role, CancellationToken cancellationToken)
         {
@@ -136,12 +137,12 @@ namespace stationaryr.Models
             {
 
                 await con.OpenAsync(cancellationToken);
-                OracleCommand cmd = new OracleCommand("STATIONARY_USERDGH_CRUD", con);
+                OracleCommand cmd = new OracleCommand("STATIONARY_ROLE_CRUD", con);
                 cmd.CommandType = CommandType.StoredProcedure;
                 OracleDataAdapter da = new OracleDataAdapter(cmd);
                 // OracleParameter op = new OracleParameter("data_cursor", OracleDbType.RefCursor) { Direction = ParameterDirection.Output };
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
-                cmd.Parameters.Add("P_ID", "");
+                cmd.Parameters.Add("P_ID", Role.Id);
                 cmd.Parameters.Add("P_NAME", Role.Name);
                 cmd.Parameters.Add("P_DESCRIPTION", Role.Description);
 
@@ -257,7 +258,7 @@ namespace stationaryr.Models
           return ret[0]; 
 
         }
-        public async Task<ApplicationRole> getuserrole(string id, CancellationToken cancellationToken)
+        public async Task<ApplicationRole> getuserrole(string name, CancellationToken cancellationToken)
         {
             List<ApplicationRole> ret = new List<ApplicationRole>();
             ApplicationRole ret1 = new ApplicationRole();
@@ -270,14 +271,14 @@ namespace stationaryr.Models
 
                 OracleDataAdapter da = new OracleDataAdapter(cmd);
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
-                cmd.Parameters.Add("P_ID", id);
+                cmd.Parameters.Add("P_ID", "");
 
 
-                cmd.Parameters.Add("P_NAME", "");
+                cmd.Parameters.Add("P_NAME", name);
                 cmd.Parameters.Add("P_DESCRIPTION", "");
 
 
-                cmd.Parameters.Add("CALLVAL", "2");
+                cmd.Parameters.Add("CALLVAL", "4");
 
                 DataTable ds = new DataTable();
 
@@ -301,7 +302,7 @@ namespace stationaryr.Models
 
         public Task AddClaimAsync(ApplicationRole role, Claim claim, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+           return Task.Run(()=> new Data().Addclaimbyrole(role.Id, claim.Type, claim.Value));
         }
 
         public async Task<IList<Claim>> GetClaimsAsync(ApplicationRole role, CancellationToken cancellationToken = default)
@@ -310,6 +311,8 @@ namespace stationaryr.Models
 
             var claim = new Data().getclaimbyrole(role.Id);
             
+                cl = _mapper.Map<List<Claim>>(claim);
+          
 
             // getclaim();
             return await Task.Run(() => cl);
@@ -317,7 +320,7 @@ namespace stationaryr.Models
 
         public Task RemoveClaimAsync(ApplicationRole role, Claim claim, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return Task.Run(() => new Data().Addclaimbyrole(role.Id, claim.Type, claim.Value));
         }
     }
 }

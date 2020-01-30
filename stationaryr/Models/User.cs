@@ -12,10 +12,13 @@ using System.Threading.Tasks;
 
 namespace stationaryr.Models
 {
-    public class UserStore : IUserStore<ApplicationUser>, IUserPasswordStore<ApplicationUser>,IUserRoleStore<ApplicationUser>
+    public class UserStore : IUserStore<ApplicationUser>, IUserPasswordStore<ApplicationUser>,IUserRoleStore<ApplicationUser>, IQueryableUserStore<ApplicationUser>
 
     {
         private readonly string _connectionString;
+
+        public   IQueryable<ApplicationUser> Users =>   new Data().GetUsers().AsQueryable();
+
         public UserStore(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection");

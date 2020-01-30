@@ -14,12 +14,14 @@ using System.IO;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
 using stationaryr.Models;
+using stationaryr.ViewModel;
+using System.Collections;
 
 namespace Stationary.Models
 {
     public class Data
     {
-        string connection = "User ID=system;Connection Timeout=600;Password=123;data source=(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST= localhost)(PORT=1522))(CONNECT_DATA=(SERVICE_NAME= user)));";
+        string connection = "User ID=xuser;Connection Timeout=600;Password=xuser;data source=(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST= 192.168.0.111)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME= dgh)));";
         //report
         public static List<USER> getuser()
         {
@@ -2096,11 +2098,41 @@ namespace Stationary.Models
             }
             return ret;
         }
-        public List<PermissionViewModels> getclaimbyrole(string roleid)
+
+        public List<UserIDROLEID> Getrolealluser()
         {
+            List<UserIDROLEID> ret = new List<UserIDROLEID>();
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_USER_ROLE_INSERT", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_USERID", "");
+                cmd.Parameters.Add("P_ROLEID", "");
+
+                cmd.Parameters.Add("CALLVAL", "3");
+
+                DataTable ds = new DataTable();
 
 
-            List<PermissionViewModels> ret = new List<PermissionViewModels>();
+                da.Fill(ds);
+                ret = ds.ToList<UserIDROLEID>();
+                //foreach (DataRow row in ds.Rows)
+                //{
+                //    ret.Add(row["Roles"].ToString());
+                //}
+            }
+            return ret;
+        }
+        public List<ClaimViewModel> getclaimbyrole(string roleid)
+        {
+            
+
+            List<ClaimViewModel> ret = new List<ClaimViewModel>();
             using (OracleConnection con = new OracleConnection(connection))
             {
 
@@ -2121,7 +2153,67 @@ namespace Stationary.Models
 
                 da.Fill(ds);
 
-                ret = ds.ToList<PermissionViewModels>();
+                ret = ds.ToList<ClaimViewModel>();
+            }
+            return ret;
+        }
+
+        public string Addclaimbyrole(string roleid,string claimtype, string claimvalue)
+        {
+
+
+            string ret = "";
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STTAIONARY_ROLE_PERMISSION", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ROLEID", roleid);
+                cmd.Parameters.Add("P_CLAIMTYPE", claimtype);
+                cmd.Parameters.Add("P_CLAIMVALUE", claimvalue);
+
+                cmd.Parameters.Add("CALLVAL", "0");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.Rows[0][0].ToString();
+            }
+            return ret;
+        }
+
+        public string removeclaimbyrole(string roleid, string claimtype, string claimvalue)
+        {
+
+
+            string ret = "";
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STTAIONARY_ROLE_PERMISSION", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ROLEID", roleid);
+                cmd.Parameters.Add("P_CLAIMTYPE", claimtype);
+                cmd.Parameters.Add("P_CLAIMVALUE", claimvalue);
+
+                cmd.Parameters.Add("CALLVAL", "2");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.Rows[0][0].ToString();
             }
             return ret;
         }

@@ -55,21 +55,14 @@ namespace stationaryr.Controllers
             if (result.Succeeded)
             {
                 //  var current_User =;
-
-             var   userAndRoles = await  _accountManager.GetUserAndRolesAsync("9E125F5BD4B64710ABD054BC9E95AF8D");
-                // var user = ;
-                //var rolesids = await _accountManager.GetUserRolesAsync(user);
-
-                
-
-                //var userVM = _mapper.Map<UserViewModel>(userAndRoles..User);
-                //userVM.Roles = userAndRoles.Value.Roles;
+                UserViewModel userVM = await GetUserViewModelHelper("CDB74587D54A45BDAFAC2A2DF0D2AAD3");
+           
 
                 //return userVM;
 
 
 
-                return Ok("success");
+                return Ok(userVM);
             }
             else
 
@@ -98,6 +91,18 @@ namespace stationaryr.Controllers
             //}
 
             }
+
+        private async Task<UserViewModel> GetUserViewModelHelper(string userId)
+        {
+            var userAndRoles = await _accountManager.GetUserAndRolesAsync(userId);
+            if (userAndRoles == null)
+                return null;
+
+            var userVM = _mapper.Map<UserViewModel>(userAndRoles.Value.User);
+            userVM.Roles = userAndRoles.Value.Roles;
+           
+            return userVM;
+        }
         [HttpPatch("Account/Updateusers")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]

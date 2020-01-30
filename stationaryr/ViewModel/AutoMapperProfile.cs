@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Stationary.Models;
 using stationaryr.Models;
 using System;
@@ -29,6 +30,11 @@ namespace stationaryr.ViewModel
              .ReverseMap();
             CreateMap<RoleViewModel, ApplicationRole>()
                 .ForMember(d => d.Id, map => map.Condition(src => src.Id != null));
+
+            CreateMap<IdentityRoleClaim<string>, ClaimViewModel>()
+               .ForMember(d => d.Type, map => map.MapFrom(s => s.ClaimType))
+               .ForMember(d => d.Value, map => map.MapFrom(s => s.ClaimValue))
+               .ReverseMap();
         }
         }
     }

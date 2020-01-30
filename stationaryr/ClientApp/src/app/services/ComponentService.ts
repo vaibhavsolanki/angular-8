@@ -47,7 +47,7 @@ export class ComponentService {
     RoleViewModel.Permissions = permission;
     console.log(RoleViewModel.Permissions);
     
-    return this.httpclient.post<string>(this.actionUrl + "api/Account/roles22", RoleViewModel)
+    return this.httpclient.post<string>(this.actionUrl + "api/Account/roles", RoleViewModel)
 
   }
   deleterole(id: string) {

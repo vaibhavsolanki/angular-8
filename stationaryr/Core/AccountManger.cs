@@ -158,40 +158,39 @@ namespace stationaryr.Core
         public async  Task<List<(ApplicationUser User, string[] Roles)>> GetUsersAndRolesAsync(int page, int pageSize)
         {
 
-            //var xx= new Data().Getrolealluser();
+            var roleswithids= new Data().Getrolealluser().ToList();
             var users = _userManager.Users.ToList();
 
-            //ApplicationUser usersVM = new ApplicationUser();
-            //foreach (var user in users)
-            //{
-            //    var userAndRoles = await GetUserAndRolesAsync(user.Id);
-            //    if (userAndRoles == null)
-            //        return null;
+            List<ApplicationUser> pp = new List<ApplicationUser>();
+            // users.Where(x => x.Id == roleswithids.Where(y=>y.UserID==x.Id));
+            try
+            {
+                foreach (var user in users)
+                {
+                    var a = roleswithids.Where(x => x.UserID == user.Id).ToList();
+                    var a1 = a.ConvertAll(x => new IdentityUserRole<string> { RoleId=x.ROLEID,UserId=x.UserID});
+                    user.Roles = a1;
+                    pp.Add(user);
+                    //foreach (var t in a1)
+                    //{
+                    //    user.Roles.Add(t);
+                    //}
 
-            //    usersVM = _mapper.Map<ApplicationUser>(userAndRoles.Value.User);
-            //    usersVM.Roles = userAndRoles.Value.Roles;
 
-            //}
+                }
+            }
 
+            catch (Exception ex)
+            {
 
-
-            //}
-
+            }
+            var userRoleIds = users.SelectMany(u => u.Roles.Select(r => r.RoleId)).ToList();
             var roles = _roleManager.Roles.ToList();
-            string[] role = { };
-
-           // return (users, role);
-            throw new NotImplementedException();
-            //foreach (var u in users)
-            //{
-            //    var role1 = _userManager.GetRolesAsync(u);
-            //    string[] role =  role1.ToArray();
-            //}
-
-
-            //var roles = new Data().GetRoles().Where(r => userRoleIds.Contains(r.Id));
-            // return await Task.Run(() => users.Select(u => (u, roles.ToArray())));
-
+            var role2 =  roles
+               .Where(r => userRoleIds.Contains(r.Id)).ToArray();
+            return users
+                  .Select(u => (u, role2.Where(r => u.Roles.Select(ur => ur.RoleId).Contains(r.Id)).Select(r => r.Name).ToArray()))
+                  .ToList();
 
 
 

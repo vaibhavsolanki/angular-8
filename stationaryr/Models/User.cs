@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace stationaryr.Models
 {
-    public class UserStore : IUserStore<ApplicationUser>, IUserPasswordStore<ApplicationUser>,IUserRoleStore<ApplicationUser>, IQueryableUserStore<ApplicationUser>
+    public class UserStore : IUserStore<ApplicationUser>, IUserPasswordStore<ApplicationUser>,IUserRoleStore<ApplicationUser>, IQueryableUserStore<ApplicationUser>,IUserEmailStore<ApplicationUser>
 
     {
         private readonly string _connectionString;
@@ -126,7 +126,7 @@ namespace stationaryr.Models
                     cmd.Parameters.Add("P_ID", "");
                     cmd.Parameters.Add("P_USERNAME", Userdgh.UserName);
                     cmd.Parameters.Add("P_EMAILID", Userdgh.Email);
-                    cmd.Parameters.Add("P_PHONENO", Userdgh.UserName);
+                    cmd.Parameters.Add("P_PHONENO", Userdgh.PhoneNumber);
                     cmd.Parameters.Add("P_DEPTID", Userdgh.Department);
                     cmd.Parameters.Add("P_PASSWORD", Userdgh.PasswordHash);
                     cmd.Parameters.Add("CALLVAL", "0");
@@ -191,6 +191,44 @@ namespace stationaryr.Models
 
         }
 
+        public async Task<ApplicationUser> getuserEmailId(string email, CancellationToken cancellationToken)
+        {
+
+            List<ApplicationUser> ret = new List<ApplicationUser>();
+            using (OracleConnection con = new OracleConnection(_connectionString))
+            {
+
+
+                await con.OpenAsync(cancellationToken);
+                OracleCommand cmd = new OracleCommand("STATIONARY_USERDGH_CRUD", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", "");
+
+                cmd.Parameters.Add("P_USERNAME", "");
+                cmd.Parameters.Add("P_EMAILID", email);
+                cmd.Parameters.Add("P_PHONENO", "");
+                cmd.Parameters.Add("P_DEPTID", "");
+                cmd.Parameters.Add("P_PASSWORD", "");
+                cmd.Parameters.Add("CALLVAL", "7");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+
+
+
+
+                ret = ds.ToList<ApplicationUser>();
+            }
+            return ret[0];
+
+        }
+        
 
         public string userrole(string userid,string roleid)
         {
@@ -370,6 +408,47 @@ namespace stationaryr.Models
         public Task RemoveFromRoleAsync(ApplicationUser user, string roleName, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<ApplicationUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ApplicationUser app = await getuserEmailId(normalizedEmail, cancellationToken);
+
+
+            return app;
+        }
+
+        public Task<string> GetEmailAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.Id.ToString());
+        }
+
+        public Task<bool> GetEmailConfirmedAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> GetNormalizedEmailAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.NormalizedEmail.ToString());
+        }
+
+        public Task SetEmailAsync(ApplicationUser user, string email, CancellationToken cancellationToken)
+        {
+            user.Email = email;
+            return Task.FromResult(0);
+        }
+
+        public Task SetEmailConfirmedAsync(ApplicationUser user, bool confirmed, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SetNormalizedEmailAsync(ApplicationUser user, string normalizedEmail, CancellationToken cancellationToken)
+        {
+            user.NormalizedEmail = normalizedEmail;
+            return Task.FromResult(0);
         }
     }
 }

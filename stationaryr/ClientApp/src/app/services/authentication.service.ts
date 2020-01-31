@@ -4,6 +4,9 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {Login, User } from '../TableEntity/TableEntityClass';
 import { error } from 'protractor';
+import { JwtHelper } from './jwt-helper';
+import { LoginResponse, AccessToken } from '../modal/loginresponse.model';
+import { PermissionValues } from '../modal/permission.modal';
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -36,13 +39,24 @@ export class AuthenticationService {
        
       
   }
-  private processLoginResponse(response: Login) {
+  private processLoginResponse(response: LoginResponse) {
 
-    localStorage.setItem('currentUser', JSON.stringify(response.username));
-    localStorage.setItem('currentRole', JSON.stringify(response.role));
- localStorage.setItem('currentAppRole', JSON.stringify(response.approle));
-    localStorage.setItem('auth_token', JSON.stringify(response.token));
-    this.currentUserSubject.next(response);
+    const accessToken = response.access_token;
+
+    if (accessToken == null) {
+      throw new Error('accessToken cannot be null');
+    }
+    const jwtHelper = new JwtHelper();
+    const decodedAccessToken = jwtHelper.decodeToken(accessToken) as AccessToken;
+    console.log(decodedAccessToken);
+    const permissions: PermissionValues[] = Array.isArray(decodedAccessToken.permission) ? decodedAccessToken.permission : [decodedAccessToken.permission];
+
+
+    localStorage.setItem('currentUser', JSON.stringify(decodedAccessToken.sub));
+    localStorage.setItem('currentRole', JSON.stringify(decodedAccessToken.role));
+    localStorage.setItem('permission', JSON.stringify(permissions));
+    localStorage.setItem('auth_token', JSON.stringify(accessToken));
+ //   this.currentUserSubject.next(response);
     return response;
   }
 

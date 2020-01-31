@@ -161,29 +161,17 @@ namespace stationaryr.Core
             var roleswithids= new Data().Getrolealluser().ToList();
             var users = _userManager.Users.ToList();
 
-            List<ApplicationUser> pp = new List<ApplicationUser>();
-            // users.Where(x => x.Id == roleswithids.Where(y=>y.UserID==x.Id));
-            try
-            {
+         
+           
+          
                 foreach (var user in users)
                 {
                     var a = roleswithids.Where(x => x.UserID == user.Id).ToList();
                     var a1 = a.ConvertAll(x => new IdentityUserRole<string> { RoleId=x.ROLEID,UserId=x.UserID});
                     user.Roles = a1;
-                    pp.Add(user);
-                    //foreach (var t in a1)
-                    //{
-                    //    user.Roles.Add(t);
-                    //}
-
-
+                 
                 }
-            }
-
-            catch (Exception ex)
-            {
-
-            }
+         
             var userRoleIds = users.SelectMany(u => u.Roles.Select(r => r.RoleId)).ToList();
             var roles = _roleManager.Roles.ToList();
             var role2 =  roles
@@ -207,6 +195,28 @@ namespace stationaryr.Core
             return (users, role);
         }
 
-      
+        public Task<ApplicationUser> GetUserByEmailAsync(string email)
+        {
+           return  _userManager.FindByEmailAsync(email);
+        }
+
+        public async Task<IList<ClaimViewModel>> GetUserClaimAsync(string roleid)
+        {
+            ApplicationRole role = new ApplicationRole();
+            IList<ClaimViewModel> li = new List<ClaimViewModel>();
+            role.Id = roleid;
+            try
+            {
+                var result = await _roleManager.GetClaimsAsync(role);
+                li = result.ToList().ConvertAll(x=>new ClaimViewModel { Type=x.Type,Value=x.Value});
+            }
+            catch(Exception ex)
+            {
+
+            }
+
+            return li;
+           
+        }
     }
 }

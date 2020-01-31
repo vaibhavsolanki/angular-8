@@ -6,21 +6,19 @@ import { AuthenticationService } from '../../../../services/authentication.servi
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Permission } from '../../../../modal/permission.modal';
 @Component({
     selector: 'app-navit-menu',
     templateUrl: './nav.component.html',
     styleUrls: ['./nav.component.css']
 })
-export class NavITMenuComponent implements OnDestroy {
-
-    //constructor(private authenticationService: AuthenticationService, private router: Router) {}
-    //navbarOpen = false;
-
-    //toggleNavbar() {
-    //    this.navbarOpen = !this.navbarOpen;
-    //}
-
+export class NavITMenuComponent implements OnDestroy, OnInit {
+ 
+  
+  ngOnInit() {
+   
+  }
 
     logout() {
         this.authenticationService.logout();
@@ -48,6 +46,20 @@ export class NavITMenuComponent implements OnDestroy {
     ngOnDestroy(): void {
         this.mobileQuery.removeListener(this._mobileQueryListener);
     }
+ 
+  get canViewUsers() {
 
-
+    return true;
+   
+ 
+    
+    
+  }
+ 
+ 
+}
+interface res {
+  Type: string;
+  Value: string;
+ 
 }

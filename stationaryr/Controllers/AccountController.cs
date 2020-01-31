@@ -16,6 +16,7 @@ using stationaryr.Core.Interface;
 using Microsoft.AspNetCore.Identity;
 using stationaryr.ViewModel;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
 
 namespace stationaryr.Controllers
 {
@@ -54,15 +55,14 @@ namespace stationaryr.Controllers
             var result = await _signInManager.PasswordSignInAsync(model.username, model.passward, model.RememberMe, lockoutOnFailure: false);
             if (result.Succeeded)
             {
-                //  var current_User =;
-                UserViewModel userVM = await GetUserViewModelHelper("41DEC8855E4545A5B2B748FDBB4592F6");
-           
+                var user = _accountManager.GetUserByEmailAsync(model.username);
 
-                //return userVM;
+                LoginResponse login = new LoginResponse();
+                login.access_token =  await    GenerateJWT(user.Result.Id);
 
+               
 
-
-                return Ok(userVM);
+                return Ok(login);
             }
             else
 
@@ -71,26 +71,41 @@ namespace stationaryr.Controllers
                 // return  BadRequest(new { message = "Username or password is incorrect" });
             }
 
-                //return Ok(new Data().StateData());
-                //var user = Data.getuser().Where(x => x.NAME == logindata.username && x.PASSWORD == logindata.passward).ToList();
-                //if (user != null)
-                //{
-
-            //    logindata.role = user[0].ROLE;
-            //    logindata.approle = user[0].APPROLE.ToList();
-            //    var tokenString = GenerateJWT(logindata);
-            //    logindata.token = tokenString;
-            //    return Ok(logindata);
-
-            //}
-            //else
-            //{
-
-            //    return BadRequest(new { message = "Username or password is incorrect" });
-
-            //}
+            
 
             }
+
+
+      async  Task<string> GenerateJWT(string id)
+        {
+
+           
+
+            UserViewModel userVM = await GetUserViewModelHelper(id);
+            var role = await _accountManager.GetRoleByNameAsync(userVM.Roles[0]);
+            var userclaim = await _accountManager.GetUserClaimAsync(role.Id);
+
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:SecretKey"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+           
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, userVM.UserName),
+                
+                new Claim("role",JsonConvert.SerializeObject(userVM.Roles)),
+                   new Claim("permission",JsonConvert.SerializeObject(userclaim)),
+            };
+
+            var token = new JwtSecurityToken(
+                issuer: _config["Jwt:Issuer"],
+                audience: _config["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials: credentials
+            );
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
 
         private async Task<UserViewModel> GetUserViewModelHelper(string userId)
         {
@@ -318,40 +333,8 @@ namespace stationaryr.Controllers
                 throw new Exception("The following errors occurred whilst deleting role: " + string.Join(", ", result.Errors));
             return Ok(result);
         }
-        //[HttpGet("users/me/preferences")]
-        //[ProducesResponseType(200, Type = typeof(string))]
-        //public async Task<IActionResult> UserPreferences()
-        //{
-        //    var userId = Utilities.GetUserId(this.User);
-        //    ApplicationUser appUser = await _accountManager.GetUserByIdAsync(userId);
-
-        //    return Ok(appUser.Configuration);
-        //}
-
-        string GenerateJWT(logindata userInfo)
-        {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:SecretKey"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, userInfo.username),
-                new Claim("username", userInfo.username.ToString()),
-                new Claim("role",userInfo.role),
-
-            };
-
-            var token = new JwtSecurityToken(
-                issuer: _config["Jwt:Issuer"],
-                audience: _config["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
-                signingCredentials: credentials
-            );
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-
+    
+    
 
     }
     public class logindata
@@ -362,5 +345,14 @@ namespace stationaryr.Controllers
         public List<role> approle { get; set; }
         public string? token { get; set; }
         public bool RememberMe { get; set; }
+
+
     }
+   public class LoginResponse
+    {
+        public string access_token { get; set; }
+        public string refresh_token { get; set; }
+     public string expires_in { get; set; }
+     public string token_type { get; set; }
+}
 }

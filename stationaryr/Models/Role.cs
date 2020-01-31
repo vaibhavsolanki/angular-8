@@ -11,6 +11,8 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using stationaryr.ViewModel;
+
 namespace stationaryr.Models
 {
     public class RoleStore: IQueryableRoleStore<ApplicationRole>,IRoleStore<ApplicationRole>,IRoleClaimStore<ApplicationRole>
@@ -307,15 +309,26 @@ namespace stationaryr.Models
 
         public async Task<IList<Claim>> GetClaimsAsync(ApplicationRole role, CancellationToken cancellationToken = default)
         {
-            List<Claim> cl = new List<Claim>();
+            List<Claim> c1 = new List<Claim>();
+            try
+            {
+               // var a1 = a.ConvertAll(x => new IdentityUserRole<string> { RoleId = x.ROLEID, UserId = x.UserID });
 
-            var claim = new Data().getclaimbyrole(role.Id);
-            
-                cl = _mapper.Map<List<Claim>>(claim);
-          
+
+                var claim = new Data().getclaimbyrole(role.Id);
+
+                c1 = claim.ConvertAll(x => new Claim(x.Type, x.Value));
+                            //    c1 = _mapper.Map<List<Claim>>(claim);
+
+              
+            }
+            catch(Exception ex)
+            {
+
+            }
 
             // getclaim();
-            return await Task.Run(() => cl);
+            return await Task.Run(() => c1);
         }
 
         public Task RemoveClaimAsync(ApplicationRole role, Claim claim, CancellationToken cancellationToken = default)

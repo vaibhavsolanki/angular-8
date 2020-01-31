@@ -1,7 +1,9 @@
 ﻿using stationaryr.Models;
+using stationaryr.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace stationaryr.Core.Interface
@@ -10,11 +12,13 @@ namespace stationaryr.Core.Interface
     {
         Task<ApplicationUser> GetUserByIdAsync(string userId);
         Task<ApplicationUser> GetUserByUserNameAsync(string userName);
+        Task<IList<ClaimViewModel>> GetUserClaimAsync(string roleid);
         Task<(bool Succeeded, string[] Errors)> DeleteUserAsync(ApplicationUser user);
         Task<(bool Succeeded, string[] Errors)> DeleteUserAsync(string userId);
         Task<(bool Succeeded, string[] Errors)> DeleteRoleAsync(ApplicationRole role);
         Task<(bool Succeeded, string[] Errors)> DeleteRoleAsync(string roleName);
         Task<List<ApplicationRole>> GetRolesLoadRelatedAsync(int page, int pageSize);
+        Task<ApplicationUser> GetUserByEmailAsync(string email);
         Task<(ApplicationUser User, string[] Roles)?> GetUserAndRolesAsync(string user);
       Task<List<(ApplicationUser User, string[] Roles)>> GetUsersAndRolesAsync(int page, int pageSize);
         Task<IList<string>> GetUserRolesAsync(ApplicationUser user);

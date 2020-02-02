@@ -55,6 +55,8 @@ export class AuthenticationService {
     localStorage.setItem('currentUser', JSON.stringify(decodedAccessToken.sub));
     localStorage.setItem('currentRole', JSON.stringify(decodedAccessToken.role));
     localStorage.setItem('permission', JSON.stringify(permissions));
+
+    console.log(permissions);
     localStorage.setItem('auth_token', JSON.stringify(accessToken));
  //   this.currentUserSubject.next(response);
     return response;

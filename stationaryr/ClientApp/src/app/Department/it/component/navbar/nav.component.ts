@@ -15,9 +15,11 @@ import { Permission } from '../../../../modal/permission.modal';
 })
 export class NavITMenuComponent implements OnDestroy, OnInit {
  
-  
+  array: any[] = [];
+ 
   ngOnInit() {
-   
+    this.usermenu();
+    this.usermenuview();
   }
 
     logout() {
@@ -45,21 +47,59 @@ export class NavITMenuComponent implements OnDestroy, OnInit {
 
     ngOnDestroy(): void {
         this.mobileQuery.removeListener(this._mobileQueryListener);
-    }
- 
-  get canViewUsers() {
+  }
 
-    return true;
-   
- 
+  usermenu() {
+    var ob = JSON.parse(localStorage.getItem('permission'));
+
+    var obj1 = ob[0].substring(1, ob[0].length - 1)
+
+    var obj = JSON.parse(obj1);
+
+  
+
+    Object.keys(obj).forEach(key => {
+      
+      
+      this.array.push(obj[key]);
     
+    
+    })
+   
+
+   
+
+  }
+  usermenuview() {
+
+    this.canViewUsers;
+    this.canViewRoles;
+    this.canViewCategory;
+    this.canViewSubCategory;
+    this.canViewSubChildCategory;
+      
+
+  }
+
+ get canViewUsers() {
+
+
+  
+   return this.array.some(e => e.Value == "usersit.view")
+   
     
   }
- 
- 
-}
-interface res {
-  Type: string;
-  Value: string;
+  get canViewRoles() {
+    return this.array.some(e => e.Value == "rolesit.view")
+  }
+  get canViewCategory() {
+    return this.array.some(e => e.Value == "categoryit.view")
+  }
+  get canViewSubCategory() {
+    return this.array.some(e => e.Value == "subcategoryit.view")
+  }
+  get canViewSubChildCategory() {
+    return this.array.some(e => e.Value == "subchildcategoryit.view")
+  }
  
 }

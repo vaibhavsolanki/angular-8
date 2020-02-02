@@ -6,13 +6,13 @@ import { AuthenticationService } from '../../../../services/authentication.servi
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 @Component({
   selector: 'app-nav-menu',
   templateUrl: './nav-menu.component.html',
   styleUrls: ['./nav-menu.component.css']
 })
-export class NavMenuComponent implements OnDestroy {
+export class NavMenuComponent implements OnDestroy, OnInit {
 
     //constructor(private authenticationService: AuthenticationService, private router: Router) {}
     //navbarOpen = false;
@@ -21,7 +21,11 @@ export class NavMenuComponent implements OnDestroy {
     //    this.navbarOpen = !this.navbarOpen;
     //}
   
-
+  array: any[] = [];
+  ngOnInit() {
+    this.usermenu();
+    this.usermenuview();
+  }
     logout() {
         this.authenticationService.logout();
         this.router.navigate(['/login']);
@@ -48,6 +52,56 @@ export class NavMenuComponent implements OnDestroy {
     ngOnDestroy(): void {
         this.mobileQuery.removeListener(this._mobileQueryListener);
     }
+  usermenu() {
+    var ob = JSON.parse(localStorage.getItem('permission'));
 
-    
+    var obj1 = ob[0].substring(1, ob[0].length - 1)
+
+    var obj = JSON.parse(obj1);
+
+
+
+    Object.keys(obj).forEach(key => {
+
+
+      this.array.push(obj[key]);
+
+
+    })
+
+
+
+
+  }
+  usermenuview() {
+
+    this.canViewUsers;
+    this.canViewRoles;
+    this.canViewCategory;
+    this.canViewSubCategory;
+    this.canViewSubChildCategory;
+
+
+  }
+  get canViewUsers() {
+
+
+
+    return this.array.some(e => e.Value == "users.view")
+
+
+  }
+  get canViewRoles() {
+    return this.array.some(e => e.Value == "roles.view")
+  }
+  get canViewCategory() {
+    return this.array.some(e => e.Value == "category.view")
+  }
+  get canViewSubCategory() {
+    return this.array.some(e => e.Value == "subcategory.view")
+  }
+  get canViewSubChildCategory() {
+    return this.array.some(e => e.Value == "subchildcategory.view")
+  }
+
 }

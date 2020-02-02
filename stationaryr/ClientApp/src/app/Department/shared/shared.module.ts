@@ -18,16 +18,17 @@ import {
     MatFormFieldModule, MatSelectModule,
     MatInputModule,
     MatCardModule,
-    MatTableModule, MatToolbarModule, MatSidenavModule, MatListModule, MatIconModule,
-    MatPaginatorModule, MatSortModule, MatDatepickerModule, MatNativeDateModule,MatDialogModule
+  MatTableModule, MatToolbarModule, MatSidenavModule, MatListModule, MatIconModule, MatTabsModule, MatExpansionModule,
+  MatPaginatorModule, MatSortModule, MatDatepickerModule, MatNativeDateModule, MatDialogModule, MatSlideToggleModule,
 } from '@angular/material';
 @NgModule({
     imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule,
-        MatIconModule,
-       MatDatepickerModule, MatNativeDateModule,
-      
-        MatTableModule,
-        MatInputModule, 
+    MatIconModule,
+    MatDatepickerModule, MatNativeDateModule, MatSlideToggleModule,
+
+
+    MatTableModule, 
+    MatInputModule, MatTabsModule, MatExpansionModule,
         MatToolbarModule, MatSidenavModule, MatListModule,
         MatFormFieldModule, MatSelectModule, MatCardModule, MatPaginatorModule, MatSortModule,MatDialogModule],
   declarations: [GroupByPipe,MaterialComponent, GetMaterial, GetSubCategory, SubCategoryComponent, SubChildCategoryComponent, GetSubChildCategory,GetRolemaster,Rolemaster,GetUsers,UsersComponent],

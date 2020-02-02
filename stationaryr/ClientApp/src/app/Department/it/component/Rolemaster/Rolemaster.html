@@ -9,24 +9,75 @@
     <input matInput placeholder="Description" formControlName="Description" [ngClass]="{ 'is-invalid': submitted && f.Description.errors }">
 
   </mat-form-field>
-  <div class="row">
-    <div class="col-sm-12 card card-body bg-light well-sm permissionsRow">
+  <mat-accordion>
+
+    <mat-expansion-panel (opened)="panelOpenState = true"
+                         (closed)="panelOpenState = false">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Stationary
+        </mat-panel-title>
+        <mat-panel-description>
+          Select Right For stationary
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
       <div class="row">
-        <ng-template ngFor let-permissionGroup [ngForOf]="allPermissions | groupBy:'GroupName'" let-i="index">
-          <div class="form-group row col-md-6 permissionsColumn">
-            <label class="col-md-5 col-form-label group-name" for="checkboxes" (click)="toggleGroup(permissionGroup.key)">{{permissionGroup.key}}</label>
-            <div class="col-md-7">
-              <div class="form-check" *ngFor="let permission of permissionGroup.value">
-                <input  name="checkboxes-{{permission.Value}}" id="checkboxes-{{permission.Value}}" type="checkbox" class="form-check-input" value="{{permission.Value}}"   (change)="onCheckboxChange($event)">
-                <label class="form-check-label" for="checkboxes-{{permission.Value}}">{{permission.Name}}</label>
+        <ng-template ngFor let-per [ngForOf]="allPermissions| groupBy:'ApplicationType'" let-i="index">
+          <div *ngIf="per.key=='Stationary'">
+            <div class="form-check" *ngFor="let pertype of per.value| groupBy:'GroupName'">
+
+              <div class="form-group row col-md-12 permissionsColumn">
+                <label class="col-md-3 col-form-label group-name" for="checkboxes" (click)="toggleGroup(pertype.key)">{{pertype.key}}</label>
+                <div class="col-md-9">
+                  
+                  <ng-container class="form-check " *ngFor="let permission of pertype.value">
+                    <div class="col-md-3">
+                      <mat-slide-toggle name="checkboxes-{{permission.Value}}" id="checkboxes-{{permission.Value}}" class="form-check-input" (change)="onCheckboxChange($event)">
+                        {{permission.Name}}
+                      </mat-slide-toggle>
+
+                    </div>
+                      <!--<label class="form-check-label" for="checkboxes-{{permission.Value}}">{{permission.Name}}</label>-->
+                  </ng-container>
+                   
+                   
+                  </div>
               </div>
             </div>
+            <div *ngIf="(i + 1) % 2 === 0" class="clearfix"></div>
           </div>
-          <div *ngIf="(i + 1) % 2 === 0" class="clearfix"></div>
         </ng-template>
       </div>
-    </div>
-  </div>
+
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          IT
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="row">
+        <div *ngFor="let per of allPermissions| groupBy:'ApplicationType'">
+          <div *ngIf="per.key=='IT'">
+            <div class="form-check" *ngFor="let pertype of per.value| groupBy:'GroupName'">
+
+              <div class="form-group row col-md-12 permissionsColumn">
+                <label class="col-md-5 col-form-label group-name" for="checkboxes" (click)="toggleGroup(pertype.key)">{{pertype.key}}</label>
+                <div class="col-md-7">
+                  <div class="form-check" *ngFor="let permission of pertype.value">
+                    <input name="checkboxes-{{permission.Value}}" id="checkboxes-{{permission.Value}}" type="checkbox" class="form-check-input" value="{{permission.Value}}" (change)="onCheckboxChange($event)">
+                    <label class="form-check-label" for="checkboxes-{{permission.Value}}">{{permission.Name}}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="(i + 1) % 2 === 0" class="clearfix"></div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
   <div class="row">
     <div class="col-md-12">
       <hr class="edit-last-separator-hr" />
@@ -35,28 +86,29 @@
 
 
   <!--<div class="form-group row">
-    <div class="col-sm-5">
-      <div *ngIf="canManageRoles" class="float-left">
-        <a (click)="selectAll()" href="javascript:;" class="btn btn-link">{{'roles.editor.SelectAll'}}</a>|<a (click)="selectNone()" href="javascript:;" class="btn btn-link">{{'roles.editor.SelectNone' }}</a>
-      </div>
+  <div class="col-sm-5">
+    <div *ngIf="canManageRoles" class="float-left">
+      <a (click)="selectAll()" href="javascript:;" class="btn btn-link">{{'roles.editor.SelectAll'}}</a>|<a (click)="selectNone()" href="javascript:;" class="btn btn-link">{{'roles.editor.SelectNone' }}</a>
     </div>
-    <div class="col-sm-7">
-      <div ngPreserveWhitespaces class="float-right">
-        <button *ngIf="!canManageRoles" type="button" (click)="cancel()" class="btn btn-outline-secondary">{{'roles.editor.Close' }}</button>
-        <button *ngIf="canManageRoles" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-times'></i> {{'roles.editor.Cancel' }}</button>
-        <button *ngIf="canManageRoles" type="submit" class="btn btn-primary" [disabled]="isSaving">
-          <i *ngIf="!isSaving" class='fa fa-save'></i><i *ngIf="isSaving" class='fa fa-circle-o-notch fa-spin'></i> {{isSaving ? ('roles.editor.Saving' ) : ('roles.editor.Save' )}}
-        </button>
-      </div>
+  </div>
+  <div class="col-sm-7">
+    <div ngPreserveWhitespaces class="float-right">
+      <button *ngIf="!canManageRoles" type="button" (click)="cancel()" class="btn btn-outline-secondary">{{'roles.editor.Close' }}</button>
+      <button *ngIf="canManageRoles" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving"><i class='fa fa-times'></i> {{'roles.editor.Cancel' }}</button>
+      <button *ngIf="canManageRoles" type="submit" class="btn btn-primary" [disabled]="isSaving">
+        <i *ngIf="!isSaving" class='fa fa-save'></i><i *ngIf="isSaving" class='fa fa-circle-o-notch fa-spin'></i> {{isSaving ? ('roles.editor.Saving' ) : ('roles.editor.Save' )}}
+      </button>
     </div>
-    </div>-->
-    <button mat-raised-button color="primary" [disabled]="loading" *ngIf="btnvisibility" (click)="onSubmit()">
-      <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-      Submit
-    </button>
-    <button mat-raised-button color="primary" [disabled]="loading" *ngIf="!btnvisibility" (click)="onUpdate()">
-      <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-      Update
-    </button>
+  </div>
+  </div>-->
+  <mat-slide-toggle>Slide me!</mat-slide-toggle>
+  <button mat-raised-button color="primary" [disabled]="loading" *ngIf="btnvisibility" (click)="onSubmit()">
+    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+    Submit
+  </button>
+  <button mat-raised-button color="primary" [disabled]="loading" *ngIf="!btnvisibility" (click)="onUpdate()">
+    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+    Update
+  </button>
 </form>
 

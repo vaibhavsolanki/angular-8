@@ -20,14 +20,16 @@ export class Rolemaster implements OnInit {
   submitted = false;
   loading = false;
   allPermissions: Permission[] = [];
-  pp: string[]=[];
+  pp: string[] = [];
+  panelOpenState = false;
   public selectedValues: { [key: string]: boolean; } = {};
  constructor(private formbuilder: FormBuilder, private Componentservices: ComponentService, private router: Router) {
 
     }
  
 
-    ngOnInit() {
+  ngOnInit() {
+    this.panelOpenState = true;
 if (this.link1 == undefined) {
       this.routelink = "GetRolemaster";
       this.editroutelink = "IT/GetRolemaster"
@@ -68,9 +70,9 @@ let empid = localStorage.getItem('editRoleId');
     const Permissions: FormArray = this.RoleForm.get('Permissions') as FormArray;
 
     if (e.target.checked) {
-      Permissions.push(new FormControl(e.target.value));
-      this.pp.push(e.target.value);
-     
+      Permissions.push( new FormControl(e.target.value));
+      this.pp.push(e.target.value );
+      
     } else {
       let i: number = 0;
       Permissions.controls.forEach((item: FormControl) => {
@@ -124,12 +126,13 @@ get f() { return this.RoleForm.controls; }
         }
    this.loading = true;
 
-   
-   this.Role.Permissions = this.allPermissions;
-   
-  //this.Role.permissions = this.getSelectedPermissions();
+   console.log(this.pp);
+   this.Role.Permissions = this.allPermissions.filter(x => !!this.pp.includes(x.Value)
+   );
+
+  
       this.Componentservices
-        .Saverole(this.RoleForm.value, this.Role.Permissions)
+        .Saverole (this.RoleForm.value, this.Role.Permissions)
         .subscribe(data => { this.datasubmit = data, alert(this.datasubmit), this.loading = false; console.log(this.datasubmit); this.router.navigate([this.editroutelink]); },
                 error => () => {
 

@@ -13,16 +13,16 @@
                  [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
       <mat-nav-list>
         <!--<a mat-list-item routerLink="." *ngFor="let nav of fillerNav">11</a>-->
-        <a mat-list-item [routerLink]="['GetMaterial']">Items</a>
+        <a [hidden]="!canViewCategory" mat-list-item [routerLink]="['GetMaterial']">Items</a>
 
-        <a mat-list-item [routerLink]="['GetCompany']">Item code</a>
+        <a  mat-list-item [routerLink]="['GetCompany']">Item code</a>
 
 
         <a mat-list-item [routerLink]="['GetUnits']">Units</a>
-        <a mat-list-item [routerLink]="['GetUsers']">Users</a>
+        <a [hidden]="!canViewUsers" mat-list-item [routerLink]="['GetUsers']">Users</a>
 
-        <a mat-list-item [routerLink]="['GetSubCategory']">Item type</a>
-        <a mat-list-item [routerLink]="['GetSubChildCategory']">Item Sub type</a>
+        <a [hidden]="!canViewSubCategory" mat-list-item [routerLink]="['GetSubCategory']">Item type</a>
+        <a [hidden]="!canViewSubChildCategory" mat-list-item [routerLink]="['GetSubChildCategory']">Item Sub type</a>
 
 
         <a mat-list-item [routerLink]="['StationaryRepository']">Stationary Repository</a>

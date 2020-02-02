@@ -82,8 +82,17 @@ namespace stationaryr.Controllers
            
 
             UserViewModel userVM = await GetUserViewModelHelper(id);
-            var role = await _accountManager.GetRoleByNameAsync(userVM.Roles[0]);
-            var userclaim = await _accountManager.GetUserClaimAsync(role.Id);
+            List<List<ClaimViewModel>> claim1 = new List<List<ClaimViewModel>>();
+            foreach (var roles in userVM.Roles)
+            {
+
+                var role = await _accountManager.GetRoleByNameAsync(roles);
+
+                var userclaim = await _accountManager.GetUserClaimAsync(role.Id);
+                claim1.Add(userclaim.ToList());
+            }
+           
+            
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:SecretKey"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -93,7 +102,7 @@ namespace stationaryr.Controllers
                 new Claim(JwtRegisteredClaimNames.Sub, userVM.UserName),
                 
                 new Claim("role",JsonConvert.SerializeObject(userVM.Roles)),
-                   new Claim("permission",JsonConvert.SerializeObject(userclaim)),
+                   new Claim("permission",JsonConvert.SerializeObject(claim1)),
             };
 
             var token = new JwtSecurityToken(

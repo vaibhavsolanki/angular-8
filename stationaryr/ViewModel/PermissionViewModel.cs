@@ -7,6 +7,7 @@ namespace stationaryr.ViewModel
 {
     public class PermissionViewModel
     {
+        public string ApplicationType { get; set; }
         public string Name { get; set; }
         public string Value { get; set; }
         public string GroupName { get; set; }
@@ -17,7 +18,9 @@ namespace stationaryr.ViewModel
         {
             return new PermissionViewModel
             {
-                Name = permission.Name,
+    
+        ApplicationType=permission.ApplicationType,
+        Name = permission.Name,
                 Value = permission.Value,
                 GroupName = permission.GroupName,
                 Description = permission.Description
@@ -29,5 +32,7 @@ namespace stationaryr.ViewModel
     {
         public string Type { get; set; }
         public string Value { get; set; }
+
+   
     }
 }

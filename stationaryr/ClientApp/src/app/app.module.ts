@@ -34,8 +34,8 @@ import {
     
     MatFormFieldModule, 
     MatInputModule,
-    MatCardModule,
-  MatToolbarModule, MatSidenavModule, MatIconModule, MatButtonModule
+  MatCardModule,
+  MatToolbarModule, MatSidenavModule, MatIconModule, MatButtonModule, MatTabsModule, MatExpansionModule, MatSlideToggleModule,
   
 } from '@angular/material';
 
@@ -49,8 +49,8 @@ import {
       
     ],
     imports: [FormsModule, ReactiveFormsModule, //MatIconModule, 
-        BrowserModule,
-        HttpClientModule, 
+      BrowserModule, MatTabsModule, MatExpansionModule, MatSlideToggleModule,
+      HttpClientModule,
       MatButtonModule,
         MatInputModule, 
         BrowserAnimationsModule, MatToolbarModule, MatSidenavModule, 

@@ -13,13 +13,13 @@
                  [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
       <mat-nav-list>
         <!--<a mat-list-item routerLink="." *ngFor="let nav of fillerNav">11</a>-->
-        <a mat-list-item [routerLink]="['GetCategory']">Category</a>
-        <a mat-list-item [routerLink]="['GetSubCategory']">Subcategory</a>
-        <a mat-list-item [routerLink]="['GetSubChildCategory']">SubChildcategory</a>
-        <a mat-list-item [routerLink]="['GetDevice']">Device</a>
+        <a [hidden]="!canViewCategory" mat-list-item [routerLink]="['GetCategory']">Category</a>
+        <a [hidden]="!canViewSubCategory" mat-list-item [routerLink]="['GetSubCategory']">Subcategory</a>
+        <a [hidden]="!canViewSubChildCategory" mat-list-item [routerLink]="['GetSubChildCategory']">SubChildcategory</a>
+        <a [hidden]="" mat-list-item [routerLink]="['GetDevice']">Device</a>
         <a mat-list-item [routerLink]="['GetContractMaster']">Contract Master</a>
         <a [hidden]="!canViewUsers" mat-list-item [routerLink]="['GetUsers']">User</a>
-        <a mat-list-item [routerLink]="['GetRolemaster']">Role Master</a>
+        <a  [hidden]="!canViewRoles" mat-list-item [routerLink]="['GetRolemaster']">Role Master</a>
         <!--<a mat-list-item [routerLink]="['GetCompany']">Item code</a>
 
 

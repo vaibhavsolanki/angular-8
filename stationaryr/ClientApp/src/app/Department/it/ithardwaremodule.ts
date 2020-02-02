@@ -23,17 +23,17 @@ import { userit } from './component/User/user';
 import {
   
   MatButtonModule,
-  MatFormFieldModule, MatSelectModule,
-  MatInputModule,
+  MatFormFieldModule, MatSelectModule, 
+  MatInputModule, MatTabsModule, MatExpansionModule,
   MatCardModule,
   MatTableModule, MatToolbarModule, MatSidenavModule, MatListModule, MatIconModule,
-  MatPaginatorModule, MatSortModule, MatDatepickerModule, MatNativeDateModule
+  MatPaginatorModule, MatSortModule, MatDatepickerModule, MatNativeDateModule, MatSlideToggleModule,
 } from '@angular/material';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { CommonModule } from '@angular/common';
 @NgModule({
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, sharedModule,
-    MatIconModule,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, sharedModule,
+    MatIconModule, MatTabsModule, MatExpansionModule, MatSlideToggleModule,
     MatDatepickerModule, MatNativeDateModule,
     NgxMaterialTimepickerModule,
     MatTableModule,

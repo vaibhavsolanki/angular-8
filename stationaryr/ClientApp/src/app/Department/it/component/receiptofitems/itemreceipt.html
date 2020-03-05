@@ -1,0 +1,119 @@
+
+<div class="card-header">
+  <h3>Add Item Receipt</h3>
+</div>
+<div class="card-body">
+
+  <form [formGroup]="ItemReceiptForm" class="example-container col-md-12">
+    <mat-form-field>
+      <select formControlName="PUBLISHORDER" placeholder="PUBLISH ORDER" matNativeControl name="PUBLISHORDER" #publishorder (change)="pubitem(publishorder.value)">
+        <option value="" selected></option>
+        <option *ngFor="let Cat of itreleaseorders;let i = index" [value]="Cat.ID">
+          {{Cat.RELEASEORDERID}}
+        </option>
+      </select>
+    </mat-form-field>
+
+    <div *ngIf="showitem">
+      <div class="font-weight-bold">
+        <label>CONTRACT NO.</label><span> {{contractno}}</span>
+      </div>
+
+      <div class="row">
+        <div class=" d-flex col-md-12">
+          <div class="col-md-4">
+            <mat-form-field>
+              <input matInput placeholder="CHALLAN." formControlName="CHALLANNO" [ngClass]="{ 'is-invalid': submitted && f.CHALLANNO.errors }">
+              <mat-error *ngIf="submitted && f.CHALLANNO.errors">CHALLAN. is required</mat-error>
+
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field>
+              <input matInput readonly [matDatepicker]="picker" placeholder="CHALLAN DATE" formControlName="CHALLANDATE">
+              <mat-datepicker-toggle matSuffix [for]="picker" [ngClass]="{ 'is-invalid': submitted && f.CHALLANDATE.errors }"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field>
+              <input matInput readonly [matDatepicker]="picker1" placeholder="RECEIPTDATE" formControlName="RECEIPTDATE">
+              <mat-datepicker-toggle matSuffix [for]="picker1" [ngClass]="{ 'is-invalid': submitted && f.RECEIPTDATE.errors }"></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class=" d-flex col-md-12">
+
+          <mat-form-field>
+            <input matInput placeholder="Remarks" formControlName="REMARKS" [ngClass]="{ 'is-invalid': submitted && f.REMARKS.errors }">
+
+
+          </mat-form-field>
+        </div>
+
+      </div>
+
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="position">
+          <th mat-header-cell *matHeaderCellDef> S.NO </th>
+          <td mat-cell *matCellDef="let row;let i = index"> {{i+1}} </td>
+        </ng-container>
+        <ng-container matColumnDef="CATEGORY">
+          <th mat-header-cell *matHeaderCellDef> CATEGORY </th>
+          <td mat-cell *matCellDef="let row"> {{row.CATEGORY}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="QUANTITY">
+          <th mat-header-cell *matHeaderCellDef> QUANTITY </th>
+          <td mat-cell *matCellDef="let row"> {{row.QUANTITY}} </td>
+        </ng-container>
+        <ng-container matColumnDef="RECEIVEDQUANTITY">
+          <th mat-header-cell *matHeaderCellDef> Received Quantity </th>
+          <td mat-cell *matCellDef="let row;let i=index">
+
+            <mat-form-field>
+              <input numbersOnly matInput type="number" (keyup)="onKeyUp($event,i)" value="{{row.RECEIVEDQUANTITY}}" />
+              <!--formControlName="QUANTITY"-->
+              <!--<mat-error *ngIf="submitted && item.controls.QUANTITY.errors.quantityvalidator">Quantity is required</mat-error>-->
+
+            </mat-form-field>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="REMAININGQUANTITY">
+          <th mat-header-cell *matHeaderCellDef> Remaining Quantity </th>
+          <td mat-cell *matCellDef="let row">
+            <input diabled matInput type="text" value="{{row.REMAINING}}" />
+            <!--formControlName="REMAINING"-->
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="REMARK">
+          <th mat-header-cell *matHeaderCellDef> Remark </th>
+          <td mat-cell *matCellDef="let row;let i=index">
+            <mat-form-field>
+              <input matInput type="text" value="{{row.REMARKS}}" (change)="onKeyPress($event,i )"/>
+              <!--formControlName="REMARKS"-->
+
+            </mat-form-field>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+    </div>
+    <br/>
+    <br/>
+    <button mat-raised-button color="primary" [disabled]="loading" *ngIf="btnvisibility" (click)="onSubmit()">
+      <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+      Submit
+    </button>
+    <button mat-raised-button color="primary" [disabled]="loading" *ngIf="!btnvisibility" (click)="onUpdate()">
+      <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+      Update
+    </button>
+  </form>
+  </div>
+

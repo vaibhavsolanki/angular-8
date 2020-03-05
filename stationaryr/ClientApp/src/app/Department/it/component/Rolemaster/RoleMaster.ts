@@ -53,8 +53,8 @@ if (this.link1 == undefined) {
 
 let empid = localStorage.getItem('editRoleId');
 
-      if (empid !=null) {
-        this.Componentservices.getRoleId(empid).subscribe(data => {
+    if (empid != null) {
+      this.Componentservices.GetRoleByName(empid).subscribe(data => {
           this.Role = data,
                 console.log(this.Role),
             this.RoleForm.controls['Name'].setValue(this.Role.Name);
@@ -128,7 +128,7 @@ get f() { return this.RoleForm.controls; }
 
    console.log(this.pp);
    this.Role.Permissions = this.allPermissions.filter(x => !!this.pp.includes(x.Value)
-   );
+  );
 
   
       this.Componentservices
@@ -148,12 +148,12 @@ get f() { return this.RoleForm.controls; }
     //.filter(p => this.selectedValues[p.value] == true)
   }
     onUpdate() {
-       // this.submitted = true;
+        this.submitted = true;
 
-      //if (this.RoleForm.invalid) {
-      //      return;
-     //   }
-      //  this.loading = true;
+      if (this.RoleForm.invalid) {
+            return;
+        }
+        this.loading = true;
      // this.Componentservices
      //   .Updateusers(this.UsersForm.value)
       //    .subscribe(data => { this.users = data, alert(this.users), this.loading = false; console.log(this.users); this.router.navigate([this.editroutelink]); },

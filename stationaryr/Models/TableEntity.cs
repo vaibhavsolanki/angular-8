@@ -251,6 +251,8 @@ namespace Stationary.Models
     public class Contract
     {
         public int ID { get; set; }
+
+        public string CONTRACTID { get; set; }
         public string CONTRACTNO { get; set; }
         public string VENDORNAME { get; set; }
         public DateTime STARTDATE { get; set; }
@@ -266,10 +268,21 @@ namespace Stationary.Models
     {
         public int ID { get; set; }
         public string CATEGORY { get; set; }
+        public string QUANTITY { get; set; }
+        public string CONTRACTID { get; set; }
         public string SUBCATEGORY { get; set; }
         public string SUBCHILDCATEGORY { get; set; }
         public string STATUS { get; set; }
         public string CREATED_DATE { get; set; }
+
+        public string RECEIVEDQUANTITY { get; set; }
+      
+        public string REMAINING { get; set; }
+        public string REMARKS { get; set; }
+
+     
+  
+
     }
 
 
@@ -290,4 +303,57 @@ namespace Stationary.Models
     }
 
 
+    public class itreleaseorder
+    {
+
+        public int ID { get; set; }
+        public string RELEASEORDERID { get; set; }
+        public string CONTRACTID { get; set; }
+        public string CONTRACTNO { get; set; }
+        public string STATUS { get; set; }
+        public DateTime CREATED_DATE { get; set; }
+
+
+        public string SUBJECT { get; set; }
+
+        public string BODY { get; set; }
+
+        public string SIGNATURE { get; set; }
+
+        public string RECEIVEDBY { get; set; }
+        public DateTime RECEIVEDDATE { get; set; }
     }
+    public class itvendor
+    {
+
+        public int ID { get; set; }
+        public string VENDORNAME { get; set; }
+        public string PHONENO { get; set; }
+        public string ADDRESS { get; set; }
+        public string APPTYPE { get; set; }
+        public string STATUS { get; set; }
+        public DateTime CREATED_DATE { get; set; }
+    }
+    public class itemreceipt
+    {
+        public string PUBLISHORDER { get; set; }
+        public List<ititems> ORDERITEM { get; set; }
+    public string CHALLANNO { get; set; }
+    public DateTime  CHALLANDATE { get; set; }
+        public DateTime RECEIPTDATE { get; set; }
+        
+        public string REMARKS { get; set; }
+    }
+    public  class itissueitems
+    {
+        public int ID { get; set; }
+        public  List<ititems> ORDERITEM { get; set; }
+        public string STATUS { get; set; }
+        public DateTime  CREATED_DATE { get; set; }
+        public string USERID { get; set; }
+        public string REMARKS { get; set; }
+        public string ISSUEID { get; set; }
+
+    }
+
+}

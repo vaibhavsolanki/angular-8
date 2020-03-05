@@ -12,16 +12,16 @@ const httpOptions = {
 };
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
-    private currentUserSubject: BehaviorSubject<Login>;
-  public currentUser: Observable<Login>;
+  private currentUserSubject: BehaviorSubject<LoginResponse>;
+  public currentUser: Observable<LoginResponse>;
   //private actionUrl: string = "http://192.168.0.42/";
   private actionUrl: string = "https://localhost:44324/"//;
     constructor(private http: HttpClient) {
-        this.currentUserSubject = new BehaviorSubject<Login>(JSON.parse(localStorage.getItem('currentUser')));
+      this.currentUserSubject = new BehaviorSubject<LoginResponse>(JSON.parse(localStorage.getItem('currentUser')));
         this.currentUser = this.currentUserSubject.asObservable();
     }
 
-    public get currentUserValue(): Login {
+  public get currentUserValue(): LoginResponse {
         return this.currentUserSubject.value;
     }
     login(username, password) {
@@ -48,17 +48,15 @@ export class AuthenticationService {
     }
     const jwtHelper = new JwtHelper();
     const decodedAccessToken = jwtHelper.decodeToken(accessToken) as AccessToken;
-    console.log(decodedAccessToken);
+ 
     const permissions: PermissionValues[] = Array.isArray(decodedAccessToken.permission) ? decodedAccessToken.permission : [decodedAccessToken.permission];
 
 
     localStorage.setItem('currentUser', JSON.stringify(decodedAccessToken.sub));
     localStorage.setItem('currentRole', JSON.stringify(decodedAccessToken.role));
     localStorage.setItem('permission', JSON.stringify(permissions));
-
-    console.log(permissions);
     localStorage.setItem('auth_token', JSON.stringify(accessToken));
- //   this.currentUserSubject.next(response);
+    this.currentUserSubject.next(response);
     return response;
   }
 
@@ -68,6 +66,7 @@ export class AuthenticationService {
       localStorage.removeItem('currentUser');
       localStorage.removeItem('currentRole');
       localStorage.removeItem('auth_token');
+      localStorage.removeItem('permission');
       this.currentUserSubject.next(null);
       
     }

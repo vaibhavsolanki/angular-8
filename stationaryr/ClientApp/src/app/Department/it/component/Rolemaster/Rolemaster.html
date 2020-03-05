@@ -28,21 +28,13 @@
             <div class="form-check" *ngFor="let pertype of per.value| groupBy:'GroupName'">
 
               <div class="form-group row col-md-12 permissionsColumn">
-                <label class="col-md-3 col-form-label group-name" for="checkboxes" (click)="toggleGroup(pertype.key)">{{pertype.key}}</label>
-                <div class="col-md-9">
-                  
-                  <ng-container class="form-check " *ngFor="let permission of pertype.value">
-                    <div class="col-md-3">
-                      <mat-slide-toggle name="checkboxes-{{permission.Value}}" id="checkboxes-{{permission.Value}}" class="form-check-input" (change)="onCheckboxChange($event)">
-                        {{permission.Name}}
-                      </mat-slide-toggle>
-
-                    </div>
-                      <!--<label class="form-check-label" for="checkboxes-{{permission.Value}}">{{permission.Name}}</label>-->
-                  </ng-container>
-                   
-                   
+                <label class="col-md-5 col-form-label group-name" for="checkboxes" (click)="toggleGroup(pertype.key)">{{pertype.key}}</label>
+                <div class="col-md-7">
+                  <div class="form-check" *ngFor="let permission of pertype.value">
+                    <input name="checkboxes-{{permission.Value}}" id="checkboxes-{{permission.Value}}" type="checkbox" class="form-check-input" value="{{permission.Value}}" (change)="onCheckboxChange($event)">
+                    <label class="form-check-label" for="checkboxes-{{permission.Value}}">{{permission.Name}}</label>
                   </div>
+                </div>
               </div>
             </div>
             <div *ngIf="(i + 1) % 2 === 0" class="clearfix"></div>

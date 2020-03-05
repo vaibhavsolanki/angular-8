@@ -27,7 +27,7 @@ import { sharedModule } from '../shared/shared.module';
 import {
   MatButtonModule,
   MatFormFieldModule, MatSelectModule,
-  MatInputModule,
+  MatInputModule, MatMenuModule,
   MatCardModule,
   MatTableModule, MatToolbarModule, MatSidenavModule, MatListModule, MatIconModule,
   MatPaginatorModule, MatSortModule, MatDatepickerModule, MatNativeDateModule,MatDialogModule
@@ -38,7 +38,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
     MatIconModule,MatDialogModule,
     MatDatepickerModule, MatNativeDateModule,
     NgxMaterialTimepickerModule,
-    MatTableModule,
+    MatTableModule, MatMenuModule,
     MatInputModule,
      MatToolbarModule, MatSidenavModule, MatListModule,
     MatFormFieldModule, MatSelectModule, MatButtonModule, MatCardModule, MatPaginatorModule,

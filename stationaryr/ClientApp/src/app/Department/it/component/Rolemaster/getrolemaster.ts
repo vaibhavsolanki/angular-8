@@ -48,9 +48,9 @@ localStorage.removeItem('editRoleId');
   editRole(role: Role): void {
 
 
-      localStorage.removeItem('editRoleId');
-    localStorage.setItem('editRoleId', role.Id);
-    this.router.navigate([this.editroutelink], { queryParams: { id: role.Id } } );
+    localStorage.removeItem('editRoleId');
+    localStorage.setItem('editRoleId', role.Name);
+    this.router.navigate([this.editroutelink], { queryParams: { name: role.Name } });
       
 
     }

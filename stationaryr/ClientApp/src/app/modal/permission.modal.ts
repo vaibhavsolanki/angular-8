@@ -21,8 +21,11 @@ export type PermissionValues =
   'rolesit.view' | 'rolesit.manage' | 'rolesit.assign' |
   'categoryit.view' | 'categoryit.manage' |
   'subcategoryit.view' | 'subcategoryit.manage' |
-  'subchildcategoryit.view' | 'subchildcategoryit.manage' 
-
+  'subchildcategoryit.view' | 'subchildcategoryit.manage' |
+  'contractit.view' | 'contractit.manage' | 'deviceit.view' | 'deviceit.manage' |
+  'PublishContractit.view' | 'PublishContractit.manage' | 'ReceiptOfItemsit.view' |
+  'ReceiptOfItemsit.manage' | 'Vendorsit.view' | 'Vendorit.manage' | 'IssueItemit.view' |
+  'IssueItemit.manage' | 'RequestItemit.view' |'RequestItemit.manage'
   ;
 
 export class Permission {

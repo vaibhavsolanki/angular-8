@@ -19,13 +19,25 @@ import { ItGetDevicename } from './component/devicename/getdevicename';
 import { getitcontractmaster } from './component/contractmasterit/getcontractmasterit';
 import { getuserit } from './component/User/getuser';
 import { userit } from './component/User/user';
+import { getpublishcontract } from './component/publishcontract/getpublishcontract';
 
+import { publishcontract } from './component/publishcontract/publishcontract';
+import { itvendors } from './component/vendor/vendor';
+import { getitvendor } from './component/vendor/getvendor';
+
+import { getitemreceipt } from './component/receiptofitems/getitemreceipt';
+import { itemreceipts } from './component/receiptofitems/itemreceipt';
+
+import { issueditems } from './component/issueitems/issueitems';
+import { getissueditems } from './component/issueitems/getissueitems';
+import { getrequestitem } from './component/requestitems/getrequestitem';
+import { requestitem } from './component/requestitems/requestitem';
 import {
   
   MatButtonModule,
   MatFormFieldModule, MatSelectModule, 
   MatInputModule, MatTabsModule, MatExpansionModule,
-  MatCardModule,
+  MatCardModule, MatMenuModule,
   MatTableModule, MatToolbarModule, MatSidenavModule, MatListModule, MatIconModule,
   MatPaginatorModule, MatSortModule, MatDatepickerModule, MatNativeDateModule, MatSlideToggleModule,
 } from '@angular/material';
@@ -35,7 +47,7 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule, FormsModule, ReactiveFormsModule, sharedModule,
     MatIconModule, MatTabsModule, MatExpansionModule, MatSlideToggleModule,
     MatDatepickerModule, MatNativeDateModule,
-    NgxMaterialTimepickerModule,
+    NgxMaterialTimepickerModule, MatMenuModule,
     MatTableModule,
     MatInputModule,
     MatToolbarModule, MatSidenavModule, MatListModule,
@@ -46,8 +58,9 @@ import { CommonModule } from '@angular/common';
   exports: [RouterModule],
   declarations: [ItDevicename, ItGetDevicename, itcontractmaster,getitcontractmaster,ithardwaredepart, ItCategoryComponent, ItHomeComponent, NavITMenuComponent, GetItCategoryComponent
     , GetItSubCategoryComponent, ItSubCategoryComponent, GetItSubChildCategoryComponent, ItSubChildCategoryComponent,
-  getuserit,userit  // , ContractMasterComponent
-    
+    getuserit, userit, getpublishcontract, publishcontract, itvendors, getitvendor, getitemreceipt, itemreceipts,
+    requestitem, getrequestitem,
+    issueditems, getissueditems //,
   ]
 
 })

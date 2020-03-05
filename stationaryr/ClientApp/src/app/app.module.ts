@@ -32,8 +32,8 @@ import { OnlynumberDirective } from './Directive/onlynumber';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import {
     
-    MatFormFieldModule, 
-    MatInputModule,
+  MatFormFieldModule,
+  MatInputModule, MatMenuModule,
   MatCardModule,
   MatToolbarModule, MatSidenavModule, MatIconModule, MatButtonModule, MatTabsModule, MatExpansionModule, MatSlideToggleModule,
   
@@ -48,9 +48,9 @@ import {
     OnlynumberDirective
       
     ],
-    imports: [FormsModule, ReactiveFormsModule, //MatIconModule, 
+    imports: [FormsModule, ReactiveFormsModule, MatIconModule, 
       BrowserModule, MatTabsModule, MatExpansionModule, MatSlideToggleModule,
-      HttpClientModule,
+      HttpClientModule, MatMenuModule,
       MatButtonModule,
         MatInputModule, 
         BrowserAnimationsModule, MatToolbarModule, MatSidenavModule, 

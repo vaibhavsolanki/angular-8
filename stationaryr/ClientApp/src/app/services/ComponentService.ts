@@ -3,22 +3,144 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SubCategory, UsersDgh, PrintRepository, contract,devicename,DGHUserRepository, Report, Units, Material, COMPANY, listofdropdown, StationaryRepository } from '../TableEntity/TableEntityClass';
+import { SubCategory, UsersDgh, itissueitems, itreleaseorder, itvendor, ititems, itemreceipt, PrintRepository, contract,devicename,DGHUserRepository, Report, Units, Material, COMPANY, listofdropdown, StationaryRepository } from '../TableEntity/TableEntityClass';
 import { ActivatedRoute } from '@angular/router';
 import { UserEdit } from '../modal/edit-user.modal';
 import { Role } from '../modal/role.modal';
 import { Permission, PermissionValues } from '../modal/permission.modal';
+import { BADQUERY } from 'dns';
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded', 'Access-Control-Allow-Headers': 'http://localhost:4200' })
 };
 
 @Injectable()
 export class ComponentService {
-// private actionUrl: string = "http://192.168.0.42/";
+ //private actionUrl: string = "http://192.168.0.42/";
  private actionUrl: string = "https://localhost:44324/";
     //private actionUrl: string='http://localhost/POMS/oalp/getdata';
     constructor(private httpclient: HttpClient, private route: ActivatedRoute) { }
-    //report
+
+  //itissueitem
+  public GetItIssueItems(): Observable<itissueitems[]> {
+
+    return this.httpclient.get<itissueitems[]>(this.actionUrl + "api/Data/GetItIssueItems")
+
+  }
+  public SaveItIssueItems(itissueitems: itissueitems): Observable<string> {
+    console.log(itissueitems);
+    return this.httpclient.post<string>(this.actionUrl + "api/Data/SaveItIssueItems", itissueitems)
+
+  }
+  DeleteItIssueItems(id: string) {
+    return this.httpclient.delete<string>(this.actionUrl + "api/Data/DeleteItIssueItems/" + id);
+  }
+
+  GetItIssueItemsById(id: string): Observable<itissueitems[]> {
+    let body = {
+      'ID': id
+    }
+    return this.httpclient.get<itissueitems[]>(this.actionUrl + "api/Data/GetItIssueItemsById/" + id);
+  }
+
+  UpdateIssueItems(itissueitems: itissueitems): Observable<string> {
+
+    const firstParam: string = this.route.snapshot.queryParamMap.get('id')
+    itissueitems.ID = Number(firstParam);
+
+    return this.httpclient.post<string>(this.actionUrl + "api/Data/UpdateIssueItems", itissueitems)
+
+  }
+
+
+  //
+
+  public GetItItemReceipt(): Observable<itemreceipt[]> {
+
+    return this.httpclient.get<itemreceipt[]>(this.actionUrl + "api/Data/GetItItemReceipt")
+
+  }
+  public SaveItItemReceipt(itemreceipt: itemreceipt, item: ititems[]): Observable<string> {
+    itemreceipt.ORDERITEM = item;
+    console.log(itemreceipt.ORDERITEM);
+    return this.httpclient.post<string>(this.actionUrl + "api/Data/SaveItItemReceipt", itemreceipt)
+
+  }
+  DeleteItItemReceipt(id: number) {
+    return this.httpclient.delete<string>(this.actionUrl + "api/Data/DeleteItItemReceipt/" + id);
+  }
+
+  GetItItemReceiptById(id: number): Observable<itemreceipt[]> {
+    let body = {
+      'ID': id
+    }
+    return this.httpclient.get<itemreceipt[]>(this.actionUrl + "api/Data/GetItItemReceiptById/" + id);
+  }
+
+  UpdateItemReceipt(itemreceipt: itemreceipt): Observable<string> {
+
+    const firstParam: string = this.route.snapshot.queryParamMap.get('id')
+    itemreceipt.PUBLISHORDER = firstParam;
+
+    return this.httpclient.post<string>(this.actionUrl + "api/Data/UpdateItemReceipt", itemreceipt)
+
+  }
+
+  //itvendor
+  public GetItVendor(): Observable<itvendor[]> {
+
+    return this.httpclient.get<itvendor[]>(this.actionUrl + "api/Data/GetItVendor")
+
+  }
+  public SaveItVendor(itvendor: itvendor): Observable<string> {
+    itvendor.APPTYPE = 'IT';
+    return this.httpclient.post<string>(this.actionUrl + "api/Data/SaveItVendor", itvendor)
+
+  }
+  DeleteItVendor(id: number) {
+    return this.httpclient.delete<string>(this.actionUrl + "api/Data/DeleteItVendor/" + id);
+  }
+
+  GetItVendorById(id: number): Observable<itvendor[]> {
+    let body = {
+      'ID': id
+    }
+    return this.httpclient.get<itvendor[]>(this.actionUrl + "api/Data/GetItVendorById/" + id);
+  }
+
+  UpdateItVendor(itvendor: itvendor): Observable<string> {
+
+    const firstParam: string = this.route.snapshot.queryParamMap.get('id')
+    itvendor.ID = Number(firstParam);
+    itvendor.APPTYPE = 'IT';
+    return this.httpclient.post<string>(this.actionUrl + "api/Data/UpdateItVendor", itvendor)
+
+  }
+
+
+
+
+
+
+  //itrelease order
+  getreleaseorder(): Observable<itreleaseorder[]> {
+    return this.httpclient.get<itreleaseorder[]>(this.actionUrl + "api/Data/getreleaseorder")
+
+  }
+  getreleaseorderbyid(id: number): Observable<itreleaseorder[]> {
+
+    return this.httpclient.get<itreleaseorder[]>(this.actionUrl + "api/Data/getreleaseorderbyid/" + id)
+
+  }
+  savereleaseorder(order: itreleaseorder): Observable<string> {
+    return this.httpclient.post<string>(this.actionUrl + "api/Data/savereleaseorder", order)
+
+  }
+
+  deletereleaseorder(id: number) {
+    return this.httpclient.delete<string>(this.actionUrl + "api/Data/deletereleaseorder/" + id);
+
+  }
+  //report
 
   get rolebyuser() {
 
@@ -59,6 +181,12 @@ export class ComponentService {
       'ID': id
     }
     return this.httpclient.get<Role>(this.actionUrl + "api/Account/roles/" + id);
+  }
+  GetRoleByName(name: string): Observable<Role> {
+    let body = {
+      'name': name
+    }
+    return this.httpclient.get<Role>(this.actionUrl + "api/Account/roles/name/" + name);
   }
 
 
@@ -102,7 +230,7 @@ export class ComponentService {
   //contractform
   public GetContractform(): Observable<contract[]> {
 
-    return this.httpclient.post<contract[]>(this.actionUrl + "api/Data/GetContractform", null)
+    return this.httpclient.get<contract[]>(this.actionUrl + "api/Data/GetContractform")
 
   }
   public SaveContractform(contract: contract): Observable<string> {
@@ -110,11 +238,11 @@ export class ComponentService {
     return this.httpclient.post<string>(this.actionUrl + "api/Data/SaveContractform", contract)
 
   }
-  deleteContractform(id: number) {
+  deleteContractform(id: string) {
     return this.httpclient.delete<string>(this.actionUrl + "api/Data/deleteContractform/" + id);
   }
 
-  getContractformId(id: number): Observable<contract[]> {
+  getContractformId(id: string): Observable<contract[]> {
     let body = {
       'ID': id
     }
@@ -124,7 +252,7 @@ export class ComponentService {
 
   public UpdateContractform(contract: contract): Observable<string> {
     const firstParam: string = this.route.snapshot.queryParamMap.get('id')
-    contract.ID = Number(firstParam);
+    contract.CONTRACTID = firstParam;
     return this.httpclient.post<string>(this.actionUrl + "api/Data/UpdateContractform", contract)
 
   }
@@ -137,8 +265,7 @@ export class ComponentService {
 
   }
   public SaveUsers(users: UserEdit): Observable<string> {
-    console.log(users);
-   
+    console.log(users);   
     return this.httpclient.post<string>(this.actionUrl + "api/Account/Register", users)//, users
 
   }
@@ -152,11 +279,20 @@ export class ComponentService {
     }
     return this.httpclient.get<UserEdit[]>(this.actionUrl + "api/Data/getuserId/" + id);
   }
+  //public Updateusers1(users: UserEdit): Observable<string> {
+  //  console.log('narang ');
+  //  console.log(users);
+  //  console.log('gagan');
+    
+  //  var Id = users.Id;
+  //  return this.httpclient.get<string>(this.actionUrl + "api/Data/getuserId/"+Id)//, users
 
+  //}
 
   public Updateusers(users: UserEdit): Observable<string> {
-    const firstParam: string = this.route.snapshot.queryParamMap.get('id')
-    users.Id = firstParam;
+    //const firstParam: string = this.route.snapshot.queryParamMap.get('id')
+    //users.Id = firstParam;
+    console.log(users);
     return this.httpclient.post<string>(this.actionUrl + "api/Account/Updateusers", users)
 
   }
@@ -288,7 +424,7 @@ export class ComponentService {
     }
     //material
      public GetMaterial(status:string): Observable<Material[]> {
-       alert(this.actionUrl);
+       
        return this.httpclient.get<Material[]>(this.actionUrl + "api/Data/GetMaterial/" + status)
 
     }

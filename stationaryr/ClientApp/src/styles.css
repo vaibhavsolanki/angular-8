@@ -15,11 +15,11 @@ a {
 code {
   color: #e01a76;
 }
-.hidden{
 
+.hidden {
   display: none;
-
 }
+
 .btn-primary {
   color: #fff;
   background-color: #1b6ec2;
@@ -34,20 +34,28 @@ code {
   .example-container > * {
     width: 100%;
   }
+.filler {
+  
+  flex: 1 1 auto;
+}
+
 table {
   overflow: scroll;
-  width:100%;
+  width: 100%;
 }
+
 .disabled {
   opacity: 0.6;
-  cursor: not-allowed!important;
+  cursor: not-allowed !important;
   pointer-events: none;
 }
+
 .mat-row,
 .mat-header-row {
   overflow: auto;
   width: 2800px;
 }
+
 .mat-form-field {
   font-size: 14px;
   width: 100%;

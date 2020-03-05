@@ -10,14 +10,15 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var rxjs_1 = require("rxjs");
 var operators_1 = require("rxjs/operators");
+var jwt_helper_1 = require("./jwt-helper");
 var httpOptions = {
     headers: new http_1.HttpHeaders({ 'Content-Type': 'application/json' })
 };
 var AuthenticationService = /** @class */ (function () {
+    // private actionUrl: string = "https://localhost:44324/"//;
     function AuthenticationService(http) {
         this.http = http;
-        //private actionUrl: string = "http://192.168.0.42/";
-        this.actionUrl = "https://localhost:44324/";
+        this.actionUrl = "http://192.168.0.42/";
         this.currentUserSubject = new rxjs_1.BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')));
         this.currentUser = this.currentUserSubject.asObservable();
     }
@@ -32,16 +33,27 @@ var AuthenticationService = /** @class */ (function () {
         var _this = this;
         var logindata = {
             username: username,
-            passward: password
+            passward: password,
+            RememberMe: true
         };
-        return this.http.post(this.actionUrl + "WeatherForecast/logincheck", logindata, httpOptions).pipe(operators_1.map(function (user) {
+        return this.http.post(this.actionUrl + "api/Account/Login", logindata, httpOptions).pipe(operators_1.map(function (user) {
             return _this.processLoginResponse(user);
         }));
     };
     AuthenticationService.prototype.processLoginResponse = function (response) {
-        localStorage.setItem('currentUser', JSON.stringify(response.username));
-        localStorage.setItem('currentRole', JSON.stringify(response.role));
-        localStorage.setItem('auth_token', JSON.stringify(response.token));
+        var accessToken = response.access_token;
+        if (accessToken == null) {
+            throw new Error('accessToken cannot be null');
+        }
+        var jwtHelper = new jwt_helper_1.JwtHelper();
+        var decodedAccessToken = jwtHelper.decodeToken(accessToken);
+        console.log(decodedAccessToken);
+        var permissions = Array.isArray(decodedAccessToken.permission) ? decodedAccessToken.permission : [decodedAccessToken.permission];
+        localStorage.setItem('currentUser', JSON.stringify(decodedAccessToken.sub));
+        localStorage.setItem('currentRole', JSON.stringify(decodedAccessToken.role));
+        localStorage.setItem('permission', JSON.stringify(permissions));
+        console.log(permissions);
+        localStorage.setItem('auth_token', JSON.stringify(accessToken));
         this.currentUserSubject.next(response);
         return response;
     };
@@ -50,6 +62,7 @@ var AuthenticationService = /** @class */ (function () {
         localStorage.removeItem('currentUser');
         localStorage.removeItem('currentRole');
         localStorage.removeItem('auth_token');
+        localStorage.removeItem('permission');
         this.currentUserSubject.next(null);
     };
     AuthenticationService = __decorate([

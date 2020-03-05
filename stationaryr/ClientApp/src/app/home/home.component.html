@@ -1,11 +1,16 @@
 
 
 
-<mat-toolbar color="primary" class="example-toolbar">
-  <!--<button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>-->
-  <!--<mat-icon aria-hidden="false" aria-label="Example home icon">menu</mat-icon>-->
-  <h1 class="example-app-name">Application</h1>
-</mat-toolbar>
+  <mat-toolbar color="primary" class="example-toolbar">
+    <h1 class="example-app-name">Application</h1>
+    <span class="filler"></span>
+    <span class="userfont">Welcome</span><span>  {{ UserName}}</span>
+    <button mat-button [matMenuTriggerFor]="menu"><mat-icon>account_circle</mat-icon></button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item>Profile</button>
+      <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon>LogOut</button>
+    </mat-menu>
+  </mat-toolbar>
 
 <!--<mat-icon aria-hidden="false" aria-label="Example home icon">menu</mat-icon>-->
 

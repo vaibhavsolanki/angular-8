@@ -369,13 +369,13 @@ namespace Stationary.Controllers
 
         
 
-        [HttpPost("[action]")]
+        [HttpGet("[action]")]
         public IActionResult GetContractform()
         {
             return Ok(new Data().GetContractform());
         }
         [HttpGet("getContractformId/{id}")]
-        public IActionResult getContractformId(int ID)
+        public IActionResult getContractformId(string ID)
         {
             return Ok(new Data().getContractformId(ID));
         }
@@ -389,6 +389,17 @@ namespace Stationary.Controllers
 
             return new Data().SaveContractform(Contract);
         }
+        [HttpPost("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+
+        public string UpdateContractform(Contract Contract)
+        {
+
+            return new Data().UpdateContractform(Contract);
+        }
+
+
+        
 
         [HttpPost("[action]")]
 
@@ -397,18 +408,18 @@ namespace Stationary.Controllers
         [HttpDelete("deleteContractform/{id}")]
 
 
-        public string deleteContractform(int ID)
+        public string deleteContractform(string ID)
         {
             return new Data().deleteContractform(ID);
         }
 
         //device name
-        [HttpPost("[action]")]
+        [HttpGet("[action]")]
         public IActionResult GetDevicename()
         {
             return Ok(new Data().GetDevicename());
         }
-        [HttpGet("deleteDevicename/{id}")]
+        [HttpDelete("deleteDevicename/{id}")]
         public IActionResult deleteDevicename(int ID)
         {
             return Ok(new Data().deleteDevicename(ID));
@@ -432,13 +443,137 @@ namespace Stationary.Controllers
 
             return new Data().UpdateDevicename(devicename);
         }
-        [HttpDelete("getDevicenameId/{id}")]
+       
 
         [HttpGet("getDevicenameId/{id}")]
         public IActionResult getDevicenameId(int ID)
         {
             return Ok(new Data().getDevicenameId(ID));
         }
+
+        //itreleaseorder
+        [HttpPost("[action]")]
+        public IActionResult savereleaseorder(itreleaseorder itreleaseorder)
+        {
+            return Ok(new Data().savereleaseorder(itreleaseorder));
+        }
+
+        [HttpGet("[action]")]
+        public IActionResult getreleaseorder()
+        {
+            return Ok(new Data().getreleaseorder());
+        }
+        [HttpGet("getreleaseorderbyid/{id}")]
+        public IActionResult getreleaseorderbyid(int ID)
+        {
+           return Ok(new Data().getreleaseorderbyid(ID));
+        }
+        [HttpDelete("deletereleaseorder/{id}")]
+        public IActionResult deletereleaseorder(int ID)
+        {
+            return Ok(new Data().deletereleaseorder(ID));
+        }
+        //itvendor
+        [HttpGet("[action]")]
+        public IActionResult GetItVendor()
+        {
+            return Ok(new Data().GetItVendor());
+        }
+        [HttpDelete("DeleteItVendor/{id}")]
+        public IActionResult DeleteItVendor(int ID)
+        {
+            return Ok(new Data().DeleteItVendor(ID));
+        }
+
+
+        [HttpPost("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+
+        public string SaveItVendor(itvendor itvendor)
+        {
+
+            return new Data().SaveItVendor(itvendor);
+        }
+
+        [HttpPost("[action]")]
+
+
+        public string UpdateItVendor(itvendor itvendor)
+        {
+
+            return new Data().UpdateItVendor(itvendor);
+        }
+       
+        [HttpGet("GetItVendorById/{id}")]
+        public IActionResult GetItVendorById(int ID)
+        {
+            return Ok(new Data().GetItVendorById(ID));
+        }
+        [HttpPost("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+
+        public string SaveItItemReceipt(itemreceipt itemreceipt)
+        {
+
+            return new Data().SaveItItemReceipt(itemreceipt);
+        }
+
+        [HttpGet("[action]")]
+        public IActionResult GetItItemReceipt()
+        {
+            return Ok(new Data().GetItItemReceipt());
+        }
+        [HttpGet("GetItItemReceiptById/{id}")]
+        public IActionResult GetItItemReceiptById(int ID)
+        {
+            return Ok(new Data().GetItItemReceiptById(ID));
+        }
+
+        //itissueitems
+
+        [HttpGet("[action]")]
+        public IActionResult GetItIssueItems()
+        {
+            return Ok(new Data().GetItIssueItems());
+        }
+        [HttpDelete("DeleteItIssueItems/{id}")]
+        public IActionResult DeleteItIssueItems(string ID)
+        {
+            return Ok(new Data().DeleteItIssueItems(ID));
+        }
+
+
+        [HttpPost("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+
+        public string SaveItIssueItems(itissueitems itissueitems)
+        {
+
+            return new Data().SaveItIssueItems(itissueitems);
+        }
+
+        [HttpPost("[action]")]
+
+
+        public string UpdateIssueItems(itissueitems itissueitems)
+        {
+
+            return new Data().UpdateIssueItems(itissueitems);
+        }
+
+        [HttpGet("GetItIssueItemsById/{id}")]
+        public IActionResult GetItIssueItemsById(string ID)
+        {
+            return Ok(new Data().GetItIssueItemsById(ID));
+        }
+        [HttpGet("getuserId/{id}")]
+        public IActionResult GetUserId(string ID)
+        {
+            return Ok(new Data().GetUserId(ID));
+        }
+        //
+
+
 
     }
 }

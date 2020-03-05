@@ -1,0 +1,37 @@
+<a [routerLink]="['../PublishContract']">Publish Contract</a>
+
+<mat-form-field>
+  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+</mat-form-field>
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" style="overflow-x:scroll;">
+
+    <!-- Position Column -->
+
+    <ng-container matColumnDef="RELEASEORDERID">
+      <th mat-header-cell *matHeaderCellDef> RELEASEORDERID </th>
+      <td mat-cell *matCellDef="let row"> {{row.RELEASEORDERID}} </td>
+    </ng-container>
+    <ng-container matColumnDef="CONTRACTNO">
+      <th mat-header-cell *matHeaderCellDef> CONTRACTNO</th>
+      <td mat-cell *matCellDef="let row"> {{row.CONTRACTID}} </td>
+    </ng-container>
+   
+    <ng-container matColumnDef="View/Delete">
+      <th mat-header-cell *matHeaderCellDef>View/Delete </th>
+      <td mat-cell *matCellDef="let row">
+        <button (click)="ViewPublish(row)" style="margin-left: 10px;" class="btn btn-info"><mat-icon>edit</mat-icon></button>
+        <button (click)="deletePublish(row)" class="btn btn-info"><mat-icon>delete</mat-icon> </button>
+
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+
+

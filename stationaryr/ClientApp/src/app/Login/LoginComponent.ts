@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from '../services/authentication.service';
 import { StateTable, Login } from '../TableEntity/TableEntityClass';
-
+import { LoginResponse } from '../modal/loginresponse.model'
 @Component({ templateUrl: 'Login.html', styleUrls:['./LoginComponent.css' ]})
 export class LoginComponent implements OnInit {
     loginForm: FormGroup;
@@ -11,7 +11,7 @@ export class LoginComponent implements OnInit {
     loading = false;
     dashboard = false;
     returnUrl: string;
-    login: Login;
+  login: LoginResponse;
     state: StateTable[];
     show = true;
     constructor(

@@ -19,6 +19,16 @@ import { GetRolemaster } from './component/Rolemaster/getrolemaster';
 import { Rolemaster } from './component/Rolemaster/RoleMaster';
 import { getuserit } from './component/User/getuser';
 import { userit } from './component/User/user';
+import { getpublishcontract } from './component/publishcontract/getpublishcontract';
+import { itvendors } from './component/vendor/vendor';
+import { getitvendor } from './component/vendor/getvendor';
+import { getitemreceipt } from './component/receiptofitems/getitemreceipt';
+import { itemreceipts } from './component/receiptofitems/itemreceipt';
+import { publishcontract } from './component/publishcontract/publishcontract';
+import { issueditems } from './component/issueitems/issueitems';
+import { getissueditems } from './component/issueitems/getissueitems';
+import { getrequestitem } from './component/requestitems/getrequestitem';
+import { requestitem } from './component/requestitems/requestitem';
 export const routes: Routes = [
   {
     path: '', component: ithardwaredepart, canActivate: [AuthGuard]
@@ -40,7 +50,19 @@ export const routes: Routes = [
  { path: 'GetRolemaster', component: GetRolemaster },
 { path: 'Rolemaster', component: Rolemaster },
  { path: 'GetUsers', component: getuserit },
-{ path: 'AddUsers', component: userit },
+      { path: 'AddUsers', component: userit },
+      { path: 'GetPublishContract', component: getpublishcontract },
+      { path: 'PublishContract', component: publishcontract },
+      { path: 'Vendor', component: itvendors },
+      { path: 'GetVendor', component: getitvendor },
+      { path: 'GetItemReceipt', component: getitemreceipt },
+      { path: 'ItemReceipt', component: itemreceipts },
+
+      { path: 'IssueItems', component: issueditems },
+      { path: 'GetIssueItems', component: getissueditems },
+      { path: 'RequestItems', component: requestitem },
+      { path: 'GetRequestItems', component: getrequestitem },
+      
       //{ path: 'ContractMaster', component: ContractMasterComponent },
 
     ]

@@ -36,15 +36,15 @@ export class getitcontractmaster {
 
   editContract(contract: contract): void {
     localStorage.removeItem('editContractId');
-    localStorage.setItem('editContractId', contract.ID.toString());
-    this.router.navigate(['IT/ContractMaster'], { queryParams: { id: contract.ID.toString() } });
+    localStorage.setItem('editContractId', contract.CONTRACTID.toString());
+    this.router.navigate(['IT/ContractMaster'], { queryParams: { id: contract.CONTRACTID.toString() } });
 
 
   }
   deleteContract(contract: contract): void {
     if (confirm("Are you sure you want to delete this ?")) {
       this.Componentservices
-        .deleteContractform(contract.ID).subscribe(
+        .deleteContractform(contract.CONTRACTID).subscribe(
           data => {
             this.message = data,
 

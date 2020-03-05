@@ -21,22 +21,673 @@ namespace Stationary.Models
 {
     public class Data
     {
-        string connection = "User ID=system;Connection Timeout=600;Password=123;data source=(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST= localhost)(PORT=1522))(CONNECT_DATA=(SERVICE_NAME= user)));";
+        string connection = "User ID=xuser;Connection Timeout=600;Password=xuser;data source=(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST= 192.168.0.111)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME= dgh)));";
+        //itissueitem
+
+
+        public string SaveItIssueItems(itissueitems itissueitems)
+        {
+
+
+            string ret = "";
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_IT_REQUEST_CRUD", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", "");
+                cmd.Parameters.Add("P_USERID", itissueitems.USERID);
+                cmd.Parameters.Add("P_REMARKS", itissueitems.REMARKS);
+
+                cmd.Parameters.Add("CALLVAL", "0");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.Rows[0][0].ToString();
+                issueitem(itissueitems.ORDERITEM, ret);
+            }
+            return ret;
+        }
+        public string DeleteItIssueItems(string id)
+
+        {
+            string ret = "";
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_IT_REQUEST_CRUD", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", id);
+
+                cmd.Parameters.Add("P_USERID", "");
+                cmd.Parameters.Add("P_REMARKS", "");
+
+                cmd.Parameters.Add("CALLVAL", "3");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.Rows[0][0].ToString();
+
+            }
+            return ret;
+        }
+
+        public List<itissueitems> GetItIssueItems()
+        {
+
+            List<itissueitems> ret = new List<itissueitems>();
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_IT_REQUEST_CRUD", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", "");
+                cmd.Parameters.Add("P_USERID", "");
+                cmd.Parameters.Add("P_REMARKS", "");
+
+                cmd.Parameters.Add("CALLVAL", "1");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.ToList<itissueitems>();
+
+            }
+            return ret;
+        }
+
+
+
+        public List<itissueitems> GetItIssueItemsById(string id)
+        {
+
+            List<itissueitems> ret = new List<itissueitems>();
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_IT_REQUEST_CRUD", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", id);
+
+                cmd.Parameters.Add("P_USERID", "");
+                cmd.Parameters.Add("P_REMARKS", "");
+                cmd.Parameters.Add("CALLVAL", "2");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.ToList<itissueitems>();
+                ret[0].ORDERITEM = GetItIssueItemsquantity(id);
+
+            }
+            return ret;
+        }
+
+        public List<ititems> GetItIssueItemsquantity(string issueid)
+        {
+            List<ititems> ret = new List<ititems>();
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_IT_REQUEST_ITEMS", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", "");
+                cmd.Parameters.Add("P_CATEGORY", "");
+                cmd.Parameters.Add("P_SUBCATEGORY", "");
+                cmd.Parameters.Add("P_SUBCHILDCATEGORY", "");
+
+                cmd.Parameters.Add("P_QUANTITY", "");
+
+
+                cmd.Parameters.Add("P_ISSUEID", issueid);
+                cmd.Parameters.Add("P_REMARKS", "");
+                cmd.Parameters.Add("CALLVAL", "2");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.ToList<ititems>(); ;
+
+            }
+
+
+            return ret;
+
+
+
+
+        }
+
+        public string UpdateIssueItems(itissueitems itissueitems)
+        {
+
+            return "";
+        }
+
+        public string issueitem(List<ititems> orderitem, string issueid)
+        {
+            string ret = "";
+            foreach (var item in orderitem)
+            {
+                using (OracleConnection con = new OracleConnection(connection))
+                {
+                    con.Open();
+                    OracleCommand cmd = new OracleCommand("STATIONARY_IT_REQUEST_ITEMS", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    OracleDataAdapter da = new OracleDataAdapter(cmd);
+                    cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("P_ID", "");
+                    cmd.Parameters.Add("P_CATEGORY", item.CATEGORY);
+                    cmd.Parameters.Add("P_SUBCATEGORY", item.SUBCATEGORY);
+                    cmd.Parameters.Add("P_SUBCHILDCATEGORY", item.SUBCHILDCATEGORY);
+
+                    cmd.Parameters.Add("P_QUANTITY", item.QUANTITY);
+
+
+                    cmd.Parameters.Add("P_ISSUEID", issueid);
+                    cmd.Parameters.Add("P_REMARKS", item.REMARKS);
+                    cmd.Parameters.Add("CALLVAL", "0");
+
+                    DataTable ds = new DataTable();
+
+
+                    da.Fill(ds);
+
+                    ret = ds.Rows[0][0].ToString();
+
+                }
+            }
+
+            return ret;
+
+        }
+
+
+        //itrealseorder
+
+
+        public List<itemreceipt> GetItItemReceipt()
+        {
+
+            List<itemreceipt> ret = new List<itemreceipt>();
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_IT_UPDATE_RECEIPT", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_RELEASEORDERID", "");
+                cmd.Parameters.Add("P_CHALLANNO", "");
+                cmd.Parameters.Add("P_CHALLANDATE", "");
+                cmd.Parameters.Add("P_REMARKS", "");
+                cmd.Parameters.Add("P_RECEIPTDATE", "");
+
+                cmd.Parameters.Add("CALLVAL", "1");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.ToList<itemreceipt>();
+
+            }
+            return ret;
+        }
+
+        public List<itemreceipt> GetItItemReceiptById(int id)
+        {
+
+            List<itemreceipt> ret = new List<itemreceipt>();
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_IT_UPDATE_RECEIPT", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_RELEASEORDERID", id);
+                cmd.Parameters.Add("P_CHALLANNO", "");
+                cmd.Parameters.Add("P_CHALLANDATE", "");
+                cmd.Parameters.Add("P_REMARKS", "");
+                cmd.Parameters.Add("P_RECEIPTDATE", "");
+
+                cmd.Parameters.Add("CALLVAL", "2");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.ToList<itemreceipt>();
+
+            }
+            return ret;
+        }
+
+        public string SaveItItemReceipt(itemreceipt itemreceipt)
+        {
+
+
+            string ret = "";
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_IT_UPDATE_RECEIPT", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_RELEASEORDERID", itemreceipt.PUBLISHORDER);
+                cmd.Parameters.Add("P_CHALLANNO", itemreceipt.CHALLANNO);
+                cmd.Parameters.Add("P_CHALLANDATE", itemreceipt.CHALLANDATE);
+                cmd.Parameters.Add("P_REMARKS", itemreceipt.REMARKS);
+                cmd.Parameters.Add("P_RECEIPTDATE", itemreceipt.RECEIPTDATE);
+
+                cmd.Parameters.Add("CALLVAL", "0");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.Rows[0][0].ToString();
+                ordrtititems(itemreceipt.ORDERITEM, itemreceipt.PUBLISHORDER);
+            }
+            return ret;
+        }
+
+        public string ordrtititems(List<ititems> orderitem, string publishorder)
+        {
+            string ret = "";
+            foreach (var item in orderitem)
+            {
+                using (OracleConnection con = new OracleConnection(connection))
+                {
+                    con.Open();
+                    OracleCommand cmd = new OracleCommand("STATIONARY_IT_ITEM_RECEIPT", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    OracleDataAdapter da = new OracleDataAdapter(cmd);
+                    cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("P_ID", "");
+                    cmd.Parameters.Add("P_PUBLISHORDER", publishorder);
+                    cmd.Parameters.Add("P_CONTRACTID", item.CONTRACTID);
+
+                    cmd.Parameters.Add("P_QUANTITY", item.QUANTITY);
+                    cmd.Parameters.Add("P_CATEGORY", item.CATEGORY);
+                    cmd.Parameters.Add("P_SUBCATEGORY", item.SUBCATEGORY);
+                    cmd.Parameters.Add("P_SUBCHILDCATEGORY", item.SUBCHILDCATEGORY);
+                    cmd.Parameters.Add("P_RECEIVEDQUANTITY", item.RECEIVEDQUANTITY);
+                    cmd.Parameters.Add("P_REMAINING", item.REMAINING);
+                    cmd.Parameters.Add("P_ITEM_REMARKS", item.REMARKS);
+                    cmd.Parameters.Add("CALLVAL", "0");
+
+                    DataTable ds = new DataTable();
+
+
+                    da.Fill(ds);
+
+                    ret = ds.Rows[0][0].ToString();
+
+                }
+            }
+
+            return ret;
+
+        }
+
+        //itvendor
+        public string SaveItVendor(itvendor itvendor)
+
+        {
+            string ret = "";
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_IT_VENDOR_CRUD", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", "");
+                cmd.Parameters.Add("P_VENDORNAME", itvendor.VENDORNAME);
+                cmd.Parameters.Add("P_PHONENO", itvendor.PHONENO);
+                cmd.Parameters.Add("P_ADDRESS", itvendor.ADDRESS);
+                cmd.Parameters.Add("P_TYPE", itvendor.APPTYPE);
+
+                cmd.Parameters.Add("CALLVAL", "0");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.Rows[0][0].ToString();
+
+            }
+            return ret;
+        }
+
+        public string UpdateItVendor(itvendor itvendor)
+
+        {
+            string ret = "";
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_IT_VENDOR_CRUD", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", itvendor.ID);
+                cmd.Parameters.Add("P_VENDORNAME", itvendor.VENDORNAME);
+                cmd.Parameters.Add("P_PHONENO", itvendor.PHONENO);
+                cmd.Parameters.Add("P_ADDRESS", itvendor.ADDRESS);
+                cmd.Parameters.Add("P_TYPE", itvendor.APPTYPE);
+
+                cmd.Parameters.Add("CALLVAL", "4");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.Rows[0][0].ToString();
+
+            }
+            return ret;
+        }
+
+        public string DeleteItVendor(int id)
+
+        {
+            string ret = "";
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_IT_VENDOR_CRUD", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", id);
+                cmd.Parameters.Add("P_VENDORNAME", "");
+                cmd.Parameters.Add("P_PHONENO", "");
+                cmd.Parameters.Add("P_ADDRESS", "");
+                cmd.Parameters.Add("P_TYPE", "");
+                cmd.Parameters.Add("CALLVAL", "3");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.Rows[0][0].ToString();
+
+            }
+            return ret;
+        }
+        public List<itvendor> GetItVendor()
+
+        {
+            List<itvendor> ret = new List<itvendor>();
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_IT_VENDOR_CRUD", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", "");
+                cmd.Parameters.Add("P_VENDORNAME", "");
+                cmd.Parameters.Add("P_PHONENO", "");
+                cmd.Parameters.Add("P_ADDRESS", "");
+                cmd.Parameters.Add("P_TYPE", "");
+                cmd.Parameters.Add("CALLVAL", "1");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.ToList<itvendor>();
+
+            }
+            return ret;
+        }
+        public List<itvendor> GetItVendorById(int id)
+
+        {
+            List<itvendor> ret = new List<itvendor>();
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_IT_VENDOR_CRUD", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", id);
+                cmd.Parameters.Add("P_VENDORNAME", "");
+                cmd.Parameters.Add("P_PHONENO", "");
+                cmd.Parameters.Add("P_ADDRESS", "");
+                cmd.Parameters.Add("P_TYPE", "");
+                cmd.Parameters.Add("CALLVAL", "2");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.ToList<itvendor>();
+
+            }
+            return ret;
+        }
+
+
+
+
+
+
+
+        //itrelaseorder
+        public List<itreleaseorder> getreleaseorder()
+
+        {
+            List<itreleaseorder> ret = new List<itreleaseorder>();
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_IT_RELEASE_CRUD", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", "");
+                cmd.Parameters.Add("P_CONTRACTID", "");
+                cmd.Parameters.Add("P_PUBLISHID", "");
+                cmd.Parameters.Add("P_SUBJECT", "");
+                cmd.Parameters.Add("P_BODY", "");
+
+                cmd.Parameters.Add("P_SIGNATURE", "");
+                cmd.Parameters.Add("P_RECEIVEDBY", "");
+
+                cmd.Parameters.Add("P_RECEIVEDDATE", "");
+
+                cmd.Parameters.Add("CALLVAL", "1");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.ToList<itreleaseorder>();
+
+            }
+            return ret;
+        }
+
+
+
+
+        public List<itreleaseorder> getreleaseorderbyid(int id)
+
+        {
+            List<itreleaseorder> ret = new List<itreleaseorder>();
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_IT_RELEASE_CRUD", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", id);
+                cmd.Parameters.Add("P_CONTRACTID", "");
+                cmd.Parameters.Add("P_PUBLISHID", "");
+                cmd.Parameters.Add("P_SUBJECT", "");
+                cmd.Parameters.Add("P_BODY", "");
+
+                cmd.Parameters.Add("P_SIGNATURE", "");
+                cmd.Parameters.Add("P_RECEIVEDBY", "");
+
+                cmd.Parameters.Add("P_RECEIVEDDATE", "");
+
+                cmd.Parameters.Add("CALLVAL", "2");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.ToList<itreleaseorder>();
+
+            }
+            return ret;
+        }
+
+
+        public string savereleaseorder(itreleaseorder itreleaseorder)
+
+        {
+            string ret = "";
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_IT_RELEASE_CRUD", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", "");
+                cmd.Parameters.Add("P_CONTRACTID", itreleaseorder.CONTRACTID);
+                cmd.Parameters.Add("P_PUBLISHID", itreleaseorder.RELEASEORDERID);
+                cmd.Parameters.Add("P_SUBJECT", itreleaseorder.SUBJECT);
+                cmd.Parameters.Add("P_BODY", itreleaseorder.BODY);
+
+                cmd.Parameters.Add("P_SIGNATURE", itreleaseorder.SIGNATURE);
+                cmd.Parameters.Add("P_RECEIVEDBY", itreleaseorder.RECEIVEDBY);
+
+                cmd.Parameters.Add("P_RECEIVEDDATE", itreleaseorder.RECEIVEDDATE);
+
+                cmd.Parameters.Add("CALLVAL", "0");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.Rows[0][0].ToString();
+
+            }
+            return ret;
+        }
+
+
+        public string deletereleaseorder(int id)
+
+        {
+            string ret = "";
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_IT_RELEASE_CRUD", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", id);
+                cmd.Parameters.Add("P_CONTRACTID", "");
+                cmd.Parameters.Add("P_PUBLISHID", "");
+                cmd.Parameters.Add("P_SUBJECT", "");
+                cmd.Parameters.Add("P_BODY", "");
+
+                cmd.Parameters.Add("P_SIGNATURE", "");
+                cmd.Parameters.Add("P_RECEIVEDBY", "");
+
+                cmd.Parameters.Add("P_RECEIVEDDATE", "");
+
+                cmd.Parameters.Add("CALLVAL", "3");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.Rows[0][0].ToString();
+
+            }
+            return ret;
+        }
+
+
         //report
         public static List<USER> getuser()
         {
             var numbers = new List<role>();
-        numbers.Add(new role() { EMP_ID="1",Approle="STATIONARY"});
-         numbers.Add(new role() { EMP_ID = "2", Approle = "IT" });
+            numbers.Add(new role() { EMP_ID = "1", Approle = "STATIONARY" });
+            numbers.Add(new role() { EMP_ID = "2", Approle = "IT" });
             List<USER> user = new List<USER>();
-            user.Add(new USER { ID = 1, EMP_ID = "", NAME = "admin1", PASSWORD = "admin@1234", ROLE = "admin", APPROLE = numbers.Where(x=>x.EMP_ID=="1").ToList() });
-            user.Add(new USER { ID = 2, EMP_ID = "", NAME = "admin2", PASSWORD = "admin@12345", ROLE = "admin", APPROLE = numbers.Where(x => x.EMP_ID == "1" || x.EMP_ID=="2").ToList() });
-            user.Add(new USER { ID = 3, EMP_ID = "", NAME = "admin", PASSWORD = "admin@123", ROLE = "admin", APPROLE= numbers.Where(x => x.EMP_ID == "2").ToList() });
-            user.Add(new USER { ID = 4, EMP_ID = "", NAME = "user1", PASSWORD = "user@123", ROLE = "user" , APPROLE = numbers.Where(x => x.EMP_ID == "1").ToList() });
+            user.Add(new USER { ID = 1, EMP_ID = "", NAME = "admin1", PASSWORD = "admin@1234", ROLE = "admin", APPROLE = numbers.Where(x => x.EMP_ID == "1").ToList() });
+            user.Add(new USER { ID = 2, EMP_ID = "", NAME = "admin2", PASSWORD = "admin@12345", ROLE = "admin", APPROLE = numbers.Where(x => x.EMP_ID == "1" || x.EMP_ID == "2").ToList() });
+            user.Add(new USER { ID = 3, EMP_ID = "", NAME = "admin", PASSWORD = "admin@123", ROLE = "admin", APPROLE = numbers.Where(x => x.EMP_ID == "2").ToList() });
+            user.Add(new USER { ID = 4, EMP_ID = "", NAME = "user1", PASSWORD = "user@123", ROLE = "user", APPROLE = numbers.Where(x => x.EMP_ID == "1").ToList() });
             return user;
 
         }
-     public string Deletereceiveditem(int id)
+        public string Deletereceiveditem(int id)
         {
             string ret = "";
             using (OracleConnection con = new OracleConnection(connection))
@@ -47,13 +698,13 @@ namespace Stationary.Models
 
                 OracleDataAdapter da = new OracleDataAdapter(cmd);
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
-                cmd.Parameters.Add("P_ID",id);
+                cmd.Parameters.Add("P_ID", id);
                 cmd.Parameters.Add("P_ITEMID", "");
                 cmd.Parameters.Add("P_TOTAL_ITEM_RECEIVED", "");
-                cmd.Parameters.Add("P_TIMEOFRECEIVED","");
+                cmd.Parameters.Add("P_TIMEOFRECEIVED", "");
                 cmd.Parameters.Add("P_DATEOFRECEIVED", "");
                 cmd.Parameters.Add("P_ITEM_TYPE", "");
-                
+
 
 
 
@@ -71,33 +722,33 @@ namespace Stationary.Models
         }
         public string GetStock(getstock Report)
         {
-            string ret="";
+            string ret = "";
             using (OracleConnection con = new OracleConnection(connection))
             {
-                
-              
+
+
                 con.Open();
                 OracleCommand cmd = new OracleCommand("STATIONARY_REPORT", con);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-             
+
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
-               cmd.Parameters.Add("data_cursor1", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("data_cursor1", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
 
 
-       
+
 
                 cmd.Parameters.Add("P_CATEGORY", Report.CATEGORY);
                 cmd.Parameters.Add("P_EMPLOYEE", "");
                 cmd.Parameters.Add("P_EMPLOYEE_STATUS", "");
                 cmd.Parameters.Add("P_SUBCATEGORY", Report.SUBCATEGORY == null ? null : Report.SUBCATEGORY);
-                
+
                 cmd.Parameters.Add("P_SUBCHILDCATEGORY", Report.SUBCHILDCATEGORY == null ? null : Report.SUBCHILDCATEGORY);
                 cmd.Parameters.Add("P_DEPTID", "");
-               
+
                 cmd.Parameters.Add("P_YEARDATE", "");
                 cmd.Parameters.Add("P_FROM_DATE", "");
-                cmd.Parameters.Add("P_TO_DATE","");
+                cmd.Parameters.Add("P_TO_DATE", "");
 
                 cmd.Parameters.Add("CALLVAL", "1");
                 OracleDataAdapter da = new OracleDataAdapter(cmd);
@@ -108,7 +759,7 @@ namespace Stationary.Models
                 cmd.Dispose();
                 con.Close();
                 ret = ds.Tables[0].Rows[0][0].ToString();
-              
+
                 // ret[0].Dghuser = ds.Tables[1].ToList<DGHUserRepository>();
             }
             return ret;
@@ -134,12 +785,12 @@ namespace Stationary.Models
 
 
                 cmd.Parameters.Add("P_CATEGORY", Report.CATEGORY);
-                cmd.Parameters.Add("P_EMPLOYEE", Report.EMPLOYEE );
+                cmd.Parameters.Add("P_EMPLOYEE", Report.EMPLOYEE);
                 cmd.Parameters.Add("P_EMPLOYEE_STATUS", Report.EMPLOYEE_STATUS);
                 cmd.Parameters.Add("P_SUBCATEGORY", Report.SUBCATEGORY);
                 cmd.Parameters.Add("P_SUBCHILDCATEGORY", Report.SUBCHILDCATEGORY);
-                cmd.Parameters.Add("P_DEPTID", Report.DEPTID==null ? DBNull.Value :(object)Report.DEPTID);
-              
+                cmd.Parameters.Add("P_DEPTID", Report.DEPTID == null ? DBNull.Value : (object)Report.DEPTID);
+
                 cmd.Parameters.Add("P_YEARDATE", Report.YEARDATE);
                 cmd.Parameters.Add("P_FROM_DATE", Report.FROM_DATE);
                 cmd.Parameters.Add("P_TO_DATE", Report.TO_DATE);
@@ -180,15 +831,79 @@ namespace Stationary.Models
 
                 ret = ds.Tables[0].ToList<USER>();
 
-                ret[0].DEPARTMENTS= ds.Tables[1].ToList<Department>();
+                ret[0].DEPARTMENTS = ds.Tables[1].ToList<Department>();
+            }
+            return ret;
+
+        }
+        //contractitems 
+
+
+        public List<ititems> getcontractitems(string contractid)
+        {
+            List<ititems> ret = new List<ititems>();
+
+
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+
+                con.Open();
+
+                OracleCommand cmd = new OracleCommand("STATIONARY_ITEM_ADDED_PROC", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                // OracleParameter op = new OracleParameter("data_cursor", OracleDbType.RefCursor) { Direction = ParameterDirection.Output };
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", "");
+                cmd.Parameters.Add("P_CATEGORY", "");
+                cmd.Parameters.Add("P_SUBCATEGORY", "");
+                cmd.Parameters.Add("P_SUBCHILDCATEGORY", "");
+                cmd.Parameters.Add("P_QUANTITY", "");
+                cmd.Parameters.Add("P_CONTRACTID", contractid);
+
+                cmd.Parameters.Add("CALLVAL", "1");
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                ret = dt.ToList<ititems>();
+
+
             }
             return ret;
 
         }
 
+
+        public string deleteititem(string id)
+        {
+            string ret = "";
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_ITEM_ADDED_PROC", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                //    OracleDataAdapter da = new OracleDataAdapter(cmd);
+                // OracleParameter op = new OracleParameter("data_cursor", OracleDbType.RefCursor) { Direction = ParameterDirection.Output };
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", "");
+                cmd.Parameters.Add("P_CATEGORY", "");
+                cmd.Parameters.Add("P_SUBCATEGORY", "");
+                cmd.Parameters.Add("P_SUBCHILDCATEGORY", "");
+                cmd.Parameters.Add("P_QUANTITY", "");
+                cmd.Parameters.Add("P_CONTRACTID", id);
+
+                cmd.Parameters.Add("CALLVAL", "2");
+                cmd.ExecuteNonQuery();
+                con.Close();
+                ret = "Success";
+            }
+            return ret;
+
+        }
         public string saveititem(List<ititems> ititems)
         {
-
+            deleteititem(ititems[0].CONTRACTID);
             string ret = "";
             using (OracleConnection con = new OracleConnection(connection))
             {
@@ -198,14 +913,15 @@ namespace Stationary.Models
                 {
                     OracleCommand cmd = new OracleCommand("STATIONARY_ITEM_ADDED_PROC", con);
                     cmd.CommandType = CommandType.StoredProcedure;
-                    OracleDataAdapter da = new OracleDataAdapter(cmd);
+                    //       OracleDataAdapter da = new OracleDataAdapter(cmd);
                     // OracleParameter op = new OracleParameter("data_cursor", OracleDbType.RefCursor) { Direction = ParameterDirection.Output };
                     cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("P_ID", "");
                     cmd.Parameters.Add("P_CATEGORY", item.CATEGORY);
                     cmd.Parameters.Add("P_SUBCATEGORY", item.SUBCATEGORY);
-                    cmd.Parameters.Add("P_SUBCHILDCATEGORY",item.SUBCHILDCATEGORY);
-                 
+                    cmd.Parameters.Add("P_SUBCHILDCATEGORY", item.SUBCHILDCATEGORY);
+                    cmd.Parameters.Add("P_QUANTITY", item.QUANTITY);
+                    cmd.Parameters.Add("P_CONTRACTID", ititems[0].CONTRACTID);
 
                     cmd.Parameters.Add("CALLVAL", "0");
                     cmd.ExecuteNonQuery();
@@ -231,7 +947,7 @@ namespace Stationary.Models
                 OracleDataAdapter da = new OracleDataAdapter(cmd);
                 // OracleParameter op = new OracleParameter("data_cursor", OracleDbType.RefCursor) { Direction = ParameterDirection.Output };
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
-                cmd.Parameters.Add("P_ID",Contract.ID);
+                cmd.Parameters.Add("P_CONTRACTID", "");
                 cmd.Parameters.Add("P_CONTRACTNO", Contract.CONTRACTNO);
                 cmd.Parameters.Add("P_VENDORNAME", Contract.VENDORNAME);
                 cmd.Parameters.Add("P_STARTDATE", Contract.STARTDATE);
@@ -245,6 +961,7 @@ namespace Stationary.Models
                 da.Fill(ds);
 
                 ret = ds.Rows[0][0].ToString();
+                Contract.ORDERITEM[0].CONTRACTID = ret;
                 saveititem(Contract.ORDERITEM);
                 //  ret[0].App_status = ds.Tables[1].ToList<ApplicationStatus>();
                 con.Close();
@@ -253,8 +970,42 @@ namespace Stationary.Models
             return ret;
         }
 
+        public string UpdateContractform(Contract Contract)
+        {
+            string ret = "";
+            using (OracleConnection con = new OracleConnection(connection))
+            {
 
-        public string deleteContractform(int id)
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_CONTRACT_CRUD", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                // OracleParameter op = new OracleParameter("data_cursor", OracleDbType.RefCursor) { Direction = ParameterDirection.Output };
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_CONTRACTID", Contract.CONTRACTID);
+                cmd.Parameters.Add("P_CONTRACTNO", Contract.CONTRACTNO);
+                cmd.Parameters.Add("P_VENDORNAME", Contract.VENDORNAME);
+                cmd.Parameters.Add("P_STARTDATE", Contract.STARTDATE);
+                cmd.Parameters.Add("P_ENDDATE", Contract.ENDDATE);
+
+                cmd.Parameters.Add("CALLVAL", "4");
+                // cmd.ExecuteNonQuery();
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.Rows[0][0].ToString();
+                Contract.ORDERITEM[0].CONTRACTID = Contract.CONTRACTID;
+                saveititem(Contract.ORDERITEM);
+                //  ret[0].App_status = ds.Tables[1].ToList<ApplicationStatus>();
+                con.Close();
+
+            }
+            return ret;
+        }
+
+        public string deleteContractform(string id)
         {
             string ret = "";
             using (OracleConnection con = new OracleConnection(connection))
@@ -267,13 +1018,13 @@ namespace Stationary.Models
                 OracleDataAdapter da = new OracleDataAdapter(cmd);
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
 
-                cmd.Parameters.Add("P_ID", id);
-                cmd.Parameters.Add("P_CONTRACTNO","");
+                cmd.Parameters.Add("P_CONTRACTID", id);
+                cmd.Parameters.Add("P_CONTRACTNO", "");
                 cmd.Parameters.Add("P_VENDORNAME", "");
                 cmd.Parameters.Add("P_STARTDATE", "");
-                cmd.Parameters.Add("P_ENDDATE","");
+                cmd.Parameters.Add("P_ENDDATE", "");
 
-              
+
                 cmd.Parameters.Add("CALLVAL", "3");
 
                 DataTable ds = new DataTable();
@@ -299,7 +1050,7 @@ namespace Stationary.Models
 
                 OracleDataAdapter da = new OracleDataAdapter(cmd);
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
-                cmd.Parameters.Add("P_ID", "");
+                cmd.Parameters.Add("P_CONTRACTID", "");
                 cmd.Parameters.Add("P_CONTRACTNO", "");
                 cmd.Parameters.Add("P_VENDORNAME", "");
                 cmd.Parameters.Add("P_STARTDATE", "");
@@ -319,7 +1070,9 @@ namespace Stationary.Models
         }
 
 
-        public List<Contract> getContractformId(int id)
+
+
+        public List<Contract> getContractformId(string id)
         {
             List<Contract> ret = new List<Contract>();
             using (OracleConnection con = new OracleConnection(connection))
@@ -331,9 +1084,9 @@ namespace Stationary.Models
 
                 OracleDataAdapter da = new OracleDataAdapter(cmd);
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
-                cmd.Parameters.Add("P_ID", id);
+                cmd.Parameters.Add("P_CONTRACTID", id);
 
-              
+
                 cmd.Parameters.Add("P_CONTRACTNO", "");
                 cmd.Parameters.Add("P_VENDORNAME", "");
                 cmd.Parameters.Add("P_STARTDATE", "");
@@ -352,10 +1105,15 @@ namespace Stationary.Models
 
 
                 ret = ds.ToList<Contract>();
+                ret[0].ORDERITEM = getcontractitems(id);
             }
             return ret;
 
         }
+
+
+
+
         //device name
         public string SaveDevicename(devicename devicename)
         {
@@ -371,7 +1129,7 @@ namespace Stationary.Models
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
                 cmd.Parameters.Add("P_ID", "");
                 cmd.Parameters.Add("P_DEVICE_NAME", devicename.DEVICENAME);
-               
+
 
                 cmd.Parameters.Add("CALLVAL", "0");
                 // cmd.ExecuteNonQuery();
@@ -399,7 +1157,7 @@ namespace Stationary.Models
                 OracleDataAdapter da = new OracleDataAdapter(cmd);
                 // OracleParameter op = new OracleParameter("data_cursor", OracleDbType.RefCursor) { Direction = ParameterDirection.Output };
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
-            
+
                 cmd.Parameters.Add("P_ID", devicename.ID);
                 cmd.Parameters.Add("P_DEVICE_NAME", devicename.DEVICENAME);
                 cmd.Parameters.Add("CALLVAL", "4");
@@ -430,7 +1188,7 @@ namespace Stationary.Models
                 OracleDataAdapter da = new OracleDataAdapter(cmd);
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
                 cmd.Parameters.Add("P_ID", id);
-                cmd.Parameters.Add("P_DEVICE_NAME","");
+                cmd.Parameters.Add("P_DEVICE_NAME", "");
 
                 cmd.Parameters.Add("CALLVAL", "3");
 
@@ -505,7 +1263,7 @@ namespace Stationary.Models
         }
 
         //user
-      
+
         //dgh user
         public string SaveDghuser_Repository(DGHUserRepository DGHUserRepository)
         {
@@ -527,7 +1285,7 @@ namespace Stationary.Models
                 cmd.Parameters.Add("P_DATE_OF_ISSUE", DGHUserRepository.DATE_OF_ISSUE);
                 cmd.Parameters.Add("P_ISSUER", DGHUserRepository.ISSUER);
                 cmd.Parameters.Add("P_REMARK", DGHUserRepository.REMARK);
-        
+
 
                 cmd.Parameters.Add("P_SUBCHILDCATEGORY", DGHUserRepository.SUBCHILDCATEGORY == null ? DBNull.Value : (object)DGHUserRepository.SUBCHILDCATEGORY);
                 cmd.Parameters.Add("P_SUBCATEGORY", DGHUserRepository.SUBCATEGORY == null ? DBNull.Value : (object)DGHUserRepository.SUBCATEGORY);
@@ -585,16 +1343,16 @@ namespace Stationary.Models
 
                 OracleDataAdapter da = new OracleDataAdapter(cmd);
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
-                cmd.Parameters.Add("P_ID",id);
+                cmd.Parameters.Add("P_ID", id);
                 cmd.Parameters.Add("P_CATEGORY", "");
                 cmd.Parameters.Add("P_EMPLOYEE", "");
                 cmd.Parameters.Add("P_DATE_OF_RECEIPT", "");
                 cmd.Parameters.Add("P_QUANTITY", "");
                 cmd.Parameters.Add("P_DATE_OF_ISSUE", "");
                 cmd.Parameters.Add("P_ISSUER", "");
-                cmd.Parameters.Add("P_REMARK","");
+                cmd.Parameters.Add("P_REMARK", "");
                 cmd.Parameters.Add("P_SUBCHILDCATEGORY", "");
-                cmd.Parameters.Add("P_SUBCATEGORY","");
+                cmd.Parameters.Add("P_SUBCATEGORY", "");
                 cmd.Parameters.Add("CALLVAL", "3");
 
                 DataTable ds = new DataTable();
@@ -619,7 +1377,7 @@ namespace Stationary.Models
 
                 OracleDataAdapter da = new OracleDataAdapter(cmd);
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
-                cmd.Parameters.Add("P_ID","");
+                cmd.Parameters.Add("P_ID", "");
                 cmd.Parameters.Add("P_CATEGORY", "");
                 cmd.Parameters.Add("P_EMPLOYEE", "");
                 cmd.Parameters.Add("P_DATE_OF_RECEIPT", "");
@@ -662,7 +1420,7 @@ namespace Stationary.Models
                 cmd.Parameters.Add("P_DATE_OF_ISSUE", "");
                 cmd.Parameters.Add("P_ISSUER", "");
                 cmd.Parameters.Add("P_REMARK", "");
-                cmd.Parameters.Add("P_SUBCHILDCATEGORY","");
+                cmd.Parameters.Add("P_SUBCHILDCATEGORY", "");
                 cmd.Parameters.Add("P_SUBCATEGORY", "");
                 cmd.Parameters.Add("CALLVAL", "2");
 
@@ -782,19 +1540,19 @@ namespace Stationary.Models
                 OracleDataAdapter da = new OracleDataAdapter(cmd);
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
                 cmd.Parameters.Add("P_ID", id);
-                cmd.Parameters.Add("P_CATEGORY","");
-                cmd.Parameters.Add("P_BRAND","");
-                cmd.Parameters.Add("P_ANNUAL_REQUIREMENT","");
+                cmd.Parameters.Add("P_CATEGORY", "");
+                cmd.Parameters.Add("P_BRAND", "");
+                cmd.Parameters.Add("P_ANNUAL_REQUIREMENT", "");
                 cmd.Parameters.Add("P_UNIT", "");
                 cmd.Parameters.Add("P_RATE", "");
                 cmd.Parameters.Add("P_GST_RATE", "");
                 cmd.Parameters.Add("P_GST_AMOUNT", "");
                 cmd.Parameters.Add("P_TOTAL_ITEM_ORDER", "");
-                cmd.Parameters.Add("P_TOTAL_ITEM_RECEIVED","");
+                cmd.Parameters.Add("P_TOTAL_ITEM_RECEIVED", "");
                 cmd.Parameters.Add("P_DATEOFRECEIVED", "");
                 cmd.Parameters.Add("P_DATEOFORDER", "");
                 cmd.Parameters.Add("P_SUBCATEGORY", "");
-                cmd.Parameters.Add("P_SUBCHILDCATEGORY","");
+                cmd.Parameters.Add("P_SUBCHILDCATEGORY", "");
                 cmd.Parameters.Add("P_TIMEOFORDER", "");
                 cmd.Parameters.Add("P_TIMEOFRECEIVED", "");
                 cmd.Parameters.Add("CALLVAL", "3");
@@ -834,7 +1592,7 @@ namespace Stationary.Models
                 cmd.Parameters.Add("P_DATEOFRECEIVED", "");
                 cmd.Parameters.Add("P_DATEOFORDER", "");
                 cmd.Parameters.Add("P_SUBCATEGORY", "");
-                cmd.Parameters.Add("P_SUBCHILDCATEGORY","");
+                cmd.Parameters.Add("P_SUBCHILDCATEGORY", "");
                 cmd.Parameters.Add("P_TIMEOFORDER", "");
                 cmd.Parameters.Add("P_TIMEOFRECEIVED", "");
                 cmd.Parameters.Add("CALLVAL", "1");
@@ -874,7 +1632,7 @@ namespace Stationary.Models
                 cmd.Parameters.Add("P_DATEOFRECEIVED", "");
                 cmd.Parameters.Add("P_DATEOFORDER", "");
                 cmd.Parameters.Add("P_SUBCATEGORY", "");
-                cmd.Parameters.Add("P_SUBCHILDCATEGORY","");
+                cmd.Parameters.Add("P_SUBCHILDCATEGORY", "");
                 cmd.Parameters.Add("P_TIMEOFORDER", "");
                 cmd.Parameters.Add("P_TIMEOFRECEIVED", "");
                 cmd.Parameters.Add("CALLVAL", "2");
@@ -899,7 +1657,7 @@ namespace Stationary.Models
         public string SaveStationary_Repository(StationaryRepository StationaryRepository)
         {
 
-           
+
             string ret = "";
             using (OracleConnection con = new OracleConnection(connection))
             {
@@ -925,67 +1683,67 @@ namespace Stationary.Models
                 cmd.Parameters.Add("P_SUBCHILDCATEGORY", StationaryRepository.SUBCHILDCATEGORY == null ? DBNull.Value : (object)StationaryRepository.SUBCHILDCATEGORY);
                 cmd.Parameters.Add("P_TIMEOFORDER", StationaryRepository.TIMEOFORDER);
                 cmd.Parameters.Add("P_TIMEOFRECEIVED", StationaryRepository.TIMEOFRECEIVED);
-              
-        cmd.Parameters.Add("CALLVAL", "0");
+
+                cmd.Parameters.Add("CALLVAL", "0");
 
                 DataTable ds = new DataTable();
-           
+
 
                 da.Fill(ds);
                 ret = ds.Rows[0][0].ToString();
-                if(ret!=null || ret != "" )
+                if (ret != null || ret != "")
                 {
-               ret=addstationarymultiitem(StationaryRepository.ORDERRECEIVED, ret,"Stationary");
+                    ret = addstationarymultiitem(StationaryRepository.ORDERRECEIVED, ret, "Stationary");
                 }
                 //  ret[0].App_status = ds.Tables[1].ToList<ApplicationStatus>();
 
 
             }
-         
+
             return ret;
         }
 
-        public void updatestatusreceiveditem(string ret1,string type)
+        public void updatestatusreceiveditem(string ret1, string type)
         {
 
             using (OracleConnection con = new OracleConnection(connection))
             {
 
                 con.Open();
-               
-
-                    OracleCommand cmd = new OracleCommand("STATIONARY_ITEMRECEIVED_CRUD", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    OracleDataAdapter da = new OracleDataAdapter(cmd);
-                    // OracleParameter op = new OracleParameter("data_cursor", OracleDbType.RefCursor) { Direction = ParameterDirection.Output };
-                    cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
-                    cmd.Parameters.Add("P_ID", "");
-                    cmd.Parameters.Add("P_ITEMID", ret1);
-                    cmd.Parameters.Add("P_TOTAL_ITEM_RECEIVED", "");
-                    cmd.Parameters.Add("P_TIMEOFRECEIVED", "");
-                    cmd.Parameters.Add("P_DATEOFRECEIVED", "");
-                    cmd.Parameters.Add("P_ITEM_TYPE", type);
 
 
+                OracleCommand cmd = new OracleCommand("STATIONARY_ITEMRECEIVED_CRUD", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                // OracleParameter op = new OracleParameter("data_cursor", OracleDbType.RefCursor) { Direction = ParameterDirection.Output };
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", "");
+                cmd.Parameters.Add("P_ITEMID", ret1);
+                cmd.Parameters.Add("P_TOTAL_ITEM_RECEIVED", "");
+                cmd.Parameters.Add("P_TIMEOFRECEIVED", "");
+                cmd.Parameters.Add("P_DATEOFRECEIVED", "");
+                cmd.Parameters.Add("P_ITEM_TYPE", type);
 
-                    cmd.Parameters.Add("CALLVAL", "3");
-                    cmd.ExecuteNonQuery();
-                   
-
-                    //  ret[0].App_status = ds.Tables[1].ToList<ApplicationStatus>();
 
 
-                }
+                cmd.Parameters.Add("CALLVAL", "3");
+                cmd.ExecuteNonQuery();
+
+
+                //  ret[0].App_status = ds.Tables[1].ToList<ApplicationStatus>();
+
+
             }
+        }
 
-       public string addstationarymultiitem(List<orderreceived> items,string ret1,string type)
+        public string addstationarymultiitem(List<orderreceived> items, string ret1, string type)
         {
             updatestatusreceiveditem(ret1, type);
             string ret = "";
-                using (OracleConnection con = new OracleConnection(connection))
-                {
+            using (OracleConnection con = new OracleConnection(connection))
+            {
 
-                    con.Open();
+                con.Open();
                 foreach (var item in items)
                 {
 
@@ -999,8 +1757,8 @@ namespace Stationary.Models
                     cmd.Parameters.Add("P_TOTAL_ITEM_RECEIVED", item.TOTAL_ITEM_RECEIVED);
                     cmd.Parameters.Add("P_TIMEOFRECEIVED", item.TIMEOFRECEIVED);
                     cmd.Parameters.Add("P_DATEOFRECEIVED", item.DATEOFRECEIVED);
-                    cmd.Parameters.Add("P_ITEM_TYPE",type);
-                    
+                    cmd.Parameters.Add("P_ITEM_TYPE", type);
+
 
 
                     cmd.Parameters.Add("CALLVAL", "0");
@@ -1008,7 +1766,7 @@ namespace Stationary.Models
                     ret = "Success";
 
                     //  ret[0].App_status = ds.Tables[1].ToList<ApplicationStatus>();
-                    
+
 
                 }
                 con.Close();
@@ -1017,7 +1775,7 @@ namespace Stationary.Models
         }
 
 
-        public List<orderreceived> getorderitemlist(int id,string type)
+        public List<orderreceived> getorderitemlist(int id, string type)
         {
             List<orderreceived> ret = new List<orderreceived>();
             using (OracleConnection con = new OracleConnection(connection))
@@ -1111,14 +1869,14 @@ namespace Stationary.Models
                 cmd.Parameters.Add("P_UNIT", "");
                 cmd.Parameters.Add("P_BASIC_AMOUNT", "");
 
-                cmd.Parameters.Add("P_GST","");
+                cmd.Parameters.Add("P_GST", "");
                 cmd.Parameters.Add("P_TOTAL_ITEM_ORDER", "");
                 cmd.Parameters.Add("P_TOTAL_ITEM_RECEIVED", "");
                 cmd.Parameters.Add("P_DATEOFRECEIVED", "");
-                cmd.Parameters.Add("P_DATEOFORDER","");
+                cmd.Parameters.Add("P_DATEOFORDER", "");
                 cmd.Parameters.Add("P_SUBCATEGORY", "");
                 cmd.Parameters.Add("P_SUBCHILDCATEGORY", "");
-                cmd.Parameters.Add("P_TIMEOFORDER","");
+                cmd.Parameters.Add("P_TIMEOFORDER", "");
                 cmd.Parameters.Add("P_TIMEOFRECEIVED", "");
                 cmd.Parameters.Add("CALLVAL", "3");
 
@@ -1174,7 +1932,7 @@ namespace Stationary.Models
 
         public List<StationaryRepository> getStationary_RepositoryId(int id)
         {
-           
+
 
             List<StationaryRepository> ret = new List<StationaryRepository>();
             using (OracleConnection con = new OracleConnection(connection))
@@ -1201,7 +1959,7 @@ namespace Stationary.Models
                 cmd.Parameters.Add("P_SUBCATEGORY", "");
                 cmd.Parameters.Add("P_SUBCHILDCATEGORY", "");
                 cmd.Parameters.Add("P_TIMEOFORDER", "");
-                cmd.Parameters.Add("P_TIMEOFRECEIVED","");
+                cmd.Parameters.Add("P_TIMEOFRECEIVED", "");
                 cmd.Parameters.Add("CALLVAL", "2");
 
                 DataTable ds = new DataTable();
@@ -1214,12 +1972,12 @@ namespace Stationary.Models
 
 
                 ret = ds.ToList<StationaryRepository>();
-               ret[0].ORDERRECEIVED= getorderitemlist(id,"Stationary");
+                ret[0].ORDERRECEIVED = getorderitemlist(id, "Stationary");
             }
             return ret;
 
         }
-        public List<SubCategory> GetCategoryDropdown(string category,string categorytype)
+        public List<SubCategory> GetCategoryDropdown(string category, string categorytype)
         {
             List<SubCategory> ret = new List<SubCategory>();
             using (OracleConnection con = new OracleConnection(connection))
@@ -1314,7 +2072,7 @@ namespace Stationary.Models
                 OracleDataAdapter da = new OracleDataAdapter(cmd);
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
                 cmd.Parameters.Add("P_ID", id);
-                
+
                 cmd.Parameters.Add("P_DESCRIPTION", "");
                 cmd.Parameters.Add("P_PARENTID", "");
                 cmd.Parameters.Add("P_CATEGORY", "");
@@ -1332,7 +2090,7 @@ namespace Stationary.Models
 
         }
 
-        public List<SubCategory> GetSubcategory(string category,string categorytype)
+        public List<SubCategory> GetSubcategory(string category, string categorytype)
         {
             List<SubCategory> ret = new List<SubCategory>();
             using (OracleConnection con = new OracleConnection(connection))
@@ -1350,7 +2108,7 @@ namespace Stationary.Models
                 cmd.Parameters.Add("P_CATEGORY", category);
                 cmd.Parameters.Add("P_CATEGORYTYPE", categorytype);
                 cmd.Parameters.Add("CALLVAL", "1");
-            
+
                 DataTable ds = new DataTable();
 
 
@@ -1547,7 +2305,7 @@ namespace Stationary.Models
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
                 cmd.Parameters.Add("P_ID", "");
                 cmd.Parameters.Add("P_UNITS_DESCRIPTION", Units.UNITS_DESCRIPTION);
-              
+
                 cmd.Parameters.Add("CALLVAL", "0");
                 cmd.ExecuteNonQuery();
                 ret = "Success";
@@ -1574,7 +2332,7 @@ namespace Stationary.Models
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
                 cmd.Parameters.Add("P_ID", Units.ID);
                 cmd.Parameters.Add("P_UNITS_DESCRIPTION", Units.UNITS_DESCRIPTION);
-              
+
                 cmd.Parameters.Add("CALLVAL", "4");
                 cmd.ExecuteNonQuery();
                 ret = "Success";
@@ -1599,7 +2357,7 @@ namespace Stationary.Models
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
                 cmd.Parameters.Add("P_ID", id);
                 cmd.Parameters.Add("P_UNITS_DESCRIPTION", "");
-              
+
                 cmd.Parameters.Add("CALLVAL", "3");
 
                 DataTable ds = new DataTable();
@@ -1613,7 +2371,7 @@ namespace Stationary.Models
 
         }
 
-      
+
 
         public List<Units> GetUnits()
         {
@@ -1629,7 +2387,7 @@ namespace Stationary.Models
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
                 cmd.Parameters.Add("P_ID", "");
                 cmd.Parameters.Add("P_UNITS_DESCRIPTION", "");
-               
+
                 cmd.Parameters.Add("CALLVAL", "1");
 
                 DataTable ds = new DataTable();
@@ -1656,7 +2414,7 @@ namespace Stationary.Models
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
                 cmd.Parameters.Add("P_ID", id);
                 cmd.Parameters.Add("P_UNITS_DESCRIPTION", "");
-              
+
                 cmd.Parameters.Add("CALLVAL", "2");
 
                 DataTable ds = new DataTable();
@@ -1773,7 +2531,7 @@ namespace Stationary.Models
                 cmd.Parameters.Add("P_PARENTID", materialtype);
                 cmd.Parameters.Add("P_CATEGORY", materialtype);
                 cmd.Parameters.Add("P_CATEGORYTYPE", materialtype);
-                
+
                 cmd.Parameters.Add("CALLVAL", "6");
 
                 DataTable ds = new DataTable();
@@ -1785,7 +2543,7 @@ namespace Stationary.Models
             }
             return ret;
         }
-            
+
         public List<listofdropdown> GetMaterialforstaOrprint(string materialtype)
         {
             List<listofdropdown> ret = new List<listofdropdown>();
@@ -1831,7 +2589,7 @@ namespace Stationary.Models
                 cmd.Parameters.Add("P_ID", "");
                 cmd.Parameters.Add("P_ITEMS_DESCRIPTION", "");
                 cmd.Parameters.Add("P_TYPE", "");
-                cmd.Parameters.Add("P_APP_TYPE",status);
+                cmd.Parameters.Add("P_APP_TYPE", status);
                 cmd.Parameters.Add("CALLVAL", "1");
 
                 DataTable ds = new DataTable();
@@ -1856,7 +2614,7 @@ namespace Stationary.Models
 
                 OracleDataAdapter da = new OracleDataAdapter(cmd);
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
-                cmd.Parameters.Add("P_ID",id);
+                cmd.Parameters.Add("P_ID", id);
                 cmd.Parameters.Add("P_ITEMS_DESCRIPTION", "");
                 cmd.Parameters.Add("P_TYPE", "");
                 cmd.Parameters.Add("P_APP_TYPE", "");
@@ -1869,7 +2627,7 @@ namespace Stationary.Models
 
 
 
-               
+
 
                 ret = ds.ToList<Material>();
             }
@@ -1899,7 +2657,7 @@ namespace Stationary.Models
                     da.Fill(dt);
 
                     ret = dt.ToList<StateTable>();
-                  
+
                     con.Close();
                 }
             }
@@ -1931,7 +2689,7 @@ namespace Stationary.Models
                 ret = ds.Tables[0].ToList<PMLGerenaldata>();
                 //  ret[0].App_status = ds.Tables[1].ToList<ApplicationStatus>();
                 con.Close();
-                
+
             }
             return ret;
         }
@@ -1965,7 +2723,7 @@ namespace Stationary.Models
 
         public string deleteProfileId(int id)
         {
-            string ret="";
+            string ret = "";
             using (OracleConnection con = new OracleConnection(connection))
             {
 
@@ -1999,14 +2757,14 @@ namespace Stationary.Models
                 con.Open();
                 OracleCommand cmd = new OracleCommand("PROC_TBL_TEST_USER", con);
                 cmd.CommandType = CommandType.StoredProcedure;
-               
+
                 OracleDataAdapter da = new OracleDataAdapter(cmd);
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
                 cmd.Parameters.Add("P_ID", "");
                 cmd.Parameters.Add("P_NAME", "");
-                cmd.Parameters.Add("P_ADDRESS","");
+                cmd.Parameters.Add("P_ADDRESS", "");
                 cmd.Parameters.Add("CALLVAL", "1");
-               
+
                 DataTable ds = new DataTable();
 
 
@@ -2014,10 +2772,10 @@ namespace Stationary.Models
 
                 ret = ds.ToList<USER>();
             }
-                return ret;
+            return ret;
 
         }
-            public string UserProfileSave(USER user)
+        public string UserProfileSave(USER user)
         {
             string ret = "";
             using (OracleConnection con = new OracleConnection(connection))
@@ -2027,7 +2785,7 @@ namespace Stationary.Models
                 OracleCommand cmd = new OracleCommand("PROC_TBL_TEST_USER", con);
                 cmd.CommandType = CommandType.StoredProcedure;
                 OracleDataAdapter da = new OracleDataAdapter(cmd);
-               // OracleParameter op = new OracleParameter("data_cursor", OracleDbType.RefCursor) { Direction = ParameterDirection.Output };
+                // OracleParameter op = new OracleParameter("data_cursor", OracleDbType.RefCursor) { Direction = ParameterDirection.Output };
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
                 cmd.Parameters.Add("P_ID", user.NAME);
                 cmd.Parameters.Add("P_NAME", user.NAME);
@@ -2065,11 +2823,42 @@ namespace Stationary.Models
 
                 da.Fill(ds);
 
-                ret =  ds.ToList<ApplicationRole>();
+                ret = ds.ToList<ApplicationRole>();
             }
-            return  ret;
+            return ret;
         }
-        public List<string>  Getrolebyuser(string userid)
+        public string checkrolecandelete(string id)
+        {
+
+            string ret = "";
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_USER_ROLE_INSERT", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_USERID", "");
+                cmd.Parameters.Add("P_ROLEID", id);
+
+                cmd.Parameters.Add("CALLVAL", "4");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.Rows[0][0].ToString();
+
+            }
+
+            return ret;
+
+        }
+
+        public List<string> Getrolebyuser(string userid)
         {
             List<string> ret = new List<string>();
             using (OracleConnection con = new OracleConnection(connection))
@@ -2083,7 +2872,7 @@ namespace Stationary.Models
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
                 cmd.Parameters.Add("P_USERID", userid);
                 cmd.Parameters.Add("P_ROLEID", "");
-              
+
                 cmd.Parameters.Add("CALLVAL", "1");
 
                 DataTable ds = new DataTable();
@@ -2091,7 +2880,7 @@ namespace Stationary.Models
 
                 da.Fill(ds);
 
-                foreach(DataRow row in ds.Rows)
+                foreach (DataRow row in ds.Rows)
                 {
                     ret.Add(row["Roles"].ToString());
                 }
@@ -2130,7 +2919,7 @@ namespace Stationary.Models
         }
         public List<ClaimViewModel> getclaimbyrole(string roleid)
         {
-            
+
 
             List<ClaimViewModel> ret = new List<ClaimViewModel>();
             using (OracleConnection con = new OracleConnection(connection))
@@ -2158,7 +2947,7 @@ namespace Stationary.Models
             return ret;
         }
 
-        public string Addclaimbyrole(string roleid,string claimtype, string claimvalue)
+        public string Addclaimbyrole(string roleid, string claimtype, string claimvalue)
         {
 
 
@@ -2248,6 +3037,36 @@ namespace Stationary.Models
             return ret;
         }
 
+        public List<ApplicationUser> GetUserId(string ID)
+        {
+            List<ApplicationUser> ret = new List<ApplicationUser>();
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_USERDGH_CRUD", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", ID);
+                cmd.Parameters.Add("P_USERNAME", "");
+                cmd.Parameters.Add("P_EMAILID", "");
+                cmd.Parameters.Add("P_PHONENO", "");
+                cmd.Parameters.Add("P_DEPTID", "");
+                cmd.Parameters.Add("P_PASSWORD", "");
+
+                cmd.Parameters.Add("CALLVAL", "2");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.ToList<ApplicationUser>();
+            }
+            return ret;
+        }
 
     }
 }
@@ -2296,8 +3115,8 @@ public static class Extensions
 
 
 
-  
-    
+
+
 }
 
 

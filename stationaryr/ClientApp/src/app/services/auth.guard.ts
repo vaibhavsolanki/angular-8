@@ -1,4 +1,4 @@
-import { Injectable, OnInit } from '@angular/core';
+ import { Injectable, OnInit } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
 import { AuthenticationService } from './authentication.service';
@@ -23,7 +23,7 @@ export class AuthGuard implements CanActivate,OnInit {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
       
      
-    const currentUser = "dd";//sthis.authenticationService.currentUserValue;
+    const currentUser = this.authenticationService.currentUserValue;
         if (currentUser) {
       
         

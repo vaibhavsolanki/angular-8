@@ -204,6 +204,8 @@ export interface dynamicdata {
 }
 export interface contract {
   ID: number;
+
+  CONTRACTID: string;
   CONTRACTNO: string;
   VENDORNAME: string;
   STARTDATE: Date;
@@ -219,7 +221,12 @@ export interface ititems {
   SUBCATEGORY: string;
   SUBCHILDCATEGORY: string;
   STATUS: string;
+  QUANTITY: string;
+  RECEIVEDQUANTITY: string;
+  CONTRACTID: string;
   CREATED_DATE: string;
+  REMAINING: string;
+  REMARKS: string;
 }
 export class devicename {
   ID: number;
@@ -229,4 +236,49 @@ export class devicename {
 
 }
 
+export class itreleaseorder {
+
+  ID: number;
+  RELEASEORDERID: string;
+  CONTRACTID: string;
+  CONTRACTNO: string;
+  STATUS: string;
+  CREATED_DATE: Date;
+  SUBJECT: string;
+  BODY: string;
+  SIGNATURE: string;
+  RECEIVEDBY: string;
+  RECEIVEDDATE: Date;
+}
+
+export class itvendor {
+
+  ID: number;
+  VENDORNAME: string;
+  PHONENO: string;
+  ADDRESS: string;
+  STATUS: string;
+  CREATED_DATE: Date;
+  APPTYPE: string;
+
+}
+
+export class itemreceipt {
+  PUBLISHORDER: string;
+  ORDERITEM: ititems[];
+  CHALLANNO: string;
+  CHALLANDATE: Date;
+  RECEIPTDATE: Date;
+  REMARKS: string;
+}
+
+export class itissueitems {
+  ID: number;
+  ORDERITEM: ititems[];
+  STATUS: string;
+  CREATED_DATE: Date;
+  USERID: string;
+  REMARKS: string;
+  ISSUEID: string;
+}
 

@@ -19,5 +19,29 @@ define(["require", "exports"], function (require, exports) {
         return devicename;
     }());
     exports.devicename = devicename;
+    var itreleaseorder = /** @class */ (function () {
+        function itreleaseorder() {
+        }
+        return itreleaseorder;
+    }());
+    exports.itreleaseorder = itreleaseorder;
+    var itvendor = /** @class */ (function () {
+        function itvendor() {
+        }
+        return itvendor;
+    }());
+    exports.itvendor = itvendor;
+    var itemreceipt = /** @class */ (function () {
+        function itemreceipt() {
+        }
+        return itemreceipt;
+    }());
+    exports.itemreceipt = itemreceipt;
+    var itissueitems = /** @class */ (function () {
+        function itissueitems() {
+        }
+        return itissueitems;
+    }());
+    exports.itissueitems = itissueitems;
 });
 //# sourceMappingURL=TableEntityClass.js.map

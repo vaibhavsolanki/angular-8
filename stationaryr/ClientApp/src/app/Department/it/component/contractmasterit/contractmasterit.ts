@@ -1,14 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild ,AfterViewInit, AfterViewChecked, AfterContentChecked, DoCheck, OnChanges, AfterContentInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { ComponentService } from '../../../../services/ComponentService';
 import { Router, ActivatedRoute } from '@angular/router';
-import { contract, listofdropdown, Material, SubCategory } from '../../../../TableEntity/TableEntityClass';
+import { contract, listofdropdown, Material, itvendor, SubCategory, ititems } from '../../../../TableEntity/TableEntityClass';
+import { setTimeout } from 'timers';
 @Component({
   selector: 'app-itcontactmaster',
   templateUrl: './contractmasterit.html',
 })
 
-export class itcontractmaster implements OnInit {
+export class itcontractmaster implements OnInit, AfterViewChecked {
 
   ContractForm: FormGroup;
   submitted = false;
@@ -16,25 +17,40 @@ export class itcontractmaster implements OnInit {
   datasubmit: string;
   Contract: contract;
   Contracts: contract[];
+  itvendors: itvendor[];
   listofdropdown: listofdropdown[];
   Category: Material[];
-SubCategory: SubCategory[] =[];
+  SubCategory: SubCategory[] = [];
   SubCategory1: SubCategory[];
   SubChildCategory: SubCategory[];
   subcategory = true;
   subchildcategory = true;
- 
-Subcategories:any[];
+  itemreceived: ititems[];
+  Subcategories: any[];
 
   btnvisibility: boolean = true;
- finaldata :  any[] = [];
+  finaldata: any[] = [];
   constructor(private formbuilder: FormBuilder, private Componentservices: ComponentService, private router: Router) {
 
 
   }
+  ngAfterViewChecked() {
+    console.log(this.itemreceived.length);
+    if (this.itemreceived.length > 0) {
+      for (var j = 0; j <= this.itemreceived.length - 1; j++) {
+
+
+        this.categorychangeload(this.itemreceived[j].CATEGORY, j);
+       
+        this.ORDERITEM.at(j).get('SUBCATEGORY').setValue(this.itemreceived[j].SUBCATEGORY);
+      }
+    }
+
+  }
   ngOnInit() {
     this.GetCategoryDropdown();
-this.getSubCategories();
+    this.getSubCategories();
+    this.getvendor();
     this.ContractForm = this.formbuilder.group({
 
       CONTRACTNO: ['', Validators.required],
@@ -43,72 +59,108 @@ this.getSubCategories();
       ENDDATE: ['', Validators.required],
       ORDERITEM: this.formbuilder.array([this.addItemFormGroup()])
 
-     
+
     })
     let empid = localStorage.getItem('editContractId');
 
-    if (+empid > 0) {
-      this.Componentservices.getContractformId(+empid).subscribe(data => {
+    if (empid != null) {
+      this.Componentservices.getContractformId(empid).subscribe(data => {
         this.Contracts = data,
-         
-          this.ContractForm.controls['CONTRACTNO'].setValue(this.Contracts[0].CONTRACTNO);
+          this.itemreceived = [];
+        this.itemreceived = this.Contracts[0].ORDERITEM;
+        console.log(this.Contracts[0].ORDERITEM);
+        this.ContractForm.controls['CONTRACTNO'].setValue(this.Contracts[0].CONTRACTNO);
         this.ContractForm.controls['VENDORNAME'].setValue(this.Contracts[0].VENDORNAME);
         this.ContractForm.controls['STARTDATE'].setValue(this.Contracts[0].STARTDATE);
         this.ContractForm.controls['ENDDATE'].setValue(this.Contracts[0].ENDDATE);
         //this.ContractForm.controls['ID'].setValue(this.Contracts[0].ID);
+
+
+        if (this.itemreceived.length > 0) {
+        
+          for (var i = 0; i <= this.itemreceived.length - 1; i++) {
+            if (i != 0) {
+              this.addItemButtonClick();
+            }
+            this.ORDERITEM.at(i).get('CATEGORY').setValue(this.itemreceived[i].CATEGORY);
+            this.ORDERITEM.at(i).get('QUANTITY').setValue(this.itemreceived[i].QUANTITY);
+
+
+
+
+
+
+
+
+          }
+
+        }
+
+
       })
 
       this.btnvisibility = false;
     }
+  
   }
 
+  getvendor() {
 
-  categorychangeload(value, i) {
+    this.Componentservices
+      .GetItVendor().subscribe(
+        data => {
+          this.itvendors = data, console.log(this.itvendors)
+        });
+  }
 
-this.finaldata[i]=this.SubCategory.filter(x=>x.PARENT_ID == value);
+  categorychangeload(value, j) {
+    
+      this.finaldata[j] = this.SubCategory.filter(x => x.PARENT_ID == value);
+     
 
+    
+    
 
- }
-getSubCategories()
-{
+  }
+  getSubCategories() {
 
- this.Componentservices.Getsubcategoryonchange("1").subscribe(data => {
-this.SubCategory=data;
-});
-console.log(this.SubCategory);
-return this.SubCategory
+    this.Componentservices.Getsubcategoryonchange("1").subscribe(data => {
+      this.SubCategory = data;
+    });
+    console.log(this.SubCategory);
+    return this.SubCategory
 
-}
-  categorychange(value: string,i:number) {
+  }
+  categorychange(value: string, i: number) {
 
-    this.categorychangeload(value,i);
+    this.categorychangeload(value, i);
 
 
   }
 
-transform(objects : any = []) {
+  transform(objects: any = []) {
     return Object.values(objects);
   }
-  subcategorychange(value,i) {
-console.log(value);
-var item = this.ORDERITEM.at(i);
-item.get('SUBCATEGORY').setValue(value,{
+  subcategorychange(value, i) {
+    console.log(value);
+    var item = this.ORDERITEM.at(i);
+    item.get('SUBCATEGORY').setValue(value, {
       onlySelf: true
     })
 
-  // this.Componentservices.Getsubcategoryonchange(aa).subscribe(data => {
-//item.controls['SUBCHILDCATEGORY'].setValue( data);
-     // this.SubChildCategory = data; console.log(this.SubCategory);
+    // this.Componentservices.Getsubcategoryonchange(aa).subscribe(data => {
+    //item.controls['SUBCHILDCATEGORY'].setValue( data);
+    // this.SubChildCategory = data; console.log(this.SubCategory);
 
-      //if (this.SubChildCategory.length > 0) {
-     //   //this.subchildcategory = true;
-     //}
-     // else {
-        //this.subchildcategory = false;
-        //this.StationaryRepository.controls['SUBCATEGORY'].setValue(null);
-        //this.ContractForm.controls['SUBCHILDCATEGORY'].setValue(null);
-//}
-  // })
+    //if (this.SubChildCategory.length > 0) {
+    //   //this.subchildcategory = true;
+    //}
+    // else {
+    //this.subchildcategory = false;
+    //this.StationaryRepository.controls['SUBCATEGORY'].setValue(null);
+    //this.ContractForm.controls['SUBCHILDCATEGORY'].setValue(null);
+    //}
+    // })
 
   }
   addItemButtonClick(): void {
@@ -145,7 +197,7 @@ item.get('SUBCATEGORY').setValue(value,{
 
   }
   onUpdate() {
-  this.submitted = true;
+    this.submitted = true;
 
     if (this.ContractForm.invalid) {
       return;
@@ -153,7 +205,7 @@ item.get('SUBCATEGORY').setValue(value,{
     this.loading = true;
 
     this.Componentservices
-      .SaveContractform(this.ContractForm.value)
+      .UpdateContractform(this.ContractForm.value)
       .subscribe(data => { this.datasubmit = data, this.loading = false; console.log(this.datasubmit); this.router.navigate(['IT/GetContractMaster']); },
         error => () => {
 
@@ -165,9 +217,9 @@ item.get('SUBCATEGORY').setValue(value,{
   GetCategoryDropdown() {
     this.Componentservices.GetMaterialforstaOrprint("IT").subscribe(data => {
       this.listofdropdown = data; console.log(this.Category);
-   
+
       this.Category = this.listofdropdown[0].Material;
-      
+
     })
   }
 

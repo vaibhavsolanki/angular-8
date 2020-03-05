@@ -1,0 +1,146 @@
+<div class="card-header">
+  <h3>Add Release Order</h3>
+</div>
+<div class="card-body">
+  <p class="d-flex justify-content-end"><button mat-raised-button color="primary" (click)="printComponent('component1')">print</button></p>
+  <form [formGroup]="PublishContractForm" class="example-container col-md-12" >
+    <div *ngIf="insertreceipt">
+      <mat-form-field>
+        <select formControlName="CONTRACTID" placeholder="CONTRACTNO" matNativeControl name="CONTRACTID" #contract (change)="contractno(contract.value)">
+          <option value="" selected></option>
+          <option *ngFor="let Cat of contracts;let i = index" [value]="Cat.CONTRACTID">
+            {{Cat.CONTRACTNO}}
+          </option>
+        </select>
+      </mat-form-field>
+
+    </div>
+
+    <br />
+
+    <div *ngIf="contractexist" id="component1">
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col-md-12">
+            <p class="d-flex justify-content-center font-weight-bold">RELEASE ORDER NO. {{releaseorder}}</p>
+          </div>
+          <div class="col-md-12">
+            <p class="d-flex justify-content-end font-weight-bold">Date:{{releaseorderdate|date}}</p>
+          </div>
+          <div class="col-md-12">
+            <p class="font-weight-bold">To,</p>
+          </div>
+          <div class="col-md-12">
+            <p class="font-weight-bold">M/s. {{vendorname}},</p>
+          </div>
+          <div class="col-md-12">
+            <p class="font-weight-bold">Address-:  {{vendoraddress}},</p>
+          </div>
+          <br />
+          <br />
+
+          <div class="col-md-12">
+            <div *ngIf="insertreceipt">
+              <mat-form-field>
+                <textarea matInput placeholder="Subject" formControlName="SUBJECT" [ngClass]="{ 'is-invalid': submitted && f.SUBJECT.errors }"></textarea>
+                <mat-error *ngIf="submitted && f.SUBJECT.errors">Subject is required</mat-error>
+              </mat-form-field>
+                </div>
+          <div *ngIf="printreceipt" class="font-weight-bold"><label>Subject : - </label><span><label id="lblsubject">{{SUBJECT}}</label></span></div>
+            
+          </div>
+
+          <div class="col-md-12">
+            <div *ngIf="insertreceipt">
+              <mat-form-field>
+
+                <textarea matInput placeholder="BODY" formControlName="BODY" [ngClass]="{ 'is-invalid': submitted && f.BODY.errors ,'disabled': disabled}"></textarea>
+
+                <mat-error *ngIf="submitted && f.BODY.errors">Body is required</mat-error>
+              </mat-form-field>
+            </div>
+            <div *ngIf="printreceipt" class="font-weight-bold"><label id="lblsubject">{{BODY}}</label></div>
+
+          </div>
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-4">
+                  <div *ngIf="insertreceipt">
+                    <mat-form-field>
+                      <textarea matInput placeholder="RECEIVEDBY" formControlName="RECEIVEDBY" [ngClass]="{ 'is-invalid': submitted && f.RECEIVEDBY.errors }"></textarea>
+
+                      <mat-error *ngIf="submitted && f.RECEIVEDBY.errors">RECEIVEDBY is required</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div *ngIf="printreceipt" class="font-weight-bold"><label >Received By: - </label><span><label id="lblsubject">{{RECEIVEDBY}}</label></span></div>
+
+                </div>
+                  <div class="col-md-4">
+
+                  </div>
+                  <div class="col-md-4">
+                    <div *ngIf="insertreceipt">
+                      <mat-form-field>
+                        <textarea matInput placeholder="SIGNATURE" formControlName="SIGNATURE" [ngClass]="{ 'is-invalid': submitted && f.SIGNATURE.errors }"></textarea>
+
+                        <mat-error *ngIf="submitted && f.SIGNATURE.errors">Signature is required</mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div *ngIf="printreceipt" class="font-weight-bold"><label >Signature: - </label><span><label id="lblsubject">{{SIGNATURE}}</label></span></div>
+
+                  </div>
+                  </div>
+            </div>
+            <div class="col-md-12">
+              <div class="col-md-4">
+                <div *ngIf="insertreceipt">
+                  <mat-form-field>
+                    <input matInput readonly [matDatepicker]="picker" placeholder="RECEIVEDDATE" formControlName="RECEIVEDDATE">
+                    <mat-datepicker-toggle matSuffix [for]="picker" [ngClass]="{ 'is-invalid': submitted && f.RECEIVEDBY.errors }"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div *ngIf="printreceipt" class="font-weight-bold"><label >Receiveddate : - </label><span><label id="lblsubject">{{RECEIVEDDATE|date}}</label></span></div>
+
+              </div>
+              </div>
+          </div>
+      </div>
+
+      <!--<p>
+        Start date:<b>
+          {{contractstartdate|date}}
+        </b>
+      </p>
+
+      <p> End Date :<b>{{contractenddate|date}}</b></p>-->
+      <p class="font-weight-bold">Annexure-I</p>
+      
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="position">
+          <th mat-header-cell *matHeaderCellDef> S.NO </th>
+          <td mat-cell *matCellDef="let row;let i = index"> {{i+1}} </td>
+        </ng-container>
+        <ng-container matColumnDef="CATEGORY">
+          <th mat-header-cell *matHeaderCellDef> CATEGORY </th>
+          <td mat-cell *matCellDef="let row"> {{row.CATEGORY}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="QUANTITY">
+          <th mat-header-cell *matHeaderCellDef> QUANTITY </th>
+          <td mat-cell *matCellDef="let row"> {{row.QUANTITY}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      <br />
+      <br />
+      <button mat-raised-button color="primary" [disabled]="loading" *ngIf="btnvisibility" (click)="onSubmit()">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+        Submit
+      </button>
+
+    </div>
+  </form>
+</div>

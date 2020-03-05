@@ -61,8 +61,8 @@
                     <!--<mat-label>Item Sub Type</mat-label>-->
                     <select formControlName="SUBCHILDCATEGORY"  placeholder="SUBCHILDCATEGORY" matNativeControl name="SUBCHILDCATEGORY+i" #subchildcategory (selectionChange)="subchildcategorychange(subchildcategory.value)" [ngClass]="{'disabled': role}">
                       <option value="" selected></option>
-                      <option *ngFor="let SubChild of SubChildCategory ;let i = index" [value]="SubChildCategory[i].ID">
-                        {{SubChildCategory[i].ITEMS_DESCRIPTION}}
+                      <option *ngFor="let SubChild of SubChildCategory ;let i = index" [value]="SubChildCategory.ID">
+                        {{SubChildCategory.ITEMS_DESCRIPTION}}
                       </option>
                     </select>
                   </mat-form-field>

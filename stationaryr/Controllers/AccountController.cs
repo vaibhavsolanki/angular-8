@@ -21,21 +21,21 @@ using Newtonsoft.Json;
 namespace stationaryr.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController] 
+    [ApiController]
 
     public class AccountController : ControllerBase
     {
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
         private readonly IAccountManager _accountManager;
-       private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private const string GetUserByIdActionName = "GetUserById";
         private const string GetRoleByIdActionName = "GetRoleById";
-        public AccountController(IConfiguration config , IAccountManager accountManager, SignInManager<ApplicationUser> signInManager, IMapper mapper)
+        public AccountController(IConfiguration config, IAccountManager accountManager, SignInManager<ApplicationUser> signInManager, IMapper mapper)
         {
             _config = config;
             _mapper = mapper;
-             _accountManager = accountManager;
+            _accountManager = accountManager;
             _signInManager = signInManager;
         }
 
@@ -51,16 +51,16 @@ namespace stationaryr.Controllers
         public async Task<IActionResult> Login([FromBody] logindata model)
         {
 
-          
+
             var result = await _signInManager.PasswordSignInAsync(model.username, model.passward, model.RememberMe, lockoutOnFailure: false);
             if (result.Succeeded)
             {
                 var user = _accountManager.GetUserByEmailAsync(model.username);
 
                 LoginResponse login = new LoginResponse();
-                login.access_token =  await    GenerateJWT(user.Result.Id);
+                login.access_token = await GenerateJWT(user.Result.Id);
 
-               
+
 
                 return Ok(login);
             }
@@ -71,15 +71,15 @@ namespace stationaryr.Controllers
                 // return  BadRequest(new { message = "Username or password is incorrect" });
             }
 
-            
-
-            }
 
 
-      async  Task<string> GenerateJWT(string id)
+        }
+
+
+        async Task<string> GenerateJWT(string id)
         {
 
-           
+
 
             UserViewModel userVM = await GetUserViewModelHelper(id);
             List<List<ClaimViewModel>> claim1 = new List<List<ClaimViewModel>>();
@@ -91,16 +91,16 @@ namespace stationaryr.Controllers
                 var userclaim = await _accountManager.GetUserClaimAsync(role.Id);
                 claim1.Add(userclaim.ToList());
             }
-           
-            
+
+
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:SecretKey"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-           
+
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userVM.UserName),
-                
+
                 new Claim("role",JsonConvert.SerializeObject(userVM.Roles)),
                    new Claim("permission",JsonConvert.SerializeObject(claim1)),
             };
@@ -124,23 +124,15 @@ namespace stationaryr.Controllers
 
             var userVM = _mapper.Map<UserViewModel>(userAndRoles.Value.User);
             userVM.Roles = userAndRoles.Value.Roles;
-           
+
             return userVM;
         }
-        [HttpPatch("Account/Updateusers")]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
-        public async Task<IActionResult> UpdateCurrentUser(ApplicationUser model)
-        {
-            var result = "nnn";//await _accountManager.CreateUserAsync(model, model.PasswordHash);
-
-            return Ok(result);
-        }
+        
 
 
 
         [HttpGet("users")]
-    //    [Authorize(Authorization.Policies.ViewAllUsersPolicy)]
+        //    [Authorize(Authorization.Policies.ViewAllUsersPolicy)]
         [ProducesResponseType(200, Type = typeof(List<UserViewModel>))]
         public async Task<IActionResult> GetUsers()
         {
@@ -149,7 +141,7 @@ namespace stationaryr.Controllers
 
 
         [HttpGet("users/{pageNumber:int}/{pageSize:int}")]
-     //   [Authorize(Authorization.Policies.ViewAllUsersPolicy)]
+        //   [Authorize(Authorization.Policies.ViewAllUsersPolicy)]
         [ProducesResponseType(200, Type = typeof(List<UserViewModel>))]
         public async Task<IActionResult> GetUsers(int pageNumber, int pageSize)
         {
@@ -167,7 +159,21 @@ namespace stationaryr.Controllers
 
             return Ok(usersVM);
         }
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Updateusers([FromBody] UserEditViewModel user)
+        {
+            if (user == null)
+                return BadRequest($"{nameof(user)} cannot be null");
 
+            ApplicationUser appUser = _mapper.Map<ApplicationUser>(user);
+
+            var result = await _accountManager.UpdateUserAsync(appUser, user.Roles, user.NewPassword);
+
+            if (result.Succeeded)
+            {
+            }
+            return Ok("");
+        }
         [HttpPost("[action]")]
 
         public async Task<IActionResult> Register([FromBody] UserEditViewModel user)
@@ -180,20 +186,22 @@ namespace stationaryr.Controllers
             //appUser.UserName = user.UserName;
             //appUser.PasswordHash = user.NewPassword;
             //appUser.PhoneNumber = user.PhoneNumber;
-           // appUser.Roles = user.Roles.;
-           // appUser.Email = user.Email;
+            // appUser.Roles = user.Roles.;
+            // appUser.Email = user.Email;
 
             ApplicationUser appUser = _mapper.Map<ApplicationUser>(user);
             // var user = new ApplicationUser { UserName = model.EMAILID, Email = model.EMAILID };
             var result = await _accountManager.CreateUserAsync(appUser, user.Roles, user.NewPassword);
+            
             if (result.Succeeded)
             {
             }
             return Ok("");
         }
 
+
         [HttpGet("roles")]
-       // [Authorize(Authorization.Policies.ViewAllRolesPolicy)]
+        // [Authorize(Authorization.Policies.ViewAllRolesPolicy)]
         [ProducesResponseType(200, Type = typeof(List<RoleViewModel>))]
         public async Task<IActionResult> GetRoles()
         {
@@ -202,24 +210,24 @@ namespace stationaryr.Controllers
 
 
         [HttpGet("roles/{pageNumber:int}/{pageSize:int}")]
-      //  [Authorize(Authorization.Policies.ViewAllRolesPolicy)]
+        //  [Authorize(Authorization.Policies.ViewAllRolesPolicy)]
         [ProducesResponseType(200, Type = typeof(List<RoleViewModel>))]
         public async Task<IActionResult> GetRoles(int pageNumber, int pageSize)
         {
             var roles = await _accountManager.GetRolesLoadRelatedAsync(pageNumber, pageSize);
-            
+
             List<RoleViewModel> roles1 = new List<RoleViewModel>();
 
-            foreach(var role in roles)
+            foreach (var role in roles)
             {
-                roles1.Add(new RoleViewModel() { Id=role.Id,Name=role.Name,Description=role.Description});
+                roles1.Add(new RoleViewModel() { Id = role.Id, Name = role.Name, Description = role.Description });
             }
 
             return Ok(roles1);
         }
 
         [HttpPost("roles")]
-      //  [Authorize(Authorization.Policies.ManageAllRolesPolicy)]
+        //  [Authorize(Authorization.Policies.ManageAllRolesPolicy)]
         [ProducesResponseType(201, Type = typeof(RoleViewModel))]
         [ProducesResponseType(400)]
         public async Task<IActionResult> CreateRole([FromBody] RoleViewModel role)
@@ -228,7 +236,7 @@ namespace stationaryr.Controllers
             {
                 if (role == null)
                     return BadRequest($"{nameof(role)} cannot be null");
-              
+
                 ApplicationRole appRole = _mapper.Map<ApplicationRole>(role);
 
                 var result = await _accountManager.CreateRoleAsync(appRole, role.Permissions?.Select(p => p.Value).ToArray());
@@ -237,17 +245,17 @@ namespace stationaryr.Controllers
 
                     return Ok(result);
                     //RoleViewModel roleVM = await GetRoleViewModelHelper(appRole.Name);
-                   // return CreatedAtAction(GetRoleByIdActionName, new { id = roleVM.Id }, roleVM);
+                    // return CreatedAtAction(GetRoleByIdActionName, new { id = roleVM.Id }, roleVM);
                 }
 
-                //AddError(result.Errors);
+                AddError(result.Errors);
             }
 
             return BadRequest(ModelState);
         }
 
         [HttpGet("permissions")]
-      //  [Authorize(Authorization.Policies.ViewAllRolesPolicy)]
+        //  [Authorize(Authorization.Policies.ViewAllRolesPolicy)]
         [ProducesResponseType(200, Type = typeof(List<PermissionViewModel>))]
         public IActionResult GetAllPermissions()
         {
@@ -315,12 +323,24 @@ namespace stationaryr.Controllers
 
         private async Task<RoleViewModel> GetRoleViewModelHelper(string roleName)
         {
+            RoleViewModel r = new RoleViewModel();
             var role = await _accountManager.GetRoleLoadRelatedAsync(roleName);
             if (role != null)
-                return _mapper.Map<RoleViewModel>(role);
+
+            {
+                r.Id = role.Id;
+                r.Name = role.Name;
+                r.Description = role.Description;
+                var claim = role.Claims.ToList().ConvertAll(x => new PermissionViewModel() { Name = x.ClaimType, Value = x.ClaimValue });
+                r.Permissions = claim.ToArray();
+            }
 
 
-            return null;
+            return r;
+            // return _mapper.Map<RoleViewModel>(role);
+
+
+
         }
 
         [HttpDelete("roles/{id}")]
@@ -335,6 +355,8 @@ namespace stationaryr.Controllers
 
             if (appRole == null)
                 return NotFound(id);
+            if (!await _accountManager.TestCanDeleteRoleAsync(id))
+                return BadRequest("Role cannot be deleted. Remove all users from this role and try again");
 
 
             var result = await _accountManager.DeleteRoleAsync(appRole);
@@ -342,8 +364,21 @@ namespace stationaryr.Controllers
                 throw new Exception("The following errors occurred whilst deleting role: " + string.Join(", ", result.Errors));
             return Ok(result);
         }
-    
-    
+
+        private void AddError(IEnumerable<string> errors, string key = "")
+        {
+            foreach (var error in errors)
+            {
+                AddError(error, key);
+            }
+        }
+
+        private void AddError(string error, string key = "")
+        {
+            ModelState.AddModelError(key, error);
+        }
+
+
 
     }
     public class logindata
@@ -357,11 +392,11 @@ namespace stationaryr.Controllers
 
 
     }
-   public class LoginResponse
+    public class LoginResponse
     {
         public string access_token { get; set; }
         public string refresh_token { get; set; }
-     public string expires_in { get; set; }
-     public string token_type { get; set; }
-}
+        public string expires_in { get; set; }
+        public string token_type { get; set; }
+    }
 }

@@ -3037,37 +3037,7 @@ namespace Stationary.Models
             return ret;
         }
 
-        public List<ApplicationUser> GetUserId(string ID)
-        {
-            List<ApplicationUser> ret = new List<ApplicationUser>();
-            using (OracleConnection con = new OracleConnection(connection))
-            {
-
-                con.Open();
-                OracleCommand cmd = new OracleCommand("STATIONARY_USERDGH_CRUD", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                OracleDataAdapter da = new OracleDataAdapter(cmd);
-                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
-                cmd.Parameters.Add("P_ID", ID);
-                cmd.Parameters.Add("P_USERNAME", "");
-                cmd.Parameters.Add("P_EMAILID", "");
-                cmd.Parameters.Add("P_PHONENO", "");
-                cmd.Parameters.Add("P_DEPTID", "");
-                cmd.Parameters.Add("P_PASSWORD", "");
-
-                cmd.Parameters.Add("CALLVAL", "2");
-
-                DataTable ds = new DataTable();
-
-
-                da.Fill(ds);
-
-                ret = ds.ToList<ApplicationUser>();
-            }
-            return ret;
-        }
-
+      
     }
 }
 

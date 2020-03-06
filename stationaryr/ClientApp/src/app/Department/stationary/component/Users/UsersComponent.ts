@@ -57,14 +57,16 @@ export class UsersComponent {
 
     if (empid.length > 0) {
       this.Componentservices.getuserId(empid).subscribe(data => {
-        this.Users = data,
-          console.log(this.Users),
-          this.UsersForm.controls['UserName'].setValue(this.Users[0].UserName);
-        this.UsersForm.controls['Email'].setValue(this.Users[0].Email);
-        this.UsersForm.controls['PhoneNumber'].setValue(this.Users[0].PhoneNumber);
-        this.UsersForm.controls['Department'].setValue(this.Users[0].Department);
-        this.UsersForm.controls['Roles'].setValue(this.Users[0].Department);
-        this.UsersForm.controls['NewPassword'].setValue(this.Users[0].CurrentPassword); 
+        this.User = data,
+          //console.log('GAGAN');
+         
+          console.log(this.User)
+        this.UsersForm.controls['UserName'].setValue(this.User.UserName);
+        this.UsersForm.controls['Email'].setValue(this.User.Email);
+        this.UsersForm.controls['PhoneNumber'].setValue(this.User.PhoneNumber);
+        this.UsersForm.controls['Department'].setValue(this.User.Department);
+        this.UsersForm.controls['Roles'].setValue(this.User.Roles);
+        this.UsersForm.controls['NewPassword'].setValue(this.User.NewPassword); 
 
       })
 

@@ -270,14 +270,14 @@ export class ComponentService {
 
   }
   deleteusers(id: string) {
-    return this.httpclient.delete<string>(this.actionUrl + "api/Data/deleteusers/" + id);
+    return this.httpclient.delete<string>(this.actionUrl + "api/Account/deleteusers/" + id);
   }
 
-  getuserId(id: string): Observable<UserEdit[]> {
+  getuserId(id: string): Observable<UserEdit> {
     let body = {
       'ID': id
     }
-    return this.httpclient.get<UserEdit[]>(this.actionUrl + "api/Data/getuserId/" + id);
+    return this.httpclient.get<UserEdit>(this.actionUrl + "api/Account/getuserId/" + id);
   }
   //public Updateusers1(users: UserEdit): Observable<string> {
   //  console.log('narang ');

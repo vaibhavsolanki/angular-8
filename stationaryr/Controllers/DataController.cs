@@ -566,11 +566,7 @@ namespace Stationary.Controllers
         {
             return Ok(new Data().GetItIssueItemsById(ID));
         }
-        [HttpGet("getuserId/{id}")]
-        public IActionResult GetUserId(string ID)
-        {
-            return Ok(new Data().GetUserId(ID));
-        }
+     
         //
 
 

@@ -158,7 +158,24 @@ namespace stationaryr.Controllers
             }
 
             return Ok(usersVM);
+
         }
+
+        [HttpGet("getuserId/{id}")]
+        public IActionResult GetUserId(string ID)
+        {
+            
+            var userAndRoles = _accountManager.GetUserAndRolesAsync(ID);
+            if (userAndRoles == null)
+                return null;
+
+            var userVM = _mapper.Map<UserViewModel>(userAndRoles.Result.Value.User);
+            userVM.Roles = userAndRoles.Result.Value.Roles;
+
+            return Ok(userVM); 
+            
+        }
+
         [HttpPost("[action]")]
         public async Task<IActionResult> Updateusers([FromBody] UserEditViewModel user)
         {
@@ -167,7 +184,7 @@ namespace stationaryr.Controllers
 
             ApplicationUser appUser = _mapper.Map<ApplicationUser>(user);
 
-            var result = await _accountManager.UpdateUserAsync(appUser, user.Roles, user.NewPassword);
+            var result = await _accountManager.UpdateUserAsync(appUser, user.Roles);
 
             if (result.Succeeded)
             {

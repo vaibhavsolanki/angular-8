@@ -181,11 +181,6 @@ namespace stationaryr.Models
 
 
                 da.Fill(ds);
-
-
-
-
-
                 ret = ds.ToList<ApplicationUser>();
             }
             return ret[0];

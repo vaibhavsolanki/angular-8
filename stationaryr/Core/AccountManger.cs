@@ -42,13 +42,13 @@ namespace stationaryr.Core
 
             return (true, new string[] { });
         }
-        public async Task<(bool Succeeded, string[] Errors)> UpdateUserAsync(ApplicationUser user, IEnumerable<string> roles, string password)
+        public async Task<(bool Succeeded, string[] Errors)> UpdateUserAsync(ApplicationUser user, IEnumerable<string> roles)
         {
             var result = await _userManager.UpdateAsync(user);
 
             if (!result.Succeeded)
                 return (false, result.Errors.Select(e => e.Description).ToArray());
-           
+
 
             foreach (var role in roles)
             {
@@ -57,7 +57,7 @@ namespace stationaryr.Core
 
             return (true, new string[] { });
         }
-        
+
         public Task<List<ApplicationRole>> GetRolesLoadRelatedAsync(int page, int pageSize)
         {
             List<ApplicationRole> rr = new Data().GetRoles();
@@ -68,6 +68,14 @@ namespace stationaryr.Core
 
         public async Task<ApplicationUser> GetUserByIdAsync(string userId)
         {
+            var UserData = await _userManager.FindByIdAsync(userId);
+            ApplicationUser applicationUser = new ApplicationUser()
+            {
+                Id = UserData.Id
+            };
+            
+            var userrole = _userManager.GetRolesAsync(applicationUser);
+            
             return await _userManager.FindByIdAsync(userId);
         }
 
@@ -93,9 +101,9 @@ namespace stationaryr.Core
         {
             ApplicationRole role = new Data().GetRoles().Where(r => r.Name == roleName).SingleOrDefault();
             var result = await _roleManager.GetClaimsAsync(role);
-            role.Claims= result.ToList().ConvertAll(x => new IdentityRoleClaim<string> { ClaimType = x.Type, ClaimValue = x.Value });
-           // var user = new Data().GetUsers().Where(x=>x.Roles== role);
-          
+            role.Claims = result.ToList().ConvertAll(x => new IdentityRoleClaim<string> { ClaimType = x.Type, ClaimValue = x.Value });
+            // var user = new Data().GetUsers().Where(x=>x.Roles== role);
+
             var role1 = await Task.Run(() => role);
             return role1;
 
@@ -179,10 +187,6 @@ namespace stationaryr.Core
 
             var roleswithids = new Data().Getrolealluser().ToList();
             var users = _userManager.Users.ToList();
-
-
-
-
             foreach (var user in users)
             {
                 var a = roleswithids.Where(x => x.UserID == user.Id).ToList();
@@ -190,7 +194,6 @@ namespace stationaryr.Core
                 user.Roles = a1;
 
             }
-
             var userRoleIds = users.SelectMany(u => u.Roles.Select(r => r.RoleId)).ToList();
             var roles = _roleManager.Roles.ToList();
             var role2 = roles

@@ -2,8 +2,9 @@ import { Component, OnInit, ViewChild, AfterViewChecked, AfterViewInit, AfterCon
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { ComponentService } from '../../../../services/ComponentService';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Material, SubCategory, ititems, itissueitems, listofdropdown } from '../../../../TableEntity/TableEntityClass';
-import { setTimeout } from 'timers';
+import { Material, SubCategory, ititems, itissueitems, listofdropdown, AdminIssue } from '../../../../TableEntity/TableEntityClass';
+import { Department } from '../../../../TableEntity/TableEntityClass';
+import { UserEdit } from '../../../../modal/edit-user.modal'
 @Component({
   selector: 'requestitem',
   templateUrl: 'requestitem.html'
@@ -21,9 +22,13 @@ export class requestitem implements OnInit, AfterContentChecked {
   submitted = false;
   loading = false;
   datasubmit: string;
+  values: number;
+  Users: UserEdit[];
+  Department: Department[];
   itemreceived: ititems[];
-  itissueitem: itissueitems[];
-  itissueitems: itissueitems[];
+  itissueitem: AdminIssue[];
+  itissueitems: AdminIssue[];
+  GaganArr: any[] = [];
   constructor(private formbuilder: FormBuilder, private Componentservices: ComponentService, private router: Router) {
 
 
@@ -37,11 +42,14 @@ export class requestitem implements OnInit, AfterContentChecked {
   ngOnInit() {
     this.GetCategoryDropdown();
     this.getSubCategories();
+   
+    this.dghemployee();
     this.RequestForm = this.formbuilder.group({
-
-     
-      ORDERITEM: this.formbuilder.array([this.addItemFormGroup()])
-
+      UserName: ['', Validators.required],
+      ISSUEDATE: ['', Validators.required],
+      
+      ORDERITEM: this.formbuilder.array([this.addItemFormGroup()]),
+      REMARKS:[],
 
     })
 
@@ -51,7 +59,11 @@ export class requestitem implements OnInit, AfterContentChecked {
     if (empid != null) {
       this.Componentservices.GetItIssueItemsById(empid).subscribe(data => {
         this.itissueitems = data,
+          this.btnvisibility = false;
           this.itemreceived = [];
+        this.RequestForm.controls['UserName'].setValue(this.itissueitems[0].UserName);
+        this.RequestForm.controls['ISSUEDATE'].setValue(this.itissueitems[0].ISSUEDATE);
+        this.RequestForm.controls['REMARKS'].setValue(this.itissueitems[0].REMARKS);
         this.itemreceived = this.itissueitems[0].ORDERITEM;
         if (this.itemreceived.length > 0) {
 
@@ -62,17 +74,61 @@ export class requestitem implements OnInit, AfterContentChecked {
             this.ORDERITEM.at(i).get('CATEGORY').setValue(this.itemreceived[i].CATEGORY);
             this.ORDERITEM.at(i).get('QUANTITY').setValue(this.itemreceived[i].QUANTITY);
             this.setcategorychangeload(this.itemreceived[i].CATEGORY, i);
-         
+            this.GaganArr.push(this.itemreceived[i].SUBCATEGORY);
            
           }
+          this.gaganArrSet();
         }
 
         console.log(this.itemreceived);
       })
     }
   }
+  onKeyUp(event: any, i) {
+    this.values = event.target.value;
+    console.log(this.values)
+    console.log(i)
+    //this.itemreceived[i].RECEIVEDQUANTITY = this.values.toString();
+    //this.items[i].REMAINING = "0";
 
- 
+    //this.items[i].REMAINING = (Number(this.items[i].QUANTITY) - Number(this.values)).toString();
+    //if (parseInt(this.items[i].REMAINING) < 0) {
+    //  alert("");
+    //  this.items[i].REMAINING = "";
+
+    //  this.items[i].RECEIVEDQUANTITY = "";
+    //}
+    //else {s
+    //  this.items[i].RECEIVEDQUANTITY = this.values.toString();
+    //}
+
+
+
+  }
+
+  gaganArrSet() {
+    for (var i = 0; i < this.GaganArr.length; i++) {
+      this.ORDERITEM.at(i).get('SUBCATEGORY').setValue(this.GaganArr[i]);
+      //  alert();
+    }
+    //alert('dd');
+    console.log(this.GaganArr + "fgafdg");
+  }
+  dghemployee() {
+    this.Componentservices.dghemployee('BOTH').subscribe(data => {
+      this.Users = data;
+      //  this.Department = this.Users[0].Department;
+      console.log(this.Users);
+      //  console.log(this.Department);
+    });
+  }
+  departmentload() {
+    this.Componentservices.department().subscribe(data => {
+      // this.Users = data;
+      this.Department = data;
+
+    });
+  }
   categorychange(value: string, i: number) {
     console.log(value);
     this.categorychangeload(value, i);
@@ -140,7 +196,17 @@ export class requestitem implements OnInit, AfterContentChecked {
     var conf = confirm("Are you sure you want to delete this ?");
     if (conf == true) {
       if (items != 0) {
+         //this.Componentservices
+        //  .Deletereceiveditem(items)
+        //  .subscribe(data => {
+        //    this.Material = data, alert(this.Material), this.loading = false; console.log(this.Material);
 
+        //  },
+        //    error => () => {
+
+        //    },
+        //    () => console.log(this.Material)
+        //  );
       }
       (<FormArray>this.RequestForm.get('ORDERITEM')).removeAt(deleteitem);
     }

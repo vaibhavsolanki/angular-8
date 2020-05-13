@@ -7,7 +7,6 @@ import { RouterModule, PreloadAllModules } from '@angular/router';
 import { AppComponent } from './app.component';
 
 
-
 import { LoginComponent } from './Login/LoginComponent';
 import { ReactiveFormsModule } from '@angular/forms';
 import { JwtInterceptor } from './services/jwt.interceptor';
@@ -55,7 +54,7 @@ import {
         MatInputModule, 
         BrowserAnimationsModule, MatToolbarModule, MatSidenavModule, 
       MatFormFieldModule, MatCardModule,
-    
+
    
         RouterModule.forRoot([
          

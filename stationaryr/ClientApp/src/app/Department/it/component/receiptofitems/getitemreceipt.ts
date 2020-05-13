@@ -11,7 +11,7 @@ import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 
 export class getitemreceipt {
   message: string;
-  itemreceipt: itemreceipt[];
+  itemreceipt: itemreceipt;
   itemreceipts: itemreceipt[];
   dataSource;
   displayedColumns: string[] = ['RELEASEORDERID', 'CHALLANNO', 'CHALLANDATE','RECEIPTDATE', 'View/Delete'];
@@ -32,6 +32,29 @@ export class getitemreceipt {
         })
 
   }
+
+  edititemreceipt(itemreceipt: itemreceipt): void {
+    localStorage.removeItem('viewitemreceiptId');
+    localStorage.setItem('viewitemreceiptId', itemreceipt.ID.toString());
+    this.router.navigate(['IT/ItemReceipt'], { queryParams: { id: itemreceipt.ID.toString() } });
+
+
+  }
+  deleteitemreceipt(itemreceipt: itemreceipt): void {
+    if (confirm("Are you sure you want to delete this ?")) {
+      this.Componentservices
+        .DeleteItItemReceipt(itemreceipt.ID).subscribe(
+          data => {
+            this.message = data,
+
+              this.itemreceipts = this.itemreceipts.filter(u => u !== itemreceipt)
+            this.dataSource = new MatTableDataSource<itemreceipt>(this.itemreceipts),
+              this.dataSource.paginator = this.paginator
+          }
+        )
+    }
+  }
+  
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();

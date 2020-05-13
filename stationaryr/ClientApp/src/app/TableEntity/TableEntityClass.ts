@@ -264,6 +264,7 @@ export class itvendor {
 }
 
 export class itemreceipt {
+  ID:number;
   PUBLISHORDER: string;
   ORDERITEM: ititems[];
   CHALLANNO: string;
@@ -271,7 +272,17 @@ export class itemreceipt {
   RECEIPTDATE: Date;
   REMARKS: string;
 }
-
+export class AdminIssue {
+  ID: string;
+  UserName: number;
+  ORDERITEM: ititems[];
+  STATUS: string;
+  ISSUEDATE; Date;
+  CREATED_DATE: Date;
+ 
+  REMARKS: string;
+  
+}
 export class itissueitems {
   ID: number;
   ORDERITEM: ititems[];

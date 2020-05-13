@@ -18,7 +18,7 @@ export class itemreceipts {
   contracts: contract[];
   itreleaseorders: itreleaseorder[];
   items: ititems[] = [];
-
+  items1: ititems[] = [];
   itemreceipt: itemreceipt[];
   itemreceipts: itemreceipt[];
   listofdropdown: listofdropdown[];
@@ -30,22 +30,42 @@ export class itemreceipts {
   values: number;
   btnvisibility: boolean = true;
   datasubmit: string;
-
+  Disabled = false;
   displayedColumns: string[] = ['position', 'CATEGORY', 'QUANTITY', 'RECEIVEDQUANTITY','REMAININGQUANTITY','REMARK'];
     formGroup: any;
   constructor(private formbuilder: FormBuilder, private Componentservices: ComponentService, private router: Router) {
 
   }
   ngOnInit() {
+    this.getpublishorder();
+    this.GetCategoryDropdown();
+    this.getSubCategories();
     let empid = localStorage.getItem('viewitemreceiptId');
     if (empid != null) {
       this.Componentservices.GetItItemReceiptById(+empid).subscribe(data => {
         this.itemreceipts = data
+        this.items1 = this.itemreceipts[0].ORDERITEM;
+        console.log("ss"); console.log(this.items1)
+        this.ItemReceiptForm.controls["PUBLISHORDER"].setValue(this.itemreceipts[0].PUBLISHORDER);
+        this.pubitem(this.itemreceipts[0].PUBLISHORDER)
+        
+        this.ItemReceiptForm.controls["CHALLANNO"].setValue(this.itemreceipts[0].CHALLANNO);
+
+        this.ItemReceiptForm.controls["CHALLANDATE"].setValue(this.itemreceipts[0].CHALLANDATE);
+
+        this.ItemReceiptForm.controls["RECEIPTDATE"].setValue(this.itemreceipts[0].RECEIPTDATE);
+        this.ItemReceiptForm.controls["REMARKS"].setValue(this.itemreceipts[0].REMARKS);
+        this.items.map((x, i) => {
+
+          this.items[i].REMAINING = "0";
+          this.items[i].REMARKS = "rr";
+      })
+        
+        this.Disabled = true;
+        console.log(data);
       });
     }
-    this.getpublishorder();
-    this.GetCategoryDropdown();
-    this.getSubCategories();
+    
     this.ItemReceiptForm = this.formbuilder.group({
 
       PUBLISHORDER: ['', Validators.required],
@@ -83,7 +103,15 @@ export class itemreceipts {
     this.items[i].REMAINING = "0";
  
     this.items[i].REMAINING = (Number(this.items[i].QUANTITY) - Number(this.values)).toString();
-    this.items[i].RECEIVEDQUANTITY = this.values.toString();
+    if (parseInt(this.items[i].REMAINING) < 0) {
+      alert("Received quantity less than or equal to Avaiable quantity");
+      this.items[i].REMAINING = "";
+     
+      this.items[i].RECEIVEDQUANTITY ="";
+    }
+    else {
+      this.items[i].RECEIVEDQUANTITY = this.values.toString();
+    }
     
    
 
@@ -151,22 +179,52 @@ export class itemreceipts {
       );
   }
 
-  getcontractbyid(value: string) {
-    this.Componentservices.getContractformId(value).subscribe(data => {
+  //onUpdate() {
+  //  this.submitted = true;
+
+  //  if (this.ItemReceiptForm.invalid) {
+  //    return;
+  //  }
+  //  this.loading = true;
+
+  //  this.Componentservices
+  //    .UpdateContractform(this.ItemReceiptForm.value)
+  //    .subscribe(data => { this.datasubmit = data, this.loading = false; console.log(this.datasubmit); this.router.navigate(['IT/GetContractMaster']); },
+  //      error => () => {
+
+  //      },
+  //      () => console.log(this.datasubmit)
+  //    );
+
+  //}
+
+
+
+ async getcontractbyid(value: string) {
+    await this.Componentservices.getContractformId(value).subscribe(data => {
       this.contracts = data
       this.items = [];
 
 
       this.items = this.contracts[0].ORDERITEM;
-      this.items.map((x, i) => {
 
+      //this.items.sort(function (a, b) { return parseInt(a.CATEGORY) - parseInt(b.CATEGORY); });
+      //this.items1.sort(function (a, b) { return parseInt(a.CATEGORY) - parseInt(b.CATEGORY); });
+      this.items.map((x, i) => {
+        let cate = "";
+        cate = this.Category.find(y => y.ITEMCODE == x.CATEGORY).ID.toString();
         this.items[i].CATEGORY == null ? this.items[i].CATEGORY = "" : this.items[i].CATEGORY = this.Category.find(y => y.ITEMCODE == x.CATEGORY).ITEMS_DESCRIPTION;
         this.items[i].SUBCATEGORY == null ? this.items[i].SUBCATEGORY = " " : this.items[i].SUBCATEGORY = this.SubCategory.find(y => y.ID.toString() == x.SUBCATEGORY).DESCRIPTION;
         this.items[i].SUBCHILDCATEGORY == null ? this.items[i].SUBCHILDCATEGORY = " " : this.items[i].SUBCHILDCATEGORY = this.SubCategory.find(y => y.ID.toString() == x.SUBCHILDCATEGORY).DESCRIPTION;
-
+        console.log(x.CATEGORY);
+      
+        //cate = "";//this.Category.filter(function (arr) { return arr.ITEMCODE == x.CATEGORY });//this.Category.find(y => y.ITEMCODE == x.CATEGORY)[0].ID.toString();
+        console.log(cate);
         this.items[i].CATEGORY = this.items[i].CATEGORY + "  " + this.items[i].SUBCATEGORY + "  " + this.items[i].SUBCHILDCATEGORY;
-        
-       
+
+        this.items[i].RECEIVEDQUANTITY = this.items1.find(x => x.CATEGORY == cate).RECEIVEDQUANTITY;
+        this.items[i].REMAINING = this.items1.find(x => x.CATEGORY == cate).REMAINING;
+        this.items[i].REMARKS = this.items1.find(x => x.CATEGORY == cate).REMARKS;
 
       })
       console.log(this.contracts);

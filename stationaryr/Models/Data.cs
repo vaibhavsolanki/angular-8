@@ -25,7 +25,7 @@ namespace Stationary.Models
         //itissueitem
 
 
-        public string SaveItIssueItems(itissueitems itissueitems)
+        public string SaveItIssueItems(AdminIssue itissueitems)
         {
 
 
@@ -39,9 +39,10 @@ namespace Stationary.Models
                 OracleDataAdapter da = new OracleDataAdapter(cmd);
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
                 cmd.Parameters.Add("P_ID", "");
-                cmd.Parameters.Add("P_USERID", itissueitems.USERID);
+                cmd.Parameters.Add("P_USERID", itissueitems.UserName);
                 cmd.Parameters.Add("P_REMARKS", itissueitems.REMARKS);
-
+                cmd.Parameters.Add("P_DEPT_ID", "");
+                cmd.Parameters.Add("P_ISSUEITEMDATE", itissueitems.ISSUEDATE);
                 cmd.Parameters.Add("CALLVAL", "0");
 
                 DataTable ds = new DataTable();
@@ -70,7 +71,8 @@ namespace Stationary.Models
 
                 cmd.Parameters.Add("P_USERID", "");
                 cmd.Parameters.Add("P_REMARKS", "");
-
+                cmd.Parameters.Add("P_DEPT_ID", "");
+                cmd.Parameters.Add("P_ISSUEITEMDATE", "");
                 cmd.Parameters.Add("CALLVAL", "3");
 
                 DataTable ds = new DataTable();
@@ -99,7 +101,10 @@ namespace Stationary.Models
                 cmd.Parameters.Add("P_ID", "");
                 cmd.Parameters.Add("P_USERID", "");
                 cmd.Parameters.Add("P_REMARKS", "");
-
+                cmd.Parameters.Add("P_DEPT_ID", "");
+                cmd.Parameters.Add("P_ISSUEITEMDATE", "");
+                
+                    
                 cmd.Parameters.Add("CALLVAL", "1");
 
                 DataTable ds = new DataTable();
@@ -115,10 +120,10 @@ namespace Stationary.Models
 
 
 
-        public List<itissueitems> GetItIssueItemsById(string id)
+        public List<AdminIssue> GetItIssueItemsById(string id)
         {
 
-            List<itissueitems> ret = new List<itissueitems>();
+            List<AdminIssue> ret = new List<AdminIssue>();
             using (OracleConnection con = new OracleConnection(connection))
             {
                 con.Open();
@@ -131,6 +136,8 @@ namespace Stationary.Models
 
                 cmd.Parameters.Add("P_USERID", "");
                 cmd.Parameters.Add("P_REMARKS", "");
+                cmd.Parameters.Add("P_DEPT_ID", "");
+                cmd.Parameters.Add("P_ISSUEITEMDATE", "");
                 cmd.Parameters.Add("CALLVAL", "2");
 
                 DataTable ds = new DataTable();
@@ -138,7 +145,7 @@ namespace Stationary.Models
 
                 da.Fill(ds);
 
-                ret = ds.ToList<itissueitems>();
+                ret = ds.ToList<AdminIssue>();
                 ret[0].ORDERITEM = GetItIssueItemsquantity(id);
 
             }
@@ -184,7 +191,7 @@ namespace Stationary.Models
 
         }
 
-        public string UpdateIssueItems(itissueitems itissueitems)
+        public string UpdateIssueItems(AdminIssue AdminIssue)
         {
 
             return "";
@@ -289,7 +296,7 @@ namespace Stationary.Models
                 da.Fill(ds);
 
                 ret = ds.ToList<itemreceipt>();
-
+                ret[0].ORDERITEM = getordrtititems(id);
             }
             return ret;
         }
@@ -325,6 +332,42 @@ namespace Stationary.Models
             }
             return ret;
         }
+
+        public List<ititems> getordrtititems( int publishorder)
+        {
+
+            List<ititems> ret = new List<ititems>();
+
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_IT_ITEM_RECEIPT", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", "");
+                cmd.Parameters.Add("P_PUBLISHORDER", publishorder);
+                cmd.Parameters.Add("P_CONTRACTID", "");
+
+                cmd.Parameters.Add("P_QUANTITY", "");
+                cmd.Parameters.Add("P_CATEGORY", "");
+                cmd.Parameters.Add("P_SUBCATEGORY", "");
+                cmd.Parameters.Add("P_SUBCHILDCATEGORY", "");
+                cmd.Parameters.Add("P_RECEIVEDQUANTITY", "");
+                cmd.Parameters.Add("P_REMAINING", "");
+                cmd.Parameters.Add("P_ITEM_REMARKS", "");
+                cmd.Parameters.Add("CALLVAL", "1");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.ToList<ititems>();
+            }
+            return ret;
+        }
+
 
         public string ordrtititems(List<ititems> orderitem, string publishorder)
         {
@@ -680,10 +723,10 @@ namespace Stationary.Models
             numbers.Add(new role() { EMP_ID = "1", Approle = "STATIONARY" });
             numbers.Add(new role() { EMP_ID = "2", Approle = "IT" });
             List<USER> user = new List<USER>();
-            user.Add(new USER { ID = 1, EMP_ID = "", NAME = "admin1", PASSWORD = "admin@1234", ROLE = "admin", APPROLE = numbers.Where(x => x.EMP_ID == "1").ToList() });
-            user.Add(new USER { ID = 2, EMP_ID = "", NAME = "admin2", PASSWORD = "admin@12345", ROLE = "admin", APPROLE = numbers.Where(x => x.EMP_ID == "1" || x.EMP_ID == "2").ToList() });
-            user.Add(new USER { ID = 3, EMP_ID = "", NAME = "admin", PASSWORD = "admin@123", ROLE = "admin", APPROLE = numbers.Where(x => x.EMP_ID == "2").ToList() });
-            user.Add(new USER { ID = 4, EMP_ID = "", NAME = "user1", PASSWORD = "user@123", ROLE = "user", APPROLE = numbers.Where(x => x.EMP_ID == "1").ToList() });
+            user.Add(new USER { ID = "1", EMP_ID = "", NAME = "admin1", PASSWORD = "admin@1234", ROLE = "admin", APPROLE = numbers.Where(x => x.EMP_ID == "1").ToList() });
+            user.Add(new USER { ID = "2", EMP_ID = "", NAME = "admin2", PASSWORD = "admin@12345", ROLE = "admin", APPROLE = numbers.Where(x => x.EMP_ID == "1" || x.EMP_ID == "2").ToList() });
+            user.Add(new USER { ID = "3", EMP_ID = "", NAME = "admin", PASSWORD = "admin@123", ROLE = "admin", APPROLE = numbers.Where(x => x.EMP_ID == "2").ToList() });
+            user.Add(new USER { ID = "4", EMP_ID = "", NAME = "user1", PASSWORD = "user@123", ROLE = "user", APPROLE = numbers.Where(x => x.EMP_ID == "1").ToList() });
             return user;
 
         }
@@ -806,7 +849,35 @@ namespace Stationary.Models
             return ret;
 
         }
+        public List<Department> department()
+        {
+            List<Department> ret = new List<Department>();
+            using (OracleConnection con = new OracleConnection(connection))
+            {
 
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_DGHUSER", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                // cmd.Parameters.Add("data_cursor1", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+                cmd.Parameters.Add("P_STATUS", "");
+                cmd.Parameters.Add("CALLVAL", "1");
+
+                DataSet ds = new DataSet();
+
+
+                da.Fill(ds);
+
+                ret = ds.Tables[0].ToList<Department>();
+
+                //  ret[0].DEPARTMENTS = ds.Tables[1].ToList<Department>();
+            }
+            return ret;
+
+        }
         public List<USER> dghemployee(string status)
         {
             List<USER> ret = new List<USER>();
@@ -819,7 +890,7 @@ namespace Stationary.Models
 
                 OracleDataAdapter da = new OracleDataAdapter(cmd);
                 cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
-                cmd.Parameters.Add("data_cursor1", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+               // cmd.Parameters.Add("data_cursor1", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
 
                 cmd.Parameters.Add("P_STATUS", status);
                 cmd.Parameters.Add("CALLVAL", "0");
@@ -831,7 +902,7 @@ namespace Stationary.Models
 
                 ret = ds.Tables[0].ToList<USER>();
 
-                ret[0].DEPARTMENTS = ds.Tables[1].ToList<Department>();
+              //  ret[0].DEPARTMENTS = ds.Tables[1].ToList<Department>();
             }
             return ret;
 
@@ -2827,6 +2898,74 @@ namespace Stationary.Models
             }
             return ret;
         }
+
+        public bool checkroleuser(string userid,string rolename)
+        {
+            
+            string ret = "";
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_USER_ROLE_INSERT", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_USERID", userid);
+                cmd.Parameters.Add("P_ROLEID", rolename);
+
+                cmd.Parameters.Add("CALLVAL", "6");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.Rows[0][0].ToString();
+              
+            }
+
+            return ret=="false"?false :true;
+           
+        }
+
+        public string checkusercandelete(string id)
+        {
+
+            string ret = "";
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_USERDGH_CRUD", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_ID", id);
+                cmd.Parameters.Add("P_USERNAME", "");
+                cmd.Parameters.Add("P_EMAILID", "");
+                cmd.Parameters.Add("P_PHONENO", "");
+                cmd.Parameters.Add("P_DEPTID", "");
+                cmd.Parameters.Add("P_PASSWORD", "");
+
+                
+                cmd.Parameters.Add("CALLVAL", "9");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.Rows[0][0].ToString();
+
+            }
+
+            return ret;
+
+        }
+
         public string checkrolecandelete(string id)
         {
 

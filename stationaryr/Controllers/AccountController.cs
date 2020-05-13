@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Identity;
 using stationaryr.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
-
+using System.Text.Json;
 namespace stationaryr.Controllers
 {
     [Route("api/[controller]")]
@@ -29,7 +29,7 @@ namespace stationaryr.Controllers
         private readonly IMapper _mapper;
         private readonly IAccountManager _accountManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private const string GetUserByIdActionName = "GetUserById";
+        private const string GetUserByIdActionName = "GetUserId";
         private const string GetRoleByIdActionName = "GetRoleById";
         public AccountController(IConfiguration config, IAccountManager accountManager, SignInManager<ApplicationUser> signInManager, IMapper mapper)
         {
@@ -67,13 +67,44 @@ namespace stationaryr.Controllers
             else
 
             {
-                return Ok("success");
-                // return  BadRequest(new { message = "Username or password is incorrect" });
+                //return Ok("success");
+              return  BadRequest(new { message = "Username or password is incorrect" });
             }
 
 
 
         }
+
+        [HttpDelete("users/{id}")]
+        [ProducesResponseType(200, Type = typeof(UserViewModel))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            //if (!(await _authorizationService.AuthorizeAsync(this.User, id, AccountManagementOperations.Delete)).Succeeded)
+            //    return new ChallengeResult();
+
+
+            ApplicationUser appUser = await _accountManager.GetUserByIdAsync(id);
+
+            if (appUser == null)
+                return NotFound(id);
+
+            if (!await _accountManager.TestCanDeleteUserAsync(id))
+                return BadRequest("User cannot be deleted. Delete all orders associated with this user and try again");
+
+
+            UserViewModel userVM = await GetUserViewModelHelper(appUser.Id);
+
+            var result = await _accountManager.DeleteUserAsync(appUser);
+            if (!result.Succeeded)
+                throw new Exception("The following errors occurred whilst deleting user: " + string.Join(", ", result.Errors));
+
+
+            return Ok(userVM);
+        }
+
 
 
         async Task<string> GenerateJWT(string id)
@@ -91,8 +122,17 @@ namespace stationaryr.Controllers
                 var userclaim = await _accountManager.GetUserClaimAsync(role.Id);
                 claim1.Add(userclaim.ToList());
             }
+            List<ClaimViewModel> claim2 = new List<ClaimViewModel>();
 
+            foreach(var t in claim1)
+            {
+                foreach (var y in t)
+                {
+                    claim2.Add(y);
+                }
+            }
 
+            //var json = System.Text.Json.JsonSerializer.Serialize(claim2.Distinct());
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:SecretKey"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -102,7 +142,7 @@ namespace stationaryr.Controllers
                 new Claim(JwtRegisteredClaimNames.Sub, userVM.UserName),
 
                 new Claim("role",JsonConvert.SerializeObject(userVM.Roles)),
-                   new Claim("permission",JsonConvert.SerializeObject(claim1)),
+                   new Claim("permission",JsonConvert.SerializeObject(claim2.Distinct())),
             };
 
             var token = new JwtSecurityToken(
@@ -197,23 +237,24 @@ namespace stationaryr.Controllers
         {
             //if (!(await IAuthorizationService.AuthorizeAsync(this.User, (user.Roles, new string[] { }), Authorization.Policies.AssignAllowedRolesPolicy)).Succeeded)
             //    return new ChallengeResult();
-            if (user == null)
-                return BadRequest($"{nameof(user)} cannot be null");
-            //ApplicationUser appUser = new ApplicationUser();
-            //appUser.UserName = user.UserName;
-            //appUser.PasswordHash = user.NewPassword;
-            //appUser.PhoneNumber = user.PhoneNumber;
-            // appUser.Roles = user.Roles.;
-            // appUser.Email = user.Email;
-
-            ApplicationUser appUser = _mapper.Map<ApplicationUser>(user);
-            // var user = new ApplicationUser { UserName = model.EMAILID, Email = model.EMAILID };
-            var result = await _accountManager.CreateUserAsync(appUser, user.Roles, user.NewPassword);
-            
-            if (result.Succeeded)
+            if (ModelState.IsValid)
             {
+                if (user == null)
+                    return BadRequest($"{nameof(user)} cannot be null");
+
+
+                ApplicationUser appUser = _mapper.Map<ApplicationUser>(user);
+                // var user = new ApplicationUser { UserName = model.EMAILID, Email = model.EMAILID };
+                var result = await _accountManager.CreateUserAsync(appUser, user.Roles, user.NewPassword);
+
+                if (result.Succeeded)
+                {
+                    return Ok("success");
+                }
+                AddError(result.Errors);
             }
-            return Ok("");
+                return BadRequest(ModelState);
+            
         }
 
 

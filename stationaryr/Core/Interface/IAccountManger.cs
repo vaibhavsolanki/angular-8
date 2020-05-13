@@ -13,8 +13,8 @@ namespace stationaryr.Core.Interface
         Task<ApplicationUser> GetUserByIdAsync(string userId);
         Task<ApplicationUser> GetUserByUserNameAsync(string userName);
         Task<IList<ClaimViewModel>> GetUserClaimAsync(string roleid);
-
         Task<bool> TestCanDeleteRoleAsync(string roleId);
+        Task<bool> TestCanDeleteUserAsync(string roleId);
         Task<(bool Succeeded, string[] Errors)> DeleteUserAsync(ApplicationUser user);
         Task<(bool Succeeded, string[] Errors)> DeleteUserAsync(string userId);
         Task<(bool Succeeded, string[] Errors)> DeleteRoleAsync(ApplicationRole role);

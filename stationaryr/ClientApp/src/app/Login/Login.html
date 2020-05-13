@@ -1,30 +1,41 @@
-
-    <div class="card" [class.hidden]="!show">
-      <div class="card-header" style="background-color:dodgerblue" >
-        <h2 style="color:#fff">Login</h2>
+<div class="d-flex h-90">
+  <div class="login-container m-auto">
+    <div class="card boxshadow">
+      <div class="card-header bg-primary dark text-white clearfix">
+        <i class="fa fa-lock" aria-hidden="true"></i> Login
+        <button *ngIf="isModal" type="button" class="close float-right text-light" aria-label="Close" (click)="closeModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
       <div class="card-body">
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="example-container">
+        <div class="col-md-8 offset-md-2">
+         
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="example-container">
+           
+            <mat-form-field>
+    <input matInput placeholder="Email" formControlName="username" [ngClass]="{ 'is-invalid': submitted && f.username.errors }">
+    <mat-error *ngIf="submitted && f.username.errors">Username is required</mat-error>
 
-          <mat-form-field>
-            <input matInput placeholder="Input" formControlName="username" [ngClass]="{ 'is-invalid': submitted && f.username.errors }">
-            <mat-error *ngIf="submitted && f.username.errors">Username is required</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input type="password" matInput placeholder="password" formControlName="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
+    <mat-error *ngIf="submitted && f.password.errors">Password is required</mat-error>
 
-          </mat-form-field>
-          <mat-form-field>
-            <input type="password" matInput placeholder="password" formControlName="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
-            <mat-error *ngIf="submitted && f.password.errors">Password is required</mat-error>
+  </mat-form-field>
+            <button mat-raised-button color="primary" [disabled]="loading">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+              Submit
+            </button>
+          </form>
 
-          </mat-form-field>
-          <button mat-raised-button color="primary" [disabled]="loading">
-            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-            Submit
-          </button>
-        </form>
-
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  
+ 
+       
+
 
 
 

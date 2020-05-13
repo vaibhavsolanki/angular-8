@@ -16,14 +16,14 @@ import { GroupByPipe } from '../../Directive/group-by.pipe'
 import {
 
     MatFormFieldModule, MatSelectModule,
-    MatInputModule,
-    MatCardModule,
+  MatInputModule,
+  MatCardModule, MatButtonModule,
   MatTableModule, MatToolbarModule, MatSidenavModule, MatListModule, MatIconModule, MatTabsModule, MatExpansionModule,
   MatPaginatorModule, MatSortModule, MatDatepickerModule, MatNativeDateModule, MatDialogModule, MatSlideToggleModule,
 } from '@angular/material';
 @NgModule({
     imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule,
-    MatIconModule,
+    MatIconModule, MatButtonModule,
     MatDatepickerModule, MatNativeDateModule, MatSlideToggleModule,
 
 

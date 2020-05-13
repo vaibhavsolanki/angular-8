@@ -7,7 +7,10 @@
   <table mat-table [dataSource]="dataSource" style="overflow-x:scroll;">
 
     <!-- Position Column -->
-
+    <ng-container matColumnDef="ID" style="display:none">
+      <th mat-header-cell *matHeaderCellDef>ID </th>
+      <td mat-cell *matCellDef="let row"> {{row.ID}} </td>
+    </ng-container>
     <ng-container matColumnDef="RELEASEORDERID">
       <th mat-header-cell *matHeaderCellDef> RELEASEORDERID </th>
       <td mat-cell *matCellDef="let row"> {{row.PUBLISHORDER}} </td>

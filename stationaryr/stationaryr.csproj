@@ -27,11 +27,15 @@
 
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
+    <Compile Remove="ClientApp\src\app\Department\it\component\permission\**" />
     <Compile Remove="ClientApp\src\app\DocumentsUpload\**" />
     <Content Remove="$(SpaRoot)**" />
+    <Content Remove="ClientApp\src\app\Department\it\component\permission\**" />
     <Content Remove="ClientApp\src\app\DocumentsUpload\**" />
+    <EmbeddedResource Remove="ClientApp\src\app\Department\it\component\permission\**" />
     <EmbeddedResource Remove="ClientApp\src\app\DocumentsUpload\**" />
     <None Remove="$(SpaRoot)**" />
+    <None Remove="ClientApp\src\app\Department\it\component\permission\**" />
     <None Remove="ClientApp\src\app\DocumentsUpload\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
@@ -41,6 +45,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\app\Department\it\component\permission\permission.html" />
+    <None Remove="ClientApp\src\app\Department\it\component\permission\permission.ts" />
     <None Remove="ClientApp\src\app\Department\it\component\Rolemaster\RoleMaster.ts" />
     <None Remove="ClientApp\src\app\Department\it\component\subcategory\getsubcategory.component.ts" />
 

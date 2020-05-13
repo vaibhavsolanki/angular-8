@@ -58,14 +58,18 @@ let empid = localStorage.getItem('editRoleId');
           this.Role = data,
                 console.log(this.Role),
             this.RoleForm.controls['Name'].setValue(this.Role.Name);
-          this.RoleForm.controls['Description'].setValue(this.Role.Description);
-        
+        this.RoleForm.controls['Description'].setValue(this.Role.Description);
+     //   this.RoleForm.controls['Permissions'].setValue(this.Role.Permissions);
               
             })
 
             this.btnvisibility = false;
         }
-}
+  }
+
+  onChange(value) {
+    if (value.checked == true) { alert();}
+  }
   onCheckboxChange(e) {
     const Permissions: FormArray = this.RoleForm.get('Permissions') as FormArray;
 
@@ -85,7 +89,7 @@ let empid = localStorage.getItem('editRoleId');
       });
     }
   }
-  getUserPreferences() {
+  getUserPreferences() { 
     return this.Componentservices.getpermission().subscribe(data => {
       this.allPermissions = data;
       console.log(this.allPermissions);
@@ -94,6 +98,7 @@ let empid = localStorage.getItem('editRoleId');
     });
   }
   selectAll() {
+    
     this.allPermissions.forEach(p => this.selectedValues[p.Value] = true);
   }
 

@@ -52,7 +52,7 @@ namespace Stationary.Models
     }
     public class USER
     {
-        public int ID { get; set; }
+        public string ID { get; set; }
         public string EMP_ID { get; set; }
         public string  NAME { get; set; }
         public string ADDRESS { get; set; }
@@ -336,13 +336,28 @@ namespace Stationary.Models
     }
     public class itemreceipt
     {
+        public int ID { get; set; }
         public string PUBLISHORDER { get; set; }
+
+
+        public string CONTRACTID { get; set; }
         public List<ititems> ORDERITEM { get; set; }
     public string CHALLANNO { get; set; }
     public DateTime  CHALLANDATE { get; set; }
         public DateTime RECEIPTDATE { get; set; }
         
         public string REMARKS { get; set; }
+    }
+    public class AdminIssue
+    {
+        public int ID { get; set; }
+        public string UserName { get; set; }
+        public List<ititems> ORDERITEM { get; set; }
+        public string STATUS { get; set; }
+        public DateTime CREATED_DATE { get; set; }
+        public DateTime ISSUEDATE { get; set; }
+        public string REMARKS { get; set; }
+
     }
     public  class itissueitems
     {
@@ -353,7 +368,8 @@ namespace Stationary.Models
         public string USERID { get; set; }
         public string REMARKS { get; set; }
         public string ISSUEID { get; set; }
-
+        public string P_DEPT_ID { get; set; }
+        public string P_ISSUEITEMDATE { get; set; }
     }
 
 }

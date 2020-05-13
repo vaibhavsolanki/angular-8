@@ -37,6 +37,12 @@ define(["require", "exports"], function (require, exports) {
         return itemreceipt;
     }());
     exports.itemreceipt = itemreceipt;
+    var AdminIssue = /** @class */ (function () {
+        function AdminIssue() {
+        }
+        return AdminIssue;
+    }());
+    exports.AdminIssue = AdminIssue;
     var itissueitems = /** @class */ (function () {
         function itissueitems() {
         }

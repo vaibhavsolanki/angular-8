@@ -294,9 +294,15 @@ namespace Stationary.Controllers
             return new Data().deletePrint_Repository(ID);
         }
 
+        //department
+        [HttpGet("department")]
+        public IActionResult department()
+        {
+            return Ok(new Data().department());
+        }
 
         //dghuser
-        
+
 
         [HttpGet("dghemployee/{status}")]
         public IActionResult dghemployee(string status)
@@ -546,19 +552,19 @@ namespace Stationary.Controllers
         [HttpPost("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
 
-        public string SaveItIssueItems(itissueitems itissueitems)
+        public string SaveItIssueItems(AdminIssue adminIssue)
         {
 
-            return new Data().SaveItIssueItems(itissueitems);
+            return new Data().SaveItIssueItems(adminIssue);
         }
 
         [HttpPost("[action]")]
 
 
-        public string UpdateIssueItems(itissueitems itissueitems)
+        public string UpdateIssueItems(AdminIssue AdminIssue)
         {
 
-            return new Data().UpdateIssueItems(itissueitems);
+            return new Data().UpdateIssueItems(AdminIssue);
         }
 
         [HttpGet("GetItIssueItemsById/{id}")]

@@ -57,9 +57,9 @@ export class NavMenuComponent implements OnDestroy, OnInit {
   usermenu() {
     var ob = JSON.parse(localStorage.getItem('permission'));
     if (ob != null) {
-      var obj1 = ob[0].substring(1, ob[0].length - 1)
+     // var obj1 = ob[0].substring(1, ob[0].length - 1)
 
-      var obj = JSON.parse(obj1);
+      var obj = JSON.parse(ob);
 
 
 

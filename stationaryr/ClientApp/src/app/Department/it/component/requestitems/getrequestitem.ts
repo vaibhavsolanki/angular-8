@@ -15,7 +15,7 @@ export class getrequestitem {
   itissueitems: itissueitems[];
 
   dataSource;
-  displayedColumns: string[] = ['ISSUEID', 'Edit/Delete'];
+  displayedColumns: string[] = ['ISSUEID','USERID', 'Edit/Delete'];
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 

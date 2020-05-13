@@ -14,8 +14,8 @@ const httpOptions = {
 export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<LoginResponse>;
   public currentUser: Observable<LoginResponse>;
-  //private actionUrl: string = "http://192.168.0.42/";
-  private actionUrl: string = "https://localhost:44324/"//;
+private actionUrl: string = "http://192.168.0.42/";
+  //private actionUrl: string = "https://localhost:44324/stationary/"//;
     constructor(private http: HttpClient) {
       this.currentUserSubject = new BehaviorSubject<LoginResponse>(JSON.parse(localStorage.getItem('currentUser')));
         this.currentUser = this.currentUserSubject.asObservable();

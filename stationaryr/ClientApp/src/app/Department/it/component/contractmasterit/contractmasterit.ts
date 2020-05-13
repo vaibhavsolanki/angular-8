@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild ,AfterViewInit, AfterViewChecked, AfterContentChecked, DoCheck, OnChanges, AfterContentInit} from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren, AfterViewInit, AfterViewChecked, AfterContentChecked, DoCheck, OnChanges, AfterContentInit, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { ComponentService } from '../../../../services/ComponentService';
 import { Router, ActivatedRoute } from '@angular/router';
 import { contract, listofdropdown, Material, itvendor, SubCategory, ititems } from '../../../../TableEntity/TableEntityClass';
 import { setTimeout } from 'timers';
+import { async } from '@angular/core/testing';
 @Component({
   selector: 'app-itcontactmaster',
   templateUrl: './contractmasterit.html',
@@ -27,26 +28,43 @@ export class itcontractmaster implements OnInit, AfterViewChecked {
   subchildcategory = true;
   itemreceived: ititems[];
   Subcategories: any[];
-
+  GaganArr: any[] = [];
   btnvisibility: boolean = true;
   finaldata: any[] = [];
   constructor(private formbuilder: FormBuilder, private Componentservices: ComponentService, private router: Router) {
 
 
   }
+
+  @ViewChild("cntfield", null) contractfield: ElementRef;
   ngAfterViewChecked() {
-    console.log(this.itemreceived.length);
-    if (this.itemreceived.length > 0) {
-      for (var j = 0; j <= this.itemreceived.length - 1; j++) {
 
 
-        this.categorychangeload(this.itemreceived[j].CATEGORY, j);
-       
-        this.ORDERITEM.at(j).get('SUBCATEGORY').setValue(this.itemreceived[j].SUBCATEGORY);
-      }
-    }
+
+    //if (this.itemreceived.length > 0) {
+    //  for (var j = 0; j <= this.itemreceived.length - 1; j++) {
+    //    this.categorychangeload(this.itemreceived[j].CATEGORY, j);
+    //    this.ORDERITEM.at(j).get('SUBCATEGORY').setValue(this.itemreceived[j].SUBCATEGORY);
+    //    console.log(this.itemreceived[j].SUBCATEGORY);
+    //  }
+    //}
+
 
   }
+  //ngAfterViewInit() {
+
+  //  this.contractfield.nativeElement.focus();    
+  //}
+
+  //ngDoCheck() {
+  //  console.log(this.itemreceived.length);
+  //  if (this.itemreceived.length > 0) {
+  //    for (var j = 0; j <= this.itemreceived.length - 1; j++) {
+  //      this.categorychangeload(this.itemreceived[j].CATEGORY, j);
+  //      this.ORDERITEM.at(j).get('SUBCATEGORY').setValue(this.itemreceived[j].SUBCATEGORY);
+  //    }
+  //  }
+  //}
   ngOnInit() {
     this.GetCategoryDropdown();
     this.getSubCategories();
@@ -59,16 +77,15 @@ export class itcontractmaster implements OnInit, AfterViewChecked {
       ENDDATE: ['', Validators.required],
       ORDERITEM: this.formbuilder.array([this.addItemFormGroup()])
 
-
     })
     let empid = localStorage.getItem('editContractId');
 
     if (empid != null) {
       this.Componentservices.getContractformId(empid).subscribe(data => {
-        this.Contracts = data,
-          this.itemreceived = [];
+        this.Contracts = data;
+        this.itemreceived = [];
         this.itemreceived = this.Contracts[0].ORDERITEM;
-        console.log(this.Contracts[0].ORDERITEM);
+        console.log(this.itemreceived.length + 'gagan');
         this.ContractForm.controls['CONTRACTNO'].setValue(this.Contracts[0].CONTRACTNO);
         this.ContractForm.controls['VENDORNAME'].setValue(this.Contracts[0].VENDORNAME);
         this.ContractForm.controls['STARTDATE'].setValue(this.Contracts[0].STARTDATE);
@@ -77,31 +94,39 @@ export class itcontractmaster implements OnInit, AfterViewChecked {
 
 
         if (this.itemreceived.length > 0) {
-        
+
           for (var i = 0; i <= this.itemreceived.length - 1; i++) {
             if (i != 0) {
               this.addItemButtonClick();
             }
             this.ORDERITEM.at(i).get('CATEGORY').setValue(this.itemreceived[i].CATEGORY);
             this.ORDERITEM.at(i).get('QUANTITY').setValue(this.itemreceived[i].QUANTITY);
-
-
-
-
-
-
-
-
+            // this.ORDERITEM.at(i).get('SUBCATEGORY').setValue(this.itemreceived[i].SUBCATEGORY);
+            this.categorychangeload(this.itemreceived[i].CATEGORY, i);
+            console.log(this.itemreceived[i].SUBCATEGORY, this.itemreceived[i].CATEGORY);
+            this.GaganArr.push(this.itemreceived[i].SUBCATEGORY);
           }
-
+          console.log("dd" + this.GaganArr);
+          this.gaganArrSet();
         }
 
 
       })
+      console.log("dd1" + this.GaganArr);
 
+      this.contractfield.nativeElement.focus();
       this.btnvisibility = false;
     }
-  
+
+  }
+
+  gaganArrSet() {
+    for (var i = 0; i < this.GaganArr.length; i++) {
+      this.ORDERITEM.at(i).get('SUBCATEGORY').setValue(this.itemreceived[i].SUBCATEGORY);
+      //  alert();
+    }
+    //alert('dd');
+    console.log(this.GaganArr + "fgafdg");
   }
 
   getvendor() {
@@ -114,13 +139,8 @@ export class itcontractmaster implements OnInit, AfterViewChecked {
   }
 
   categorychangeload(value, j) {
-    
-      this.finaldata[j] = this.SubCategory.filter(x => x.PARENT_ID == value);
-     
 
-    
-    
-
+    this.finaldata[j] = this.SubCategory.filter(x => x.PARENT_ID == value);
   }
   getSubCategories() {
 
@@ -132,10 +152,7 @@ export class itcontractmaster implements OnInit, AfterViewChecked {
 
   }
   categorychange(value: string, i: number) {
-
     this.categorychangeload(value, i);
-
-
   }
 
   transform(objects: any = []) {
@@ -222,8 +239,6 @@ export class itcontractmaster implements OnInit, AfterViewChecked {
 
     })
   }
-
-
 
   get ORDERITEM(): FormArray {
     return this.ContractForm.get('ORDERITEM') as FormArray;

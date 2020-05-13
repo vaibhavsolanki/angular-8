@@ -58,8 +58,9 @@
                 <label class="col-md-5 col-form-label group-name" for="checkboxes" (click)="toggleGroup(pertype.key)">{{pertype.key}}</label>
                 <div class="col-md-7">
                   <div class="form-check" *ngFor="let permission of pertype.value">
-                    <input name="checkboxes-{{permission.Value}}" id="checkboxes-{{permission.Value}}" type="checkbox" class="form-check-input" value="{{permission.Value}}" (change)="onCheckboxChange($event)">
-                    <label class="form-check-label" for="checkboxes-{{permission.Value}}">{{permission.Name}}</label>
+                    <mat-slide-toggle (change)="onChange($event)" [ngModelOptions]="{standalone: true}" [(ngModel)]='selectedValues[permission.value]'>{{permission.Name}}</mat-slide-toggle>
+                    <!--<input name="checkboxes-{{permission.Value}}" id="checkboxes-{{permission.Value}}" type="checkbox" class="form-check-input" value="{{permission.Value}}" [(ngModel)]="selectedValues[permission.value]" [ngModelOptions]="{standalone:true}" (change)="onCheckboxChange($event)">
+                    <label class="form-check-label" for="checkboxes-{{permission.Value}}">{{permission.Name}}</label>-->
                   </div>
                 </div>
               </div>
@@ -68,6 +69,7 @@
           </div>
         </div>
       </div>
+      
     </mat-expansion-panel>
   </mat-accordion>
   <div class="row">
@@ -93,7 +95,7 @@
     </div>
   </div>
   </div>-->
-  <mat-slide-toggle>Slide me!</mat-slide-toggle>
+ 
   <button mat-raised-button color="primary" [disabled]="loading" *ngIf="btnvisibility" (click)="onSubmit()">
     <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
     Submit

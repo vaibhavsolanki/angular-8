@@ -15,10 +15,10 @@ var httpOptions = {
     headers: new http_1.HttpHeaders({ 'Content-Type': 'application/json' })
 };
 var AuthenticationService = /** @class */ (function () {
-    // private actionUrl: string = "https://localhost:44324/"//;
     function AuthenticationService(http) {
         this.http = http;
-        this.actionUrl = "http://192.168.0.42/";
+        //private actionUrl: string = "http://192.168.0.42/";
+        this.actionUrl = "https://localhost:44324/"; //;
         this.currentUserSubject = new rxjs_1.BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')));
         this.currentUser = this.currentUserSubject.asObservable();
     }
@@ -47,12 +47,10 @@ var AuthenticationService = /** @class */ (function () {
         }
         var jwtHelper = new jwt_helper_1.JwtHelper();
         var decodedAccessToken = jwtHelper.decodeToken(accessToken);
-        console.log(decodedAccessToken);
         var permissions = Array.isArray(decodedAccessToken.permission) ? decodedAccessToken.permission : [decodedAccessToken.permission];
         localStorage.setItem('currentUser', JSON.stringify(decodedAccessToken.sub));
         localStorage.setItem('currentRole', JSON.stringify(decodedAccessToken.role));
         localStorage.setItem('permission', JSON.stringify(permissions));
-        console.log(permissions);
         localStorage.setItem('auth_token', JSON.stringify(accessToken));
         this.currentUserSubject.next(response);
         return response;

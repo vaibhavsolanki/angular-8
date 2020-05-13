@@ -6,7 +6,7 @@
 
   <form [formGroup]="ItemReceiptForm" class="example-container col-md-12">
     <mat-form-field>
-      <select formControlName="PUBLISHORDER" placeholder="PUBLISH ORDER" matNativeControl name="PUBLISHORDER" #publishorder (change)="pubitem(publishorder.value)">
+      <select formControlName="PUBLISHORDER" placeholder="PUBLISH ORDER" matNativeControl name="PUBLISHORDER" #publishorder (change)="pubitem(publishorder.value)" [attr.disabled]="Disabled">
         <option value="" selected></option>
         <option *ngFor="let Cat of itreleaseorders;let i = index" [value]="Cat.ID">
           {{Cat.RELEASEORDERID}}
@@ -23,21 +23,21 @@
         <div class=" d-flex col-md-12">
           <div class="col-md-4">
             <mat-form-field>
-              <input matInput placeholder="CHALLAN." formControlName="CHALLANNO" [ngClass]="{ 'is-invalid': submitted && f.CHALLANNO.errors }">
+              <input matInput placeholder="CHALLAN." formControlName="CHALLANNO" [ngClass]="{ 'is-invalid': submitted && f.CHALLANNO.errors}" [attr.disabled]="disabled?'Disabled':null">
               <mat-error *ngIf="submitted && f.CHALLANNO.errors">CHALLAN. is required</mat-error>
 
             </mat-form-field>
           </div>
           <div class="col-md-4">
             <mat-form-field>
-              <input matInput readonly [matDatepicker]="picker" placeholder="CHALLAN DATE" formControlName="CHALLANDATE">
+              <input matInput readonly [matDatepicker]="picker" placeholder="CHALLAN DATE" formControlName="CHALLANDATE" [attr.disabled]="Disabled">
               <mat-datepicker-toggle matSuffix [for]="picker" [ngClass]="{ 'is-invalid': submitted && f.CHALLANDATE.errors }"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
           </div>
           <div class="col-md-4">
             <mat-form-field>
-              <input matInput readonly [matDatepicker]="picker1" placeholder="RECEIPTDATE" formControlName="RECEIPTDATE">
+              <input matInput readonly [matDatepicker]="picker1" placeholder="RECEIPTDATE" formControlName="RECEIPTDATE" [attr.disabled]="Disabled">
               <mat-datepicker-toggle matSuffix [for]="picker1" [ngClass]="{ 'is-invalid': submitted && f.RECEIPTDATE.errors }"></mat-datepicker-toggle>
               <mat-datepicker #picker1></mat-datepicker>
             </mat-form-field>
@@ -48,7 +48,7 @@
         <div class=" d-flex col-md-12">
 
           <mat-form-field>
-            <input matInput placeholder="Remarks" formControlName="REMARKS" [ngClass]="{ 'is-invalid': submitted && f.REMARKS.errors }">
+            <input matInput placeholder="Remarks" formControlName="REMARKS" [ngClass]="{ 'is-invalid': submitted && f.REMARKS.errors }" [attr.disabled]="Disabled">
 
 
           </mat-form-field>
@@ -75,7 +75,7 @@
           <td mat-cell *matCellDef="let row;let i=index">
 
             <mat-form-field>
-              <input numbersOnly matInput type="number" (keyup)="onKeyUp($event,i)" value="{{row.RECEIVEDQUANTITY}}" />
+              <input numbersOnly matInput type="number" (keyup)="onKeyUp($event,i)" value="{{row.RECEIVEDQUANTITY}}" [attr.disabled]="Disabled"/>
               <!--formControlName="QUANTITY"-->
               <!--<mat-error *ngIf="submitted && item.controls.QUANTITY.errors.quantityvalidator">Quantity is required</mat-error>-->
 
@@ -85,7 +85,7 @@
         <ng-container matColumnDef="REMAININGQUANTITY">
           <th mat-header-cell *matHeaderCellDef> Remaining Quantity </th>
           <td mat-cell *matCellDef="let row">
-            <input diabled matInput type="text" value="{{row.REMAINING}}" />
+            <input diabled matInput type="text" value="{{row.REMAINING}}" [attr.disabled]="Disabled"/>
             <!--formControlName="REMAINING"-->
           </td>
         </ng-container>
@@ -93,7 +93,7 @@
           <th mat-header-cell *matHeaderCellDef> Remark </th>
           <td mat-cell *matCellDef="let row;let i=index">
             <mat-form-field>
-              <input matInput type="text" value="{{row.REMARKS}}" (change)="onKeyPress($event,i )"/>
+              <input matInput type="text" value="{{row.REMARKS}}" (change)="onKeyPress($event,i )" [attr.disabled]="Disabled"/>
               <!--formControlName="REMARKS"-->
 
             </mat-form-field>
@@ -106,14 +106,16 @@
     </div>
     <br/>
     <br/>
-    <button mat-raised-button color="primary" [disabled]="loading" *ngIf="btnvisibility" (click)="onSubmit()">
-      <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-      Submit
-    </button>
-    <button mat-raised-button color="primary" [disabled]="loading" *ngIf="!btnvisibility" (click)="onUpdate()">
-      <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-      Update
-    </button>
+    <div *ngIf="!Disabled">
+      <button mat-raised-button color="primary" [disabled]="loading" *ngIf="btnvisibility" (click)="onSubmit()">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+        Submit
+      </button>
+      <button mat-raised-button color="primary" [disabled]="loading" *ngIf="!btnvisibility" (click)="onUpdate()">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+        Update
+      </button>
+    </div>
   </form>
   </div>
 

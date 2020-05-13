@@ -253,6 +253,33 @@ namespace stationaryr.Models
             }
             return ret;
         }
+        public string userroleremove(string userid, string roleid)
+        {
+            string ret = "";
+
+            using (OracleConnection con = new OracleConnection(_connectionString))
+            {
+
+
+                OracleCommand cmd = new OracleCommand("STATIONARY_USER_ROLE_INSERT", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                // OracleParameter op = new OracleParameter("data_cursor", OracleDbType.RefCursor) { Direction = ParameterDirection.Output };
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("P_USERID", userid);
+                cmd.Parameters.Add("P_ROLEID", roleid);
+                cmd.Parameters.Add("CALLVAL", "5");
+                // cmd.ExecuteNonQuery();
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.Rows[0][0].ToString();
+
+            }
+            return ret;
+        }
         public async Task<ApplicationUser> getusername(string usename, CancellationToken cancellationToken)
         {
             List<ApplicationUser> ret = new List<ApplicationUser>();
@@ -398,12 +425,12 @@ namespace stationaryr.Models
 
         public Task<bool> IsInRoleAsync(ApplicationUser user, string roleName, CancellationToken cancellationToken)
         {
-            return Task.Run(()=>false);
+            return Task.Run(() => new Data().checkroleuser(user.Id, roleName));
         }
 
         public Task RemoveFromRoleAsync(ApplicationUser user, string roleName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.Run(() => userroleremove(user.Id, roleName));
         }
 
         public async Task<ApplicationUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)

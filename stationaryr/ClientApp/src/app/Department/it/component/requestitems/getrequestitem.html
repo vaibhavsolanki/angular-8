@@ -1,5 +1,5 @@
 
-<a [routerLink]="['../RequestItems']">Request Items</a>
+<a [routerLink]="['../RequestItems']">Issue Item(Admin)</a>
 <mat-form-field>
   <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
 </mat-form-field>
@@ -11,6 +11,10 @@
     <ng-container matColumnDef="ISSUEID">
       <th mat-header-cell *matHeaderCellDef> ISSUEID </th>
       <td mat-cell *matCellDef="let row"> {{row.ISSUEID}} </td>
+    </ng-container>
+    <ng-container matColumnDef="USERID">
+      <th mat-header-cell *matHeaderCellDef> USERID </th>
+      <td mat-cell *matCellDef="let row"> {{row.USERID}} </td>
     </ng-container>
     
 

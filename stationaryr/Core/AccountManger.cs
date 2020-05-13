@@ -48,12 +48,35 @@ namespace stationaryr.Core
 
             if (!result.Succeeded)
                 return (false, result.Errors.Select(e => e.Description).ToArray());
-
-
-            foreach (var role in roles)
+            if (roles != null)
             {
-                result = await this._userManager.AddToRoleAsync(user, role);
+                var userRoles = await _userManager.GetRolesAsync(user);
+
+                var rolesToRemove = userRoles.Except(roles).ToArray();
+                var rolesToAdd = roles.Except(userRoles).Distinct().ToArray();
+
+                if (rolesToRemove.Any())
+                {
+                    result = await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
+                    if (!result.Succeeded)
+                        return (false, result.Errors.Select(e => e.Description).ToArray());
+                }
+
+                if (rolesToAdd.Any())
+                {
+                    result = await _userManager.AddToRolesAsync(user, rolesToAdd);
+                    if (!result.Succeeded)
+                        return (false, result.Errors.Select(e => e.Description).ToArray());
+                }
             }
+
+
+            //foreach (var role in roles)
+            //{
+            //    result = await this._userManager.AddToRoleAsync(user, role);
+
+
+            //}
 
             return (true, new string[] { });
         }
@@ -248,5 +271,14 @@ namespace stationaryr.Core
             return Task.Run(() =>
                 ret == "false" ? false : true);
         }
+        public Task<bool> TestCanDeleteUserAsync(string roleId)
+        {
+            string ret = new Data().checkusercandelete(roleId);
+
+            return Task.Run(() =>
+                ret == "false" ? false : true);
+        }
+
+
     }
 }

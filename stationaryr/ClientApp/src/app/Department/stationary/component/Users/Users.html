@@ -1,8 +1,8 @@
 
-  <form [formGroup]="UsersForm" class="example-container col-md-6">
+  <form [formGroup]="UsersForm" class="example-container col-md-6"  autocomplete="off">
 
     <mat-form-field>
-      <input matInput placeholder="USERNAME" formControlName="UserName" [ngClass]="{ 'is-invalid': submitted && f.UserName.errors }">
+      <input matInput placeholder="USERNAME" formControlName="UserName" autocomplete="off" [ngClass]="{ 'is-invalid': submitted && f.UserName.errors }">
       <mat-error *ngIf="submitted && f.UserName.errors">USERNAME is required</mat-error>
 
     </mat-form-field>
@@ -19,7 +19,7 @@
     <mat-form-field>
       <mat-label>DEPARTMENT</mat-label>
       <select formControlName="Department" matNativeControl name="Department" #department>
-        <option value="" selected></option>
+        <option value="" selected>Choose</option>
         <option *ngFor="let Dept of Department" [value]="Dept.ID">
           {{Dept.NAME}}
         </option>
@@ -27,18 +27,29 @@
     </mat-form-field>
     <mat-form-field>
       <mat-label>ROLES</mat-label>
-      <select multiple formControlName="Roles" matNativeControl name="Roles" #department>
-        <option value="" selected></option>
-        <option *ngFor="let role of Roles" [value]="role.Id">
-          {{role.Name}}
-        </option>
-      </select>
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput placeholder="Password" formControlName="NewPassword" [ngClass]="{ 'is-invalid': submitted && f.NewPassword.errors }">
-      <mat-error *ngIf="submitted && f.NewPassword.errors?.required">PASSWORD is required</mat-error>
+      <mat-select multiple formControlName="Roles" matNativeControl name="Roles">
 
+        <mat-option *ngFor="let role of Roles" [value]="role.Name">
+          {{role.Name}}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
+   <div *ngIf="passwordhide">
+
+        <mat-form-field>
+          <input matInput placeholder="Password" type="password" formControlName="NewPassword" autocomplete="new-password" [ngClass]="{ 'is-invalid': submitted && f.NewPassword.errors }">
+          <mat-error *ngIf="submitted && f.NewPassword.errors?.required">PASSWORD is required</mat-error>
+
+        </mat-form-field>
+        <!--<mat-form-field>
+          <input matInput placeholder="Compare Password" type="password" formControlName="ComparePassword" autocomplete="new-password" [ngClass]="{ 'is-invalid': submitted && f.ComparePassword.errors }">
+          <mat-error *ngIf="submitted && f.ComparePassword.errors?.required">PASSWORD is required</mat-error>
+          <mat-error *ngIf="submitted && f.ComparePassword.errors?.mustMatch">PASSWORD must match</mat-error>
+
+        </mat-form-field>-->
+      </div>
+    
+   
 
     <button mat-raised-button color="primary" [disabled]="loading" *ngIf="btnvisibility" (click)="onSubmit()">
       <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>

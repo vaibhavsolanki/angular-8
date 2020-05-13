@@ -4,6 +4,24 @@
   </div>
   <div class="card-body">
     <form [formGroup]="RequestForm" class="example-container col-md-8">
+      <mat-form-field>
+        <mat-label>UserName</mat-label>
+        <select formControlName="UserName" matNativeControl name="UserName" #username>
+          <option value="" selected></option>
+          <option *ngFor="let user of Users" [value]="user.ID">
+            {{user.NAME}}
+          </option>
+        </select>
+        <!--<mat-error *ngIf="submitted && f.UserName.errors?.required">EMAILID is required</mat-error>
+    <mat-error *ngIf="f.Email.errors?.email">Email must be a valid email address</mat-error>-->
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput readonly [matDatepicker]="picker" placeholder="Issue Date" formControlName="ISSUEDATE">
+        <mat-datepicker-toggle matSuffix [for]="picker" [ngClass]="{'disabled':role}"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+
+      </mat-form-field>
+
       <div formArrayName="ORDERITEM" *ngFor="let item of RequestForm.get('ORDERITEM').controls; let i = index" class="form-group">
         <div [formGroupName]="i">
           <div class="row">
@@ -24,7 +42,7 @@
                 <div class="col-md-2">
                   <mat-form-field *ngIf="subcategory">
                     <!--<mat-label>Item Type</mat-label>-->
-                    <select ngModel formControlName="SUBCATEGORY" placeholder="SUBCATEGORY" matNativeControl name="SUBCATEGORY+i" #subcategory (change)="subcategorychange(subcategory.value,i)" [ngClass]="{'disabled': role}">
+                    <select  formControlName="SUBCATEGORY" placeholder="SUBCATEGORY" matNativeControl name="SUBCATEGORY+i" #subcategory (change)="subcategorychange(subcategory.value,i)" [ngClass]="{'disabled': role}">
                       <option value="" selected></option>
                       <option *ngFor="let Sub of finaldata[i]; let i = index" [value]="Sub.ID">
                         {{Sub.DESCRIPTION}}
@@ -45,24 +63,24 @@
                 </div>
                 <div class="col-md-2">
                   <mat-form-field>
-                    <input matInput numbersOnly  placeholder="Avaiable Quantity" disabled value="2">
+                    <input matInput numbersOnly placeholder="Avaiable Quantity" disabled value="0" >
 
                   </mat-form-field>
                 </div>
 
-                  <div class="col-md-2">
+                <div class="col-md-2">
 
-                    <mat-form-field>
-                      <input matInput numbersOnly required placeholder="QUANTITY" formControlName="QUANTITY" id="QUANTITY+{{i}}">
+                  <mat-form-field>
+                    <input matInput numbersOnly required placeholder="QUANTITY" formControlName="QUANTITY" id="QUANTITY+{{i}}" (keyup)="onKeyUp($event,i)">
 
-                    </mat-form-field>
-                  </div>
-                  <div class="col-md-1">
-                    <button *ngIf="RequestForm.get('ORDERITEM').length>1" (click)="deleteitem(i)" class="btn btn-sm"><mat-icon>delete_forever</mat-icon></button>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-1">
+                  <button *ngIf="RequestForm.get('ORDERITEM').length>1" (click)="deleteitem(i)" class="btn btn-sm"><mat-icon>delete_forever</mat-icon></button>
 
-                  </div>
                 </div>
               </div>
+            </div>
             <div class="col-md-2">
               <button class="btn btn-success btn-sm" type="button" (click)="addItemButtonClick()" [disabled]="RequestForm.get('ORDERITEM').controls.errors" style="margin-right:10px">Add Item</button>
 
@@ -71,6 +89,11 @@
           </div>
         </div>
       </div>
+      <mat-form-field>
+        <textarea matInput placeholder="Remarks" formControlName="REMARKS"></textarea>
+
+      </mat-form-field>
+
       <button mat-raised-button color="primary" [disabled]="loading" *ngIf="btnvisibility" (click)="onSubmit()">
         <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
         Submit

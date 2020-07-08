@@ -6,6 +6,8 @@
     "module": "esnext",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
+    "noImplicitAny": false,
+    "removeComments": false,
     "declaration": false,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,

@@ -17,6 +17,9 @@ using stationaryr.Core;
 using AutoMapper;
 using AppPermissions =stationaryr.Models.ApplicationPermissions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Stationary.Models;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace stationaryr
 {
@@ -35,6 +38,8 @@ namespace stationaryr
 
             services.AddMvc(options => {
                 options.RespectBrowserAcceptHeader = true;
+               // var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+               // options.Filters.Add(new AuthorizeFilter("policy"));
             }).AddJsonOptions(o =>
             {
                 o.JsonSerializerOptions.PropertyNamingPolicy = null;
@@ -47,7 +52,8 @@ namespace stationaryr
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddDefaultTokenProviders();
             services.AddScoped<IAccountManager, AccountManager>();
-
+          //  services.AddSingleton<IHttpContextAccessor,HttpContextAccessor>();
+          //  services.AddScoped<test>();
             //services.AddSingleton<IAuthorizationHandler, ViewUserAuthorizationHandler>();
             //services.AddSingleton<IAuthorizationHandler, ManageUserAuthorizationHandler>();
             //services.AddSingleton<IAuthorizationHandler, ViewRoleAuthorizationHandler>();
@@ -159,8 +165,9 @@ namespace stationaryr
               .AllowAnyHeader()
               .AllowAnyMethod());
 
-          //app.UseIdentityServer();
-         
+            //app.UseIdentityServer();
+            //app.UseSession();
+
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseHttpsRedirection();
@@ -189,6 +196,7 @@ namespace stationaryr
 
                 if (env.IsDevelopment())
                 {
+                    spa.Options.StartupTimeout = new TimeSpan(0, 0, 80);
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });

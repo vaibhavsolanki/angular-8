@@ -1,0 +1,28 @@
+/*@import '~@angular/material/theming';
+@include mat-core();
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker hue.
+$app-primary: mat-palette($mat-indigo);
+$app-accent: mat-palette($mat-green);
+
+// The warn palette is optional (defaults to red).
+$app-warn: mat-palette($mat-red);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
+
+
+*/
+// define 3 theme color
+// mat-palette accepts $palette-name, main, lighter and darker variants
+$my-theme-primary: mat-palette($mat-red, 600, 300, 900);
+$my-theme-accent: mat-palette($mat-blue-grey, 700, 300, 900);
+$my-theme-warn: mat-palette($mat-pink, 700, 300, 900);
+// create theme (use mat-dark-theme for themes with dark backgrounds)
+$my-theme: mat-light-theme($my-theme-primary, $my-theme-accent, $my-theme-warn);
+
+// themes for notifications
+$my-theme-info: mat-palette($mat-blue);
+$my-theme-success: mat-palette($mat-green);
+$my-theme-warning: mat-palette($mat-yellow);
+$my-theme-error: mat-palette($mat-red);

@@ -42,9 +42,13 @@
 
   <ItemGroup>
     <Compile Remove="Models\AppContext.cs" />
+    <Compile Remove="Models\test.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\app\Department\it\component\menu-list-item\menu-list-item.component.ts" />
+    <None Remove="ClientApp\src\app\Department\it\component\menu-list-item\nav.service.ts" />
+    <None Remove="ClientApp\src\app\Department\it\component\navbar\nav-item.ts" />
     <None Remove="ClientApp\src\app\Department\it\component\permission\permission.html" />
     <None Remove="ClientApp\src\app\Department\it\component\permission\permission.ts" />
     <None Remove="ClientApp\src\app\Department\it\component\Rolemaster\RoleMaster.ts" />
@@ -55,6 +59,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app\Department\it\component\menu-list-item\menu-list-item.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\Department\it\component\menu-list-item\nav.service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\Department\it\component\navbar\nav-item.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\Department\it\component\Rolemaster\RoleMaster.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\Department\it\component\subcategory\getsubcategory.component.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\jwt.interceptor.ts" />

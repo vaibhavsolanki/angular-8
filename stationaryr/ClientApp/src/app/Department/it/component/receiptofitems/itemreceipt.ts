@@ -222,9 +222,9 @@ export class itemreceipts {
         console.log(cate);
         this.items[i].CATEGORY = this.items[i].CATEGORY + "  " + this.items[i].SUBCATEGORY + "  " + this.items[i].SUBCHILDCATEGORY;
 
-        this.items[i].RECEIVEDQUANTITY = this.items1.find(x => x.CATEGORY == cate).RECEIVEDQUANTITY;
-        this.items[i].REMAINING = this.items1.find(x => x.CATEGORY == cate).REMAINING;
-        this.items[i].REMARKS = this.items1.find(x => x.CATEGORY == cate).REMARKS;
+        this.items[i].RECEIVEDQUANTITY = this.items1.find(x => x.CATEGORY == cate)?.RECEIVEDQUANTITY;
+        this.items[i].REMAINING = this.items1.find(x => x.CATEGORY == cate)?.REMAINING;
+        this.items[i].REMARKS = this.items1.find(x => x.CATEGORY == cate)?.REMARKS;
 
       })
       console.log(this.contracts);

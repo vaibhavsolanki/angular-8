@@ -1,4 +1,4 @@
-//import { Component } from '@angular/core';
+
 import { Router } from '@angular/router';
 
 import { AuthenticationService } from '../../../../services/authentication.service';
@@ -6,21 +6,178 @@ import { AuthenticationService } from '../../../../services/authentication.servi
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ElementRef, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { Permission } from '../../../../modal/permission.modal';
+import { NavItem } from './nav-item'
+import { NavService } from '../menu-list-item/nav.service';
 @Component({
   selector: 'app-navit-menu',
   templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.css']
+  styleUrls: ['./nav.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
-export class NavITMenuComponent implements OnDestroy, OnInit {
+export class NavITMenuComponent implements OnDestroy, OnInit, AfterViewInit {
+  @ViewChild('appDrawer') appDrawer: ElementRef;
+  navItems: NavItem[] = [
+    {
+      displayName: 'Master Updation',
+      iconName: 'master',
+      heading:'heading',
+    },
+    {
+      displayName: 'Vendor Master',
+      iconName: '',
+      route: 'IT/GetVendor',
+      
+    },
+    {
+      displayName: 'Contract Master',
+      iconName: '',
+      route: 'IT/GetContractMaster',
 
+    },
+    {
+      displayName: 'Item Master',
+      iconName: '',
+      heading: 'div',
+      children: [
+        {
+          displayName: 'Item Type',
+          iconName: '',
+          route: 'IT/GetCategory',
+        },
+        {
+          displayName: 'Item Sub Type',
+          iconName: '',
+          route: 'IT/GetSubCategory',
+        },
+        {
+          displayName: 'Item Subchild Type',
+          iconName: '',
+          route: 'IT/GetSubChildCategory',
+         
+        },
+            
+       
+      ]
+    },
+    {
+      displayName: 'Device',
+      iconName: '',
+      route: 'IT/GetDevice',
+
+    },
+    {
+      displayName: 'Order Management',
+      iconName: '',
+      heading: 'heading',
+    },
+   
+    {
+      displayName: 'Placement of Order Of Items',
+      iconName: '',
+      route: 'IT/GetPublishContract',
+
+    },
+    {
+      displayName: 'Receipt of items',
+      iconName: '',
+      route: 'IT/GetItemReceipt',
+
+    },
+    {
+      displayName: 'Issue of Items',
+      iconName: '',
+      route: 'IT/GetRequestItems',
+
+    },
+    {
+      displayName: 'User Rights',
+      iconName: '',
+      heading: 'heading',
+    },
+    {
+      displayName: 'User Management',
+      iconName: '',
+      route: 'IT/GetUsers',
+
+    },
+    {
+      displayName: 'Role Management',
+      iconName: '',
+      route: 'IT/GetRolemaster',
+
+    },
+    {
+      displayName: 'Reports',
+      iconName: 'report',
+      heading: 'heading',
+    },
+    {
+      displayName: 'Inventory Position',
+      iconName: 'store',
+      route: 'IT/InventoryPosition',
+
+    },
+    {
+      displayName: 'Order Details',
+      iconName: '',
+      route: 'IT/OrderDetails',
+
+    },
+    {
+      displayName: 'Receipt Details',
+      iconName: '',
+      route: 'IT/ReceiptDetails',
+
+    },
+    {
+      displayName: 'Issue Details',
+      iconName: '',
+      route: 'IT/IssueDetails',
+
+    },
+    {
+      displayName: 'Return Of Item By User',
+      iconName: '',
+      route: 'IT/Return_By_User',
+
+    },
+    {
+      displayName: 'Search',
+      iconName: 'search',
+      heading: 'heading',
+
+    },
+    {
+      displayName: 'Employee wise',
+      iconName: '',
+      route: '',
+
+    },
+    {
+      displayName: 'Item wise',
+      iconName: '',
+      route: '',
+
+    },
+    {
+      displayName: 'Date wise',
+      iconName: '',
+      route: '',
+
+    },
+  ];
+ 
   array: any[] = [];
   UserName: string;
+
+  opened=true;
   ngOnInit() {
     this.UserName = JSON.parse(localStorage.getItem('currentUser').toLowerCase());
     this.usermenu();
     this.usermenuview();
+    this.opened = true;
   }
 
   logout() {
@@ -32,7 +189,7 @@ export class NavITMenuComponent implements OnDestroy, OnInit {
 
   private _mobileQueryListener: () => void;
 
-  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private authenticationService: AuthenticationService, private router: Router, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
+  constructor(public navService: NavService,changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private authenticationService: AuthenticationService, private router: Router, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
@@ -125,5 +282,8 @@ export class NavITMenuComponent implements OnDestroy, OnInit {
   }
   get canViewRequestItems() {
     return this.array.some(e => e.Value == "requestitemit.view")
+  }
+  ngAfterViewInit() {
+    this.navService.appDrawer = this.appDrawer;
   }
 }

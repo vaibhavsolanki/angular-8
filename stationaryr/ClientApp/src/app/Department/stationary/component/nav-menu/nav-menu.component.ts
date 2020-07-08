@@ -22,11 +22,13 @@ export class NavMenuComponent implements OnDestroy, OnInit {
   //}
 
   array: any[] = [];
+  opened = true;
   ngOnInit() {
     this.UserName = JSON.parse(localStorage.getItem('currentUser').toLowerCase());
 
     this.usermenu();
     this.usermenuview();
+    this.opened = true;
   }
   logout() {
     this.authenticationService.logout();

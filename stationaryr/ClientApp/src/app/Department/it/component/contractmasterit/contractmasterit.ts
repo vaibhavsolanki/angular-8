@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { contract, listofdropdown, Material, itvendor, SubCategory, ititems } from '../../../../TableEntity/TableEntityClass';
 import { setTimeout } from 'timers';
 import { async } from '@angular/core/testing';
+
 @Component({
   selector: 'app-itcontactmaster',
   templateUrl: './contractmasterit.html',

@@ -94,6 +94,10 @@ namespace Stationary.Models
         public string TYPE { get; set; }
         public string ITEMCODE { get; set; }
         public string APPTYPE { get; set; }
+        public string ORDERQUANTITY { get; set; }
+        public string QUANTITY { get; set; }
+
+        public string AVAQUANTITY { get; set; }
     }
     public class listofdropdown
     {

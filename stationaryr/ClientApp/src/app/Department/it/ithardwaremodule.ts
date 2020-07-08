@@ -32,6 +32,11 @@ import { issueditems } from './component/issueitems/issueitems';
 import { getissueditems } from './component/issueitems/getissueitems';
 import { getrequestitem } from './component/requestitems/getrequestitem';
 import { requestitem } from './component/requestitems/requestitem';
+import { InventoryPosition } from './component/report/inventoryposition'
+import { IssueDetails } from './component/report/issuedetails'
+import { OrderDetails } from './component/report/orderdetails'
+//import { ReceiptDetails } from './component/report/receiptdetail'
+//import { Return_By_User } from './component/report/return_of_item_by_user'
 import {
   
   MatButtonModule,
@@ -39,9 +44,11 @@ import {
   MatInputModule, MatTabsModule, MatExpansionModule,
   MatCardModule, MatMenuModule,
   MatTableModule, MatToolbarModule, MatSidenavModule, MatListModule, MatIconModule,
-  MatPaginatorModule, MatSortModule, MatDatepickerModule, MatNativeDateModule, MatSlideToggleModule,
+  MatPaginatorModule, MatSortModule, MatDatepickerModule, MatNativeDateModule, MatSlideToggleModule, MatBadgeModule,
 } from '@angular/material';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { NavService } from './component/menu-list-item/nav.service'
+import { MenuListItemComponent } from './component/menu-list-item/menu-list-item.component'
 import { CommonModule } from '@angular/common';
 @NgModule({
   imports: [CommonModule, FormsModule, ReactiveFormsModule, sharedModule,
@@ -50,7 +57,7 @@ import { CommonModule } from '@angular/common';
     NgxMaterialTimepickerModule, MatMenuModule,
     MatTableModule,
     MatInputModule,
-    MatToolbarModule, MatSidenavModule, MatListModule,
+    MatToolbarModule, MatSidenavModule, MatListModule, MatBadgeModule,
         MatFormFieldModule, MatSelectModule, MatButtonModule, MatCardModule, MatPaginatorModule,
      
     RouterModule.forChild(routes)
@@ -59,10 +66,15 @@ import { CommonModule } from '@angular/common';
   declarations: [ItDevicename, ItGetDevicename, itcontractmaster,getitcontractmaster,ithardwaredepart, ItCategoryComponent, ItHomeComponent, NavITMenuComponent, GetItCategoryComponent
     , GetItSubCategoryComponent, ItSubCategoryComponent, GetItSubChildCategoryComponent, ItSubChildCategoryComponent,
     getuserit, userit, getpublishcontract, publishcontract, itvendors, getitvendor, getitemreceipt, itemreceipts,
-    requestitem, getrequestitem,
-    issueditems, getissueditems //,
-  ]
-
+    requestitem, getrequestitem, 
+    issueditems, getissueditems, MenuListItemComponent,
+    InventoryPosition
+    , OrderDetails,
+    //ReceiptDetails, Return_By_User,
+    IssueDetails
+    //,
+  ],
+   providers: [NavService]
 })
 export class IthardwareModule { }
 

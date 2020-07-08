@@ -29,6 +29,11 @@ import { issueditems } from './component/issueitems/issueitems';
 import { getissueditems } from './component/issueitems/getissueitems';
 import { getrequestitem } from './component/requestitems/getrequestitem';
 import { requestitem } from './component/requestitems/requestitem';
+import { InventoryPosition } from './component/report/inventoryposition'
+import { IssueDetails } from './component/report/issuedetails'
+import { OrderDetails } from './component/report/orderdetails'
+import { ReceiptDetails } from './component/report/receiptdetail'
+import { Return_By_User } from './component/report/return_of_item_by_user'
 export const routes: Routes = [
   {
     path: '', component: ithardwaredepart, canActivate: [AuthGuard]
@@ -62,7 +67,16 @@ export const routes: Routes = [
       { path: 'GetIssueItems', component: getissueditems },
       { path: 'RequestItems', component: requestitem },
       { path: 'GetRequestItems', component: getrequestitem },
+
+      { path: 'InventoryPosition', component: InventoryPosition },
+
+      { path: 'OrderDetails', component: OrderDetails },
+      { path: 'ReceiptDetails', component: ReceiptDetails },
+      { path: 'Return_By_User', component: Return_By_User },
+      { path: 'IssueDetails', component: IssueDetails },
+
       
+    
       //{ path: 'ContractMaster', component: ContractMasterComponent },
 
     ]

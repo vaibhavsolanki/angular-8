@@ -16,7 +16,7 @@
       </mat-form-field>
 
       <mat-form-field>
-        <textarea matInput placeholder="Address" formControlName="ADDRESS" [ngClass]="{ 'is-invalid': submitted && f.ADDRESS.errors }"></textarea>
+        <textarea  rows="4" cols="50"  matInput placeholder="Address" formControlName="ADDRESS" [ngClass]="{ 'is-invalid': submitted && f.ADDRESS.errors }"></textarea>
         <mat-error *ngIf="submitted && f.ADDRESS.errors">ADDRESS is required</mat-error>
 
       </mat-form-field>

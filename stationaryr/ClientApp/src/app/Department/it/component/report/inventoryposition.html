@@ -1,0 +1,36 @@
+<h2  >Item Position</h2>
+<mat-accordion>
+
+  
+  <div *ngFor="let cat of Category">
+
+    <mat-expansion-panel (opened)="beforePanelOpened(cat)"
+                         >
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <p class="font-weight-bold mt-lg-2">{{cat.ITEMS_DESCRIPTION}}</p>
+        </mat-panel-title>
+        <mat-panel-description>
+          <p class="float-lg-left font-weight-bold">
+            Order Quantity<button mat-mini-fab color="primary">
+  {{cat.ORDERQUANTITY}}
+</button>
+          </p>
+          <p class="float-lg-left font-weight-bold">
+            Total Quantity<button mat-mini-fab color="warn">
+              {{cat.QUANTITY}}
+            </button>
+          </p>
+          <p class="float-lg-right font-weight-bold">
+            Avaiable Quantity
+            <button mat-mini-fab color="accent">
+              {{cat.AVAQUANTITY}}
+            </button>
+          </p>
+          <!--Currently I am {{panelOpenState ? 'open' : 'closed'}}-->
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <p>I'm visible because I am open</p>
+    </mat-expansion-panel>
+  </div>
+</mat-accordion>

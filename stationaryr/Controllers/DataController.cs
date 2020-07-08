@@ -11,7 +11,7 @@ namespace Stationary.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   // [Authorize]
+   // [Authorize(Roles ="admin")]
     public class DataController : ControllerBase
     {
         [HttpPost("[action]")]
@@ -48,6 +48,7 @@ namespace Stationary.Controllers
         [HttpGet("GetMaterial/{status}")]
         public IActionResult GetMaterial(string status)
         {
+          //var user = HttpContext.Session.GetString("user");
             return Ok(new Data().GetMaterial(status));
         }
         [HttpGet("GetmaterialID/{id}")]
@@ -572,9 +573,22 @@ namespace Stationary.Controllers
         {
             return Ok(new Data().GetItIssueItemsById(ID));
         }
-     
-        //
+        [HttpGet("GetCategoryPostion/{str}")]
 
+        public IActionResult GetCategoryPostion(string str)
+        {
+            return Ok(new Data().GetCategoryPostion(str));
+        }
+
+
+        [HttpGet("GetSubCategoryPostion/{byName}")]
+
+        public IActionResult GetSubCategoryPostion(string str,string category)
+        {
+            return Ok(new Data().GetSubCategoryPostion(str));
+        }
+        //
+       
 
 
     }

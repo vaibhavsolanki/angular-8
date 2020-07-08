@@ -1,0 +1,32 @@
+.bg-tropicaloceangreen {
+  background: linear-gradient(to top right, #5cab39, #00b0ff);
+}
+.mat-list-base .mat-subheader {
+  background: linear-gradient(to top right, #5cab39, #00b0ff);
+}
+/*@import '../../../../../_theme.scss';*/
+
+/*:host {
+  display: block;
+  outline: none;
+
+  .mat-list-item.active {
+    background-color: mat-color($app-primary, 50);
+  }
+
+  &:hover,
+  &:focus {
+    > .mat-list-item:not(.expanded) {
+      background-color: mat-color($app-primary, 100) !important;
+    }
+  }
+}*/
+
+/*.mat-list-item {
+  padding: 8px 0;
+
+  .routeIcon {
+    margin-right: 40px;
+  }
+}*/
+

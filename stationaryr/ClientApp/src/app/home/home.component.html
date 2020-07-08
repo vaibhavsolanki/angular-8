@@ -1,5 +1,31 @@
+<style>
+  button{
+    position:relative;
+  }
+  .hardware:before {
+    -ms-filter: "alpha(opacity=50)";
+    filter: alpha(opacity=50);
+    filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0.5);
+  }
+  .hardware {
+    width: 100%;
+    
+   
+    height: 100%;
+    background-image: url("../assets/hardware.jpg");
+    background-size: cover;
+    background-position-y: -20vh;
+  }
 
-
+  .stationary{
+    width: 100%;
+  
+    height: 100%;
+    background-image: url("../assets/stationary.jpg");
+    background-size: cover;
+    background-position-y: -20vh;
+  }
+</style>
 
   <mat-toolbar color="primary" class="example-toolbar">
     <h1 class="example-app-name">Application</h1>
@@ -21,22 +47,24 @@
     
     <div class="col-md-4">
       <div class="card mt-4">
-        <div class="card-header">
-          <h3>Stationary</h3>
+        <div class="card-header bg-info text-white">
+          <h3>Stationery</h3>
         </div>
-        <div class="card-body">
+        <div class="card-body stationary">
+          <!--<img src="C:\Users\Administrator\Source\repos\angular\stationaryr\wwwroot\hardware.jpg" />-->
 
-          <button routerLink="/stationary">stationary</button>
+          <button mat-raised-button color="primary" routerLink="/stationary">stationery</button>
         </div>
       </div>
     </div>
     <div class="col-md-4" >
       <div class=" card mt-4">
-        <div class="card-header">
+        <div class="card-header bg-info text-white">
           <h3>IT</h3>
         </div>
-        <div class="card-body">
-          <button routerLink="/IT">IT</button>
+        <div class="card-body hardware">
+
+          <button mat-raised-button color="primary" routerLink="/IT">IT</button>
         </div>
       </div>
     </div>

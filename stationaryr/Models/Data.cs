@@ -16,14 +16,15 @@ using System.Reflection;
 using stationaryr.Models;
 using stationaryr.ViewModel;
 using System.Collections;
+using Microsoft.AspNetCore.Http;
 
 namespace Stationary.Models
 {
+    
     public class Data
     {
         string connection = "User ID=xuser;Connection Timeout=600;Password=xuser;data source=(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST= 192.168.0.111)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME= dgh)));";
         //itissueitem
-
 
         public string SaveItIssueItems(AdminIssue itissueitems)
         {
@@ -1338,6 +1339,7 @@ namespace Stationary.Models
         //dgh user
         public string SaveDghuser_Repository(DGHUserRepository DGHUserRepository)
         {
+            
             string ret = "";
             using (OracleConnection con = new OracleConnection(connection))
             {
@@ -3176,7 +3178,61 @@ namespace Stationary.Models
             return ret;
         }
 
-      
+        public List<Material> GetCategoryPostion(string materialtype)
+        {
+            List<Material> ret = new List<Material>();
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_CATEGORY_POSITION", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+           
+                cmd.Parameters.Add("P_TYPE", materialtype);
+                cmd.Parameters.Add("CALLVAL", "0");
+
+                DataSet ds = new DataSet();
+
+
+                da.Fill(ds);
+              
+                ret = ds.Tables[0].ToList<Material>();
+              
+            }
+            return ret;
+        }
+        public List<SubCategory> GetSubCategoryPostion(string materialtype)
+        {
+            List<SubCategory> ret = new List<SubCategory>();
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_SUBCATEGORY_POSI", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+               
+                cmd.Parameters.Add("P_CATEGORYTYPE", materialtype);
+                cmd.Parameters.Add("P_CATEGORY", materialtype);
+                cmd.Parameters.Add("CALLVAL", "0");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.ToList<SubCategory>();
+            }
+            return ret;
+        }
+
+
     }
 }
 

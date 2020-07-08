@@ -8,15 +8,15 @@ import { ActivatedRoute } from '@angular/router';
 import { UserEdit } from '../modal/edit-user.modal';
 import { Role } from '../modal/role.modal';
 import { Permission, PermissionValues } from '../modal/permission.modal';
-import { BADQUERY } from 'dns';
+
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded', 'Access-Control-Allow-Headers': 'http://localhost:4200' })
 };
 
 @Injectable()
 export class ComponentService {
- private actionUrl: string = "http://192.168.0.42/";
- /// private actionUrl: string = "https://localhost:44324/stationary/";
+//private actionUrl = "http://192.168.0.42/stationary/";
+  private actionUrl= "https://localhost:44324/";
     //private actionUrl: string='http://localhost/POMS/oalp/getdata';
     constructor(private httpclient: HttpClient, private route: ActivatedRoute) { }
 
@@ -565,5 +565,16 @@ export class ComponentService {
         Subcategory.ID = Number(firstParam);
         return this.httpclient.post<string>(this.actionUrl + "api/Data/UpdateSubcategory", Subcategory)
 
-    }
+  }
+  //Report
+  public GetCategoryPostion(str: string): Observable<Material[]> {
+
+    return this.httpclient.get<Material[]>(this.actionUrl + "api/Data/GetCategoryPostion/" + str)
+
+  }
+  public GetSubCategoryPostion(str: string,category:string): Observable<SubCategory[]> {
+
+    return this.httpclient.get<SubCategory[]>(this.actionUrl + "api/Data/GetSubCategoryPostion/byName?str=" + str + "&category=" + category)
+
+  }
 }

@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit {
     console.log(sta, it);
     if (it == true && sta == false) {
 
-      this.router.navigate(['IT']);
+      this.router.navigate(['IT/home']);
     }
     else if (it == false && sta == true) {
       this.router.navigate(['stationary']);

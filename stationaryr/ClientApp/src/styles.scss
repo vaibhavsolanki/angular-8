@@ -3,9 +3,24 @@
 
 
 
-@import '~@angular/material/prebuilt-themes/indigo-pink.css';
-@import '~bootstrap/dist/css/bootstrap.min.css';
 
+@import '~bootstrap/dist/css/bootstrap.min.css';
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+html {
+  --scrollbarBG: #CFD8DC;
+  --thumbBG: #90A4AE;
+}
+
+body::-webkit-scrollbar {
+  width: 12px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: var(--thumbBG);
+  border-radius: 12px;
+  border: 3px solid var(--scrollbarBG);
+}
 /*@import url("https://fonts.googleapis.com/icon?family=Material+Icons&display=block");*/
 /* Provide sufficient contrast against white background */
 a {
@@ -30,7 +45,22 @@ code {
   display: flex;
   flex-direction: column;
 }
+.extended-fab-button {
+  width: 20px;
+  padding: 0 26px;
+  height:20px;
+  border-radius: 29px;
 
+  .mat-icon {
+    margin-right: 10px;
+  }
+
+  .extended-fab-button__text {
+    font-weight: 300;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+}
   .example-container > * {
     width: 100%;
   }

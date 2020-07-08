@@ -67,6 +67,9 @@ export interface Material {
     TYPE: string;
     ITEMCODE: string;
   APPTYPE: string;
+  QUANTITY: string;
+  AVAQUANTITY: string;
+  ORDERQUANTITY: string;
 }
 export interface listofdropdown {
     Company: COMPANY[];

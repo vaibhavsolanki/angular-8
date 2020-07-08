@@ -19,6 +19,7 @@ export class Rolemaster implements OnInit {
   RoleForm: FormGroup;
   submitted = false;
   loading = false;
+   groupList: any[] = [];
   allPermissions: Permission[] = [];
   pp: string[] = [];
   panelOpenState = false;
@@ -59,12 +60,24 @@ let empid = localStorage.getItem('editRoleId');
                 console.log(this.Role),
             this.RoleForm.controls['Name'].setValue(this.Role.Name);
         this.RoleForm.controls['Description'].setValue(this.Role.Description);
-     //   this.RoleForm.controls['Permissions'].setValue(this.Role.Permissions);
-              
-            })
-
+      
+        
+        //if (this.Role.Permissions != undefined) {
+        //  this.Role.Permissions.forEach(function (v) {
+        //    this.groupList.push(v.Value);
+        //    //this.allPermissions.forEach(p => this.selectedValues["categoryit.view"] = true);
+        //  });
+        //}
+        //console.log('ee');
+        //console.log(this.groupList);
+        //   this.RoleForm.controls['Permissions'].setValue(this.Role.Permissions);
+        console.log(this.Role.Permissions)
+      })
+      
             this.btnvisibility = false;
-        }
+    }
+  
+
   }
 
   onChange(value) {
@@ -78,7 +91,7 @@ let empid = localStorage.getItem('editRoleId');
       this.pp.push(e.target.value );
       
     } else {
-      let i: number = 0;
+      let i= 0;
       Permissions.controls.forEach((item: FormControl) => {
         if (item.value == e.target.value) {
           Permissions.removeAt(i);
@@ -93,7 +106,7 @@ let empid = localStorage.getItem('editRoleId');
     return this.Componentservices.getpermission().subscribe(data => {
       this.allPermissions = data;
       console.log(this.allPermissions);
-      
+     
       
     });
   }

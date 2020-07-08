@@ -60,7 +60,7 @@ namespace stationaryr.Controllers
                 LoginResponse login = new LoginResponse();
                 login.access_token = await GenerateJWT(user.Result.Id);
 
-
+                //HttpContext.Session.SetString("user", user.Result.Id);
 
                 return Ok(login);
             }

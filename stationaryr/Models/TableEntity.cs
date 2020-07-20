@@ -99,6 +99,35 @@ namespace Stationary.Models
 
         public string AVAQUANTITY { get; set; }
     }
+
+    public class Material_QuantityCategory_Request
+    {
+        public int Quantity { get; set; }
+        public string Category { get; set; }
+        public string Items_Description { get; set; }
+        public string ID { get; set; } 
+    }
+    public class Material_QuantityCategory
+    {
+        public int Quantity { get; set; }
+        public string Category { get; set; }
+        public string Items_Description { get; set; }
+        public string Itemcode { get; set; }
+    }
+
+    public class Materail_Quantity_Sub
+    {
+        public int QuantityBySub { get; set; }
+        public string Category { get; set; }
+        public string Subcategory { get; set; }
+        public string Description { get; set; } 
+        public string Items_Description { get; set; }
+
+    }
+
+
+  
+
     public class listofdropdown
     {
         public List<Company> Company { get; set; }

@@ -11,7 +11,7 @@ namespace Stationary.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   // [Authorize(Roles ="admin")]
+    // [Authorize(Roles ="admin")]
     public class DataController : ControllerBase
     {
         [HttpPost("[action]")]
@@ -24,8 +24,8 @@ namespace Stationary.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
 
         public string UserProfileSave(USER user)
-        { 
-       
+        {
+
             return new Data().UserProfileSave(user);
         }
         [HttpPost("[action]")]
@@ -48,7 +48,7 @@ namespace Stationary.Controllers
         [HttpGet("GetMaterial/{status}")]
         public IActionResult GetMaterial(string status)
         {
-          //var user = HttpContext.Session.GetString("user");
+            //var user = HttpContext.Session.GetString("user");
             return Ok(new Data().GetMaterial(status));
         }
         [HttpGet("GetmaterialID/{id}")]
@@ -56,6 +56,105 @@ namespace Stationary.Controllers
         {
             return Ok(new Data().GetmaterialID(ID));
         }
+
+        [HttpGet("GetmaterialquantitybyCat")]
+        public IActionResult GetmaterialquantitybyCat()
+        {
+            try
+            {
+                List<Material_QuantityCategory> m = new List<Material_QuantityCategory>();
+                List<Material_QuantityCategory_Request> r = new List<Material_QuantityCategory_Request>();
+                m = new Data().GetMaterial_Quantities();
+                r = new Data().GetMaterial_Quantities_Requested();
+
+                List<Material_QuantityCategory> ret = new List<Material_QuantityCategory>();
+
+                foreach (var item in m)
+                {
+                    foreach (var i in r)
+                    {
+                        if (item.Category == i.ID)
+                        {
+                            Material_QuantityCategory final = new Material_QuantityCategory();
+                            var finalQuanity = item.Quantity - i.Quantity;
+
+                            if (finalQuanity < 0)
+                            {
+                                finalQuanity = 0;
+                            }
+                            final.Quantity = finalQuanity;
+                            final.Category = item.Category;
+                            final.Items_Description = item.Items_Description;
+                            final.Itemcode = item.Itemcode;
+                            ret.Add(final);
+
+                        }
+                    }
+
+                    
+                }
+                return Ok(ret);
+            }
+
+            catch(Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+
+        [HttpGet("GetmaterialquantitybySubCat")]
+        public IActionResult GetmaterialquantitybySubCat()
+        {
+            try
+            {
+
+                List<Materail_Quantity_Sub> sub = new List<Materail_Quantity_Sub>();
+                List<Materail_Quantity_Sub> subRequest = new List<Materail_Quantity_Sub>();
+
+                sub = new Data().GetMaterial_QuantitiesSub();
+                subRequest = new Data().GetMaterial_Quantities_Requested_Sub();
+
+                List<Materail_Quantity_Sub> ret = new List<Materail_Quantity_Sub>();
+                foreach (var item in sub)
+                {
+                    foreach (var i in subRequest)
+                    {
+
+
+                        if (item.Category == i.Category && item.Subcategory == i.Subcategory)
+                        {
+
+                            Materail_Quantity_Sub final = new Materail_Quantity_Sub();
+                            var finalQuanity = item.QuantityBySub - i.QuantityBySub;
+                            if (finalQuanity < 0)
+                            {
+                                finalQuanity = 0;
+                            }
+                            final.QuantityBySub = finalQuanity;
+                            final.Category = item.Category;
+                            final.Subcategory = item.Subcategory;
+                            final.Items_Description = item.Items_Description;
+                            final.Description = item.Description;
+                            ret.Add(final);
+
+
+                        }
+
+                    }
+                }
+
+               
+
+                return Ok(ret);
+            }
+
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
 
         [HttpPost("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -67,7 +166,7 @@ namespace Stationary.Controllers
         }
 
         [HttpPost("[action]")]
-       
+
 
         public string MaterialUpdate(Material material)
         {
@@ -76,13 +175,13 @@ namespace Stationary.Controllers
         }
         [HttpDelete("deleteMaterial/{id}")]
 
-        
+
         public string deleteMaterial(int ID)
         {
             return new Data().deleteMaterial(ID);
         }
         //Company
-       
+
         [HttpPost("[action]")]
         public IActionResult GetCompany()
         {
@@ -161,9 +260,9 @@ namespace Stationary.Controllers
         //subcategory
 
         [HttpGet("GetSubcategory/{id}/{status}")]
-        public IActionResult GetSubcategory(string id,string status)
+        public IActionResult GetSubcategory(string id, string status)
         {
-            return Ok(new Data().GetSubcategory(id,status));
+            return Ok(new Data().GetSubcategory(id, status));
         }
         [HttpGet("getSubcategoryId/{id}")]
         public IActionResult getSubcategoryId(int ID)
@@ -198,9 +297,9 @@ namespace Stationary.Controllers
 
 
         [HttpGet("GetCategoryDropdown/{id}/{status}")]
-        public IActionResult GetCategoryDropdown(string id,string status)
+        public IActionResult GetCategoryDropdown(string id, string status)
         {
-            return Ok(new Data().GetCategoryDropdown(id,status));
+            return Ok(new Data().GetCategoryDropdown(id, status));
         }
         [HttpGet("GetMaterialforstaOrprint/{str}")]
 
@@ -274,7 +373,7 @@ namespace Stationary.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
 
         public string SavePrint_Repository(PrintRepository PrintRepository)
-         {
+        {
 
             return new Data().SavePrint_Repository(PrintRepository);
         }
@@ -356,7 +455,7 @@ namespace Stationary.Controllers
         }
         [HttpPost("[action]")]
         public IActionResult GetStock(getstock Report)
-                                    {
+        {
             return Ok(new Data().GetStock(Report));
         }
         [HttpDelete("Deletereceiveditem/{id}")]
@@ -370,11 +469,11 @@ namespace Stationary.Controllers
 
 
 
-        
+
         //contract
 
 
-        
+
 
         [HttpGet("[action]")]
         public IActionResult GetContractform()
@@ -406,12 +505,12 @@ namespace Stationary.Controllers
         }
 
 
-        
+
 
         [HttpPost("[action]")]
 
 
-     
+
         [HttpDelete("deleteContractform/{id}")]
 
 
@@ -435,7 +534,7 @@ namespace Stationary.Controllers
 
         [HttpPost("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-      
+
         public string SaveDevicename(devicename devicename)
         {
 
@@ -450,7 +549,7 @@ namespace Stationary.Controllers
 
             return new Data().UpdateDevicename(devicename);
         }
-       
+
 
         [HttpGet("getDevicenameId/{id}")]
         public IActionResult getDevicenameId(int ID)
@@ -473,7 +572,7 @@ namespace Stationary.Controllers
         [HttpGet("getreleaseorderbyid/{id}")]
         public IActionResult getreleaseorderbyid(int ID)
         {
-           return Ok(new Data().getreleaseorderbyid(ID));
+            return Ok(new Data().getreleaseorderbyid(ID));
         }
         [HttpDelete("deletereleaseorder/{id}")]
         public IActionResult deletereleaseorder(int ID)
@@ -510,7 +609,7 @@ namespace Stationary.Controllers
 
             return new Data().UpdateItVendor(itvendor);
         }
-       
+
         [HttpGet("GetItVendorById/{id}")]
         public IActionResult GetItVendorById(int ID)
         {
@@ -583,12 +682,12 @@ namespace Stationary.Controllers
 
         [HttpGet("GetSubCategoryPostion/{byName}")]
 
-        public IActionResult GetSubCategoryPostion(string str,string category)
+        public IActionResult GetSubCategoryPostion(string str, string category)
         {
             return Ok(new Data().GetSubCategoryPostion(str));
         }
         //
-       
+
 
 
     }

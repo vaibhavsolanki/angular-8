@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SubCategory, UsersDgh, itissueitems, itreleaseorder, itvendor, ititems, itemreceipt, PrintRepository, contract,devicename,DGHUserRepository, Report, Units, Material, COMPANY, listofdropdown, StationaryRepository, Department, AdminIssue } from '../TableEntity/TableEntityClass';
+import { SubCategory, UsersDgh, itissueitems, itreleaseorder, itvendor, ititems, itemreceipt, PrintRepository, contract, devicename, DGHUserRepository, Report, Units, Material, COMPANY, listofdropdown, StationaryRepository, Department, AdminIssue, Material_QuantityCategory, Materail_QuantitySub } from '../TableEntity/TableEntityClass';
 import { ActivatedRoute } from '@angular/router';
 import { UserEdit } from '../modal/edit-user.modal';
 import { Role } from '../modal/role.modal';
@@ -442,7 +442,18 @@ export class ComponentService {
       return this.httpclient.get<SubCategory[]>(this.actionUrl + "api/Data/Getsubcategoryonchange/" + str);
 
     }
-    
+  public Getquantity(): Observable<Material_QuantityCategory[]> {
+
+    return this.httpclient.get<Material_QuantityCategory[]>(this.actionUrl + "api/Data/GetmaterialquantitybyCat/");
+
+  }
+
+  public GetquantityByCategory(): Observable<Materail_QuantitySub[]> {
+
+    return this.httpclient.get<Materail_QuantitySub[]>(this.actionUrl + "api/Data/GetmaterialquantitybySubCat/");
+
+  }
+
   public SaveMaterial(Material: Material, getstatus: string): Observable<string> {
     Material.APPTYPE = getstatus;
         return this.httpclient.post<string>(this.actionUrl + "api/Data/MaterialSave", Material)

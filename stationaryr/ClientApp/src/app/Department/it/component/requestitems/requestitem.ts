@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewChecked, AfterViewInit, AfterCon
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { ComponentService } from '../../../../services/ComponentService';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Material, SubCategory, ititems, itissueitems, listofdropdown, AdminIssue } from '../../../../TableEntity/TableEntityClass';
+import { Material, SubCategory, ititems, itissueitems, listofdropdown, AdminIssue, Material_QuantityCategory, Materail_QuantitySub } from '../../../../TableEntity/TableEntityClass';
 import { Department } from '../../../../TableEntity/TableEntityClass';
 import { UserEdit } from '../../../../modal/edit-user.modal'
 @Component({
@@ -28,6 +28,11 @@ export class requestitem implements OnInit, AfterContentChecked {
   itemreceived: ititems[];
   itissueitem: AdminIssue[];
   itissueitems: AdminIssue[];
+  quantityItem: any[] = [];
+  ava: number;
+  no: number;
+  Quantity: Material_QuantityCategory[] = [];
+  QuantityByCategory: Materail_QuantitySub[] = [];
   GaganArr: any[] = [];
   constructor(private formbuilder: FormBuilder, private Componentservices: ComponentService, private router: Router) {
 
@@ -42,8 +47,10 @@ export class requestitem implements OnInit, AfterContentChecked {
   ngOnInit() {
     this.GetCategoryDropdown();
     this.getSubCategories();
-   
+    this.getquantity();
     this.dghemployee();
+    this.getquantitybyCategory();
+    
     this.RequestForm = this.formbuilder.group({
       UserName: ['', Validators.required],
       ISSUEDATE: ['', Validators.required],
@@ -147,11 +154,37 @@ export class requestitem implements OnInit, AfterContentChecked {
     
     this.finaldata[i] = this.SubCategory.filter(x => x.PARENT_ID == value);
     console.log(this.finaldata[i]);
+    this.avaiablequantity(value, i);
 
   }
 
-  avaiablequantity() {
+  avaiablequantity(value, i) {
 
+    this.ava = this.Quantity.find(x => x.Itemcode == value).Quantity;
+    console.log(this.ava);
+    
+  }
+
+  avaiableQuantityByCategory(value, i) {
+    this.ava = this.QuantityByCategory.find(x => x.Subcategory == value).QuantityBySub;
+    console.log(this.ava);
+  }
+
+
+
+  getquantity() {
+    this.Componentservices.Getquantity().subscribe(data => {
+      this.Quantity = data;
+      console.log(this.Quantity);
+    })
+
+  }
+
+  getquantitybyCategory() {
+    this.Componentservices.GetquantityByCategory().subscribe(data => {
+      this.QuantityByCategory = data;
+      console.log(this.QuantityByCategory);
+    })
 
   }
   getSubCategories() {
@@ -217,6 +250,7 @@ export class requestitem implements OnInit, AfterContentChecked {
     item.get('SUBCATEGORY').setValue(value, {
       onlySelf: true
     })
+    this.avaiableQuantityByCategory(value, i);
   }
 
   onSubmit() {

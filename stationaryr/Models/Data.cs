@@ -2675,6 +2675,93 @@ namespace Stationary.Models
             return ret;
         }
 
+
+        public List<Material_QuantityCategory> GetMaterial_Quantities()
+        {
+            List<Material_QuantityCategory> ret = new List<Material_QuantityCategory>();
+
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_MATERIAL_QUANTITY", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+              
+               
+                cmd.Parameters.Add("CALLVAL", "1");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.ToList<Material_QuantityCategory>();
+                
+            }
+            return ret;
+        }
+
+
+        public List<Materail_Quantity_Sub> GetMaterial_QuantitiesSub()
+        {
+            List<Materail_Quantity_Sub> ret = new List<Materail_Quantity_Sub>();
+
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_MATERIAL_QUANTITY", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+
+                cmd.Parameters.Add("CALLVAL", "0");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.ToList<Materail_Quantity_Sub>();
+
+            }
+            return ret;
+        }
+
+        public List<Material_QuantityCategory_Request> GetMaterial_Quantities_Requested()
+        {
+            List<Material_QuantityCategory_Request> ret = new List<Material_QuantityCategory_Request>();
+
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_MATERIAL_QUANTITY", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+
+                cmd.Parameters.Add("CALLVAL", "3");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.ToList<Material_QuantityCategory_Request>();
+
+            }
+            return ret;
+        }
+
+
         public List<Material> GetmaterialID(int id)
         {
             List<Material> ret = new List<Material>();
@@ -2707,6 +2794,37 @@ namespace Stationary.Models
             return ret;
 
         }
+
+
+        public List<Materail_Quantity_Sub> GetMaterial_Quantities_Requested_Sub()
+        {
+            List<Materail_Quantity_Sub> ret = new List<Materail_Quantity_Sub>();
+
+            using (OracleConnection con = new OracleConnection(connection))
+            {
+
+                con.Open();
+                OracleCommand cmd = new OracleCommand("STATIONARY_MATERIAL_QUANTITY", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleDataAdapter da = new OracleDataAdapter(cmd);
+                cmd.Parameters.Add("data_cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+
+                cmd.Parameters.Add("CALLVAL", "2");
+
+                DataTable ds = new DataTable();
+
+
+                da.Fill(ds);
+
+                ret = ds.ToList<Materail_Quantity_Sub>();
+
+            }
+            return ret;
+        }
+
+
 
 
 

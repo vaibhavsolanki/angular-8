@@ -37,7 +37,7 @@
     "oidc-client": "^1.10.1",
     "popper.js": "^1.14.3",
     "rxjs": "^6.5.4",
-    "xlsx": "^0.15.4",
+    "xlsx": "^0.17.0",
     "zone.js": "~0.10.3"
   },
   "devDependencies": {
